@@ -1,7 +1,7 @@
-import { LinearGradient } from 'expo-linear-gradient';
-import { ImageBackground } from 'expo-image';
-import type { ReactElement } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { LinearGradient } from "expo-linear-gradient";
+import { ImageBackground } from "expo-image";
+import type { ReactElement } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
@@ -11,13 +11,13 @@ import {
   Text,
   View,
   type ViewToken,
-} from 'react-native';
-import { AuthActionButtons } from '@/components/onboarding/AuthActionButtons';
-import { OnboardingItem } from '@/components/onboarding/OnboardingItem';
-import { Pagination } from '@/components/onboarding/Pagination';
-import { onboardingData } from '@/data/onboardingData';
+} from "react-native";
+import { AuthActionButtons } from "@/components/onboarding/AuthActionButtons";
+import { OnboardingItem } from "@/components/onboarding/OnboardingItem";
+import { Pagination } from "@/components/onboarding/Pagination";
+import { onboardingData } from "@/data/onboardingData";
 
-const { width: screenWidth } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get("window");
 
 const OnBoardingScreen = (): ReactElement => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -42,7 +42,7 @@ const OnBoardingScreen = (): ReactElement => {
           duration: 2000,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     ).start();
   }, [floatAnim]);
 
@@ -51,15 +51,15 @@ const OnBoardingScreen = (): ReactElement => {
       if (viewableItems.length > 0) {
         setCurrentIndex(viewableItems[0]?.index || 0);
       }
-    }
+    },
   ).current;
 
   const backgroundImage =
     onboardingData[currentIndex]?.image || onboardingData[0]?.image;
-  
+
   const gradientColors = onboardingData[currentIndex]?.backgroundColor || [
-    'rgba(51, 153, 255, 0.9)',
-    'rgba(0, 128, 255, 0.95)',
+    "rgba(51, 153, 255, 0.9)",
+    "rgba(0, 128, 255, 0.95)",
   ];
 
   const handleSkip = () => {
@@ -77,9 +77,9 @@ const OnBoardingScreen = (): ReactElement => {
       transition={500}
     >
       <StatusBar barStyle="light-content" />
-      
+
       <LinearGradient
-        colors={[gradientColors[0], gradientColors[1], 'rgba(0,0,0,0.8)']}
+        colors={[gradientColors[0], gradientColors[1], "rgba(0,0,0,0.8)"]}
         style={{ flex: 1 }}
       >
         {/* Fixed Header - App Title */}
@@ -108,7 +108,7 @@ const OnBoardingScreen = (): ReactElement => {
         )}
 
         {/* Scrollable Content Area - Only this part transitions */}
-        <View className="flex-1">
+        <View className={`${currentIndex===3?'pt-28':''} flex-1 justify-center`}>
           <FlatList
             data={onboardingData}
             renderItem={({ item, index }) => (
@@ -130,14 +130,15 @@ const OnBoardingScreen = (): ReactElement => {
             viewabilityConfig={viewConfig}
             onScroll={Animated.event(
               [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-              { useNativeDriver: false }
+              { useNativeDriver: false },
             )}
+            contentContainerStyle={{ flexGrow: 0 }}
           />
         </View>
 
         {/* Fixed Footer - Pagination & Buttons */}
-        <View className="pb-12">
-          <View className="mb-6 items-center">
+        <View className="pb-8">
+          <View className="mb-4 items-center">
             <Pagination data={onboardingData} scrollX={scrollX} width={width} />
           </View>
 
