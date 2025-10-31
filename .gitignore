@@ -44,3 +44,5 @@ app-example
 
 # specs,architecture and configuration (keep private)
 /specs
+design.md
+tasks.md
