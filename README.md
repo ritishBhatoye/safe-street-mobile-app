@@ -1,50 +1,147 @@
-# Welcome to your Expo app 👋
+# Safe Street 🛣️
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A modern React Native mobile application built with Expo, featuring a beautiful UI powered by NativeWind (Tailwind CSS) and smooth animations with Reanimated.
 
-## Get started
+## 🚀 Features
 
-1. Install dependencies
+- **Cross-Platform**: Runs on iOS, Android, and Web
+- **Modern Stack**: Built with Expo SDK 54, React 19, and TypeScript
+- **Styled with NativeWind**: Tailwind CSS for React Native
+- **File-Based Routing**: Powered by Expo Router
+- **Dark Mode Support**: Automatic theme switching
+- **Smooth Animations**: React Native Reanimated for performant animations
+- **Tab Navigation**: Bottom tab navigation with haptic feedback
+- **New Architecture**: Enabled for improved performance
 
-   ```bash
-   npm install
-   ```
+## 📋 Prerequisites
 
-2. Start the app
+- Node.js (v18 or newer)
+- npm or yarn
+- iOS Simulator (Mac only) or Android Emulator
+- Expo Go app (for quick testing on physical devices)
 
-   ```bash
-   npx expo start
-   ```
+## 🛠️ Installation
 
-In the output, you'll find options to open the app in a
+1. Clone the repository:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+```bash
+git clone <your-repo-url>
+cd safe-street
+```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+2. Install dependencies:
 
-## Get a fresh project
+```bash
+npm install
+```
 
-When you're ready, run:
+3. Start the development server:
+
+```bash
+npm start
+```
+
+## 📱 Running the App
+
+### Development Build
+
+```bash
+# iOS
+npm run ios
+
+# Android
+npm run android
+
+# Web
+npm run web
+```
+
+### Using Expo Go
+
+1. Run `npm start`
+2. Scan the QR code with:
+   - iOS: Camera app
+   - Android: Expo Go app
+
+## 🏗️ Project Structure
+
+```
+safe-street/
+├── src/
+│   ├── app/              # File-based routing
+│   │   ├── (tabs)/       # Tab navigation screens
+│   │   ├── _layout.tsx   # Root layout
+│   │   └── modal.tsx     # Modal screen
+│   ├── components/       # Reusable components
+│   │   └── ui/          # UI components
+│   ├── constants/        # Theme and constants
+│   └── hooks/           # Custom React hooks
+├── assets/              # Images and static files
+├── app.json            # Expo configuration
+└── tailwind.config.js  # Tailwind CSS configuration
+```
+
+## 🎨 Tech Stack
+
+- **Framework**: [Expo](https://expo.dev) ~54.0
+- **Language**: [TypeScript](https://www.typescriptlang.org/) ~5.9
+- **UI Library**: [React Native](https://reactnative.dev/) 0.81
+- **Styling**: [NativeWind](https://www.nativewind.dev/) v4 (Tailwind CSS)
+- **Navigation**: [Expo Router](https://docs.expo.dev/router/introduction/) v6
+- **Animations**: [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/) v3
+- **Gestures**: [React Native Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler/) v2
+
+## 🧪 Development
+
+### Linting
+
+```bash
+npm run lint
+```
+
+### Reset Project
+
+Remove starter code and start fresh:
 
 ```bash
 npm run reset-project
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 📝 Configuration
 
-## Learn more
+### Tailwind CSS
 
-To learn more about developing your project with Expo, look at the following resources:
+Configure Tailwind in `tailwind.config.js`. Update the `content` array to include all files using NativeWind classes.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Theme
 
-## Join the community
+Customize colors and theme settings in `src/constants/theme.ts`.
 
-Join our community of developers creating universal apps.
+### App Configuration
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Modify `app.json` for:
+
+- App name and slug
+- Icons and splash screens
+- Platform-specific settings
+- Plugins and experiments
+
+## 🌐 Deep Linking
+
+The app supports deep linking with the custom scheme:
+
+```
+safestreet://
+```
+
+## 📄 License
+
+This project is private and proprietary.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow the existing code style and run linting before submitting PRs.
+
+## 📧 Contact
+
+For questions or support, please open an issue in the repository.
