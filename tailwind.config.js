@@ -206,9 +206,21 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        // DM Sans - Primary font family
+        'dm-sans': ['dm-sans', 'system-ui', 'sans-serif'],
+        'dm-sans-thin': ['dm-sans-thin', 'dm-sans', 'sans-serif'],
+        'dm-sans-extralight': ['dm-sans-extralight', 'dm-sans', 'sans-serif'],
+        'dm-sans-light': ['dm-sans-light', 'dm-sans', 'sans-serif'],
+        'dm-sans-medium': ['dm-sans-medium', 'dm-sans', 'sans-serif'],
+        'dm-sans-semibold': ['dm-sans-semibold', 'dm-sans', 'sans-serif'],
+        'dm-sans-bold': ['dm-sans-bold', 'dm-sans', 'sans-serif'],
+        'dm-sans-extrabold': ['dm-sans-extrabold', 'dm-sans', 'sans-serif'],
+        'dm-sans-black': ['dm-sans-black', 'dm-sans', 'sans-serif'],
+        
+        // Default fallbacks
+        sans: ['dm-sans', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
-        display: ['system-ui', 'sans-serif'],
+        display: ['dm-sans-bold', 'dm-sans', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         '2xs': ['0.625rem', { lineHeight: '0.75rem' }],
