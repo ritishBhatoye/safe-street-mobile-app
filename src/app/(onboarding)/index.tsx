@@ -1,7 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { ImageBackground } from 'expo-image';
 import type { ReactElement } from 'react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
@@ -23,9 +23,28 @@ const OnBoardingScreen = (): ReactElement => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef<FlatList>(null);
+  const floatAnim = useRef(new Animated.Value(0)).current;
   const width = screenWidth;
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
+
+  // Floating animation for app title
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: -10,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, [floatAnim]);
 
   const viewableItemsChanged = useRef(
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
@@ -63,13 +82,17 @@ const OnBoardingScreen = (): ReactElement => {
         colors={[gradientColors[0], gradientColors[1], 'rgba(0,0,0,0.8)']}
         style={{ flex: 1 }}
       >
-        {/* Fixed Header - Skip Button */}
-        <View className="absolute left-0 right-0 top-0 z-10 px-6 pt-14">
-          {currentIndex < onboardingData.length - 1 && (
-            <Pressable onPress={handleSkip} className="self-end px-4 py-2">
-              <Text className="text-base font-semibold text-white">Skip</Text>
-            </Pressable>
-          )}
+        {/* Fixed Header - App Title */}
+        <View className="absolute left-0 right-0 top-0 z-10 items-center pt-16">
+          <Animated.View
+            style={{
+              transform: [{ translateY: floatAnim }],
+            }}
+          >
+            <Text className="text-2xl font-bold tracking-wide text-white">
+              SafeStreet
+            </Text>
+          </Animated.View>
         </View>
 
         {/* Scrollable Content Area - Only this part transitions */}
@@ -100,10 +123,18 @@ const OnBoardingScreen = (): ReactElement => {
           />
         </View>
 
-        {/* Fixed Footer - Pagination & Buttons */}
+        {/* Fixed Footer - Pagination, Skip & Buttons */}
         <View className="pb-12">
-          <View className="items-center">
+          <View className="mb-6 flex-row items-center justify-between px-6">
+            {/* Pagination Dots - Left */}
             <Pagination data={onboardingData} scrollX={scrollX} width={width} />
+            
+            {/* Skip Button - Right */}
+            {currentIndex < onboardingData.length - 1 && (
+              <Pressable onPress={handleSkip} className="px-4 py-2">
+                <Text className="text-base font-semibold text-white">Skip</Text>
+              </Pressable>
+            )}
           </View>
           
           {currentIndex === onboardingData.length - 1 && (

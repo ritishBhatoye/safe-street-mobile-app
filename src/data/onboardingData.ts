@@ -26,6 +26,14 @@ export const onboardingData: OnBoardingType[] = [
   },
   {
     id: 3,
+    title: 'Track & Navigate',
+    subtitle: 'View incidents on interactive maps and find the safest routes to your destination.',
+    image: 'https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=800&q=80',
+    backgroundColor: ['rgba(249, 115, 22, 0.9)', 'rgba(234, 88, 12, 0.95)'], // Accent orange
+    icon: '🗺️',
+  },
+  {
+    id: 4,
     title: 'Community Powered',
     subtitle: 'Join a community of people working together to create safer neighborhoods for everyone.',
     image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80',
