@@ -91,7 +91,7 @@ export const OnboardingItem = ({
   });
 
   return (
-    <View style={{ width }} className="flex-1 items-center justify-center px-8">
+    <View style={{ width }} className="flex-1 items-center justify-center px-8 gap-6">
       {/* Icon Container with decorative circles */}
       <Animated.View
         style={{
@@ -253,7 +253,7 @@ export const OnboardingItem = ({
           transform: [{ translateY }],
           opacity,
         }}
-        className="w-full items-center"
+        className="w-full items-center gap-4 mt-5"
       >
         {/* Title with bubble background */}
         <View className="mb-4 rounded-3xl bg-white/10 px-6 py-3 backdrop-blur-sm">
