@@ -8,7 +8,7 @@ interface PaginationProps {
 }
 
 export const Pagination = ({ data, scrollX, width }: PaginationProps) => (
-  <View className="flex-row gap-2">
+  <View className="mb-6 flex-row gap-2">
     {data.map((_, index) => {
       const inputRange = [
         (index - 1) * width,

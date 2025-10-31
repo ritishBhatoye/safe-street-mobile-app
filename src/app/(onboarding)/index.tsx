@@ -95,6 +95,18 @@ const OnBoardingScreen = (): ReactElement => {
           </Animated.View>
         </View>
 
+        {/* Skip Button - Bottom Right */}
+        {currentIndex < onboardingData.length - 1 && (
+          <View className="absolute bottom-32 right-6 z-10">
+            <Pressable
+              onPress={handleSkip}
+              className="rounded-full border-2 border-white/50 bg-white/25 px-6 py-2.5 shadow-lg backdrop-blur-md active:bg-white/35"
+            >
+              <Text className="text-base font-bold text-white">Skip</Text>
+            </Pressable>
+          </View>
+        )}
+
         {/* Scrollable Content Area - Only this part transitions */}
         <View className="flex-1">
           <FlatList
@@ -123,23 +135,13 @@ const OnBoardingScreen = (): ReactElement => {
           />
         </View>
 
-        {/* Fixed Footer - Pagination, Skip & Buttons */}
+        {/* Fixed Footer - Pagination & Buttons */}
         <View className="pb-12">
-          <View className="mb-6 flex-row items-center justify-between px-6">
-            {/* Pagination Dots - Left */}
+          <View className="mb-6 items-center">
             <Pagination data={onboardingData} scrollX={scrollX} width={width} />
-            
-            {/* Skip Button - Right */}
-            {currentIndex < onboardingData.length - 1 && (
-              <Pressable onPress={handleSkip} className="px-4 py-2">
-                <Text className="text-base font-semibold text-white">Skip</Text>
-              </Pressable>
-            )}
           </View>
-          
-          {currentIndex === onboardingData.length - 1 && (
-            <AuthActionButtons />
-          )}
+
+          {currentIndex === onboardingData.length - 1 && <AuthActionButtons />}
         </View>
       </LinearGradient>
     </ImageBackground>
