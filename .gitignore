@@ -47,3 +47,7 @@ app-example
 /specs
 design.md
 tasks.md
+
+# Documentation files (keep private)
+*.md
+!README.md
