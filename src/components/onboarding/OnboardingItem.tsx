@@ -123,27 +123,128 @@ export const OnboardingItem = ({
         {/* Icon */}
         <Text style={{ fontSize: 100 }}>{item.icon}</Text>
 
-        {/* Floating Action Labels */}
-        <View className="absolute -left-16 -top-8">
-          <View className="rounded-full bg-white px-4 py-2 shadow-md">
-            <Text
-              style={{ color: item.accentColor }}
-              className="text-sm font-semibold"
+        {/* Floating Action Labels and Avatars - Alternating positions */}
+        {index % 2 === 0 ? (
+          <>
+            {/* Left-Top Label */}
+            <Animated.View
+              style={{
+                transform: [{ translateY: floatAnim2 }],
+              }}
+              className="absolute -left-24 -top-16"
             >
-              {item.actionLabels[0]}
-            </Text>
-          </View>
-        </View>
-        <View className="absolute -bottom-12 -right-12">
-          <View className="rounded-full bg-white px-4 py-2 shadow-md">
-            <Text
-              style={{ color: item.accentColor }}
-              className="text-sm font-semibold"
+              <View className="rounded-full bg-white px-4 py-2 shadow-lg">
+                <Text
+                  style={{ color: item.accentColor }}
+                  className="text-sm font-semibold"
+                >
+                  {item.actionLabels[0]}
+                </Text>
+              </View>
+            </Animated.View>
+
+            {/* Left Avatar */}
+            <Animated.View
+              style={{
+                transform: [{ translateY: floatAnim1 }],
+              }}
+              className="absolute -left-32 top-8"
             >
-              {item.actionLabels[1]}
-            </Text>
-          </View>
-        </View>
+              <View className="h-12 w-12 items-center justify-center rounded-full bg-purple-400 shadow-md">
+                <Text className="text-2xl">👤</Text>
+              </View>
+            </Animated.View>
+
+            {/* Right-Bottom Label */}
+            <Animated.View
+              style={{
+                transform: [{ translateY: floatAnim3 }],
+              }}
+              className="absolute -bottom-16 -right-20"
+            >
+              <View className="rounded-full bg-white px-4 py-2 shadow-lg">
+                <Text
+                  style={{ color: item.accentColor }}
+                  className="text-sm font-semibold"
+                >
+                  {item.actionLabels[1]}
+                </Text>
+              </View>
+            </Animated.View>
+
+            {/* Right Avatar */}
+            <Animated.View
+              style={{
+                transform: [{ translateY: floatAnim2 }],
+              }}
+              className="absolute -right-28 bottom-4"
+            >
+              <View className="h-10 w-10 items-center justify-center rounded-full bg-cyan-400 shadow-md">
+                <Text className="text-xl">✨</Text>
+              </View>
+            </Animated.View>
+          </>
+        ) : (
+          <>
+            {/* Top-Right Label */}
+            <Animated.View
+              style={{
+                transform: [{ translateY: floatAnim2 }],
+              }}
+              className="absolute -right-24 -top-16"
+            >
+              <View className="rounded-full bg-white px-4 py-2 shadow-lg">
+                <Text
+                  style={{ color: item.accentColor }}
+                  className="text-sm font-semibold"
+                >
+                  {item.actionLabels[0]}
+                </Text>
+              </View>
+            </Animated.View>
+
+            {/* Right Avatar */}
+            <Animated.View
+              style={{
+                transform: [{ translateY: floatAnim1 }],
+              }}
+              className="absolute -right-32 top-8"
+            >
+              <View className="h-12 w-12 items-center justify-center rounded-full bg-orange-400 shadow-md">
+                <Text className="text-2xl">🎯</Text>
+              </View>
+            </Animated.View>
+
+            {/* Bottom-Left Label */}
+            <Animated.View
+              style={{
+                transform: [{ translateY: floatAnim3 }],
+              }}
+              className="absolute -bottom-16 -left-20"
+            >
+              <View className="rounded-full bg-white px-4 py-2 shadow-lg">
+                <Text
+                  style={{ color: item.accentColor }}
+                  className="text-sm font-semibold"
+                >
+                  {item.actionLabels[1]}
+                </Text>
+              </View>
+            </Animated.View>
+
+            {/* Left Avatar */}
+            <Animated.View
+              style={{
+                transform: [{ translateY: floatAnim2 }],
+              }}
+              className="absolute -left-28 bottom-4"
+            >
+              <View className="h-10 w-10 items-center justify-center rounded-full bg-teal-400 shadow-md">
+                <Text className="text-xl">💡</Text>
+              </View>
+            </Animated.View>
+          </>
+        )}
       </Animated.View>
 
       {/* Text Content with floating effect */}
