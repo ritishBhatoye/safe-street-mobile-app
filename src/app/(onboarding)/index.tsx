@@ -89,7 +89,7 @@ const OnBoardingScreen = (): ReactElement => {
               transform: [{ translateY: floatAnim }],
             }}
           >
-            <Text className="text-2xl font-bold tracking-wide text-white">
+            <Text className="font-dm-sans-bold text-2xl tracking-wide text-white">
               SafeStreet
             </Text>
           </Animated.View>
@@ -102,13 +102,17 @@ const OnBoardingScreen = (): ReactElement => {
               onPress={handleSkip}
               className="rounded-full border-2 border-white/50 bg-white/25 px-6 py-2.5 shadow-lg backdrop-blur-md active:bg-white/35"
             >
-              <Text className="text-base font-bold text-white">Skip</Text>
+              <Text className="font-dm-sans-semibold text-base text-white">
+                Skip
+              </Text>
             </Pressable>
           </View>
         )}
 
         {/* Scrollable Content Area - Only this part transitions */}
-        <View className={`${currentIndex===3?'pt-28':''} flex-1 justify-center`}>
+        <View
+          className={`${currentIndex === 3 ? "pt-28" : ""} flex-1 justify-center`}
+        >
           <FlatList
             data={onboardingData}
             renderItem={({ item, index }) => (

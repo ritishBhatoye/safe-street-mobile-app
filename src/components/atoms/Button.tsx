@@ -60,7 +60,7 @@ export const Button = ({
         <ActivityIndicator color="white" />
       ) : (
         <Text
-          className={`font-semibold ${textSizeStyles[size]} ${textColorStyles[variant]}`}
+          className={`font-dm-sans-semibold ${textSizeStyles[size]} ${textColorStyles[variant]}`}
         >
           {title}
         </Text>

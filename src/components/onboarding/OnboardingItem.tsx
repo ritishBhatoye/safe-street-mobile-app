@@ -136,7 +136,7 @@ export const OnboardingItem = ({
               <View className="rounded-full bg-white px-4 py-2 shadow-lg">
                 <Text
                   style={{ color: item.accentColor }}
-                  className="text-sm font-semibold"
+                  className="font-dm-sans-semibold text-sm"
                 >
                   {item.actionLabels[0]}
                 </Text>
@@ -165,7 +165,7 @@ export const OnboardingItem = ({
               <View className="rounded-full bg-white px-4 py-2 shadow-lg">
                 <Text
                   style={{ color: item.accentColor }}
-                  className="text-sm font-semibold"
+                  className="font-dm-sans-semibold text-sm"
                 >
                   {item.actionLabels[1]}
                 </Text>
@@ -196,7 +196,7 @@ export const OnboardingItem = ({
               <View className="rounded-full bg-white px-4 py-2 shadow-lg">
                 <Text
                   style={{ color: item.accentColor }}
-                  className="text-sm font-semibold"
+                  className="font-dm-sans-semibold text-sm"
                 >
                   {item.actionLabels[0]}
                 </Text>
@@ -225,7 +225,7 @@ export const OnboardingItem = ({
               <View className="rounded-full bg-white px-4 py-2 shadow-lg">
                 <Text
                   style={{ color: item.accentColor }}
-                  className="text-sm font-semibold"
+                  className="font-dm-sans-semibold text-sm"
                 >
                   {item.actionLabels[1]}
                 </Text>
@@ -257,13 +257,13 @@ export const OnboardingItem = ({
       >
         {/* Title with bubble background */}
         <View className="mb-4 rounded-3xl bg-white/10 px-6 py-3 backdrop-blur-sm">
-          <Text className="text-center text-3xl font-bold text-white">
+          <Text className="font-dm-sans-bold text-center text-3xl text-white">
             {item.title}
           </Text>
         </View>
 
         {/* Subtitle */}
-        <Text className="text-center text-lg leading-7 text-white/90">
+        <Text className="font-dm-sans text-center text-lg leading-7 text-white/90">
           {item.subtitle}
         </Text>
       </Animated.View>
