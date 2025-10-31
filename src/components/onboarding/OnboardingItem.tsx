@@ -122,6 +122,28 @@ export const OnboardingItem = ({
 
         {/* Icon */}
         <Text style={{ fontSize: 100 }}>{item.icon}</Text>
+
+        {/* Floating Action Labels */}
+        <View className="absolute -left-16 -top-8">
+          <View className="rounded-full bg-white px-4 py-2 shadow-md">
+            <Text
+              style={{ color: item.accentColor }}
+              className="text-sm font-semibold"
+            >
+              {item.actionLabels[0]}
+            </Text>
+          </View>
+        </View>
+        <View className="absolute -bottom-12 -right-12">
+          <View className="rounded-full bg-white px-4 py-2 shadow-md">
+            <Text
+              style={{ color: item.accentColor }}
+              className="text-sm font-semibold"
+            >
+              {item.actionLabels[1]}
+            </Text>
+          </View>
+        </View>
       </Animated.View>
 
       {/* Text Content with floating effect */}
