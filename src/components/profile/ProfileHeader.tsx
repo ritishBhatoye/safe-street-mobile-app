@@ -60,7 +60,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         colors={["#3B82F6", "#8B5CF6"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={{paddingTop:16,paddingBottom:30,paddingHorizontal:10}}
+        style={{ paddingTop: 16, paddingBottom: 30, paddingHorizontal: 10 }}
         className="pt-16 pb-24 px-6"
       >
         <Animated.View style={headerAnimatedStyle} className="items-center">

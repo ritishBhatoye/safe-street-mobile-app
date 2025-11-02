@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Image, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, {
@@ -25,11 +26,8 @@ export const AnimatedProfileHeader: React.FC<AnimatedProfileHeaderProps> = ({
   const headerStyle = useAnimatedStyle(() => {
     const opacity = interpolate(scrollY.value, [100, 150], [0, 1], Extrapolate.CLAMP);
 
-    const height = interpolate(scrollY.value, [100, 150], [0, 60], Extrapolate.CLAMP);
-
     return {
       opacity,
-      height,
     };
   });
 
@@ -42,42 +40,43 @@ export const AnimatedProfileHeader: React.FC<AnimatedProfileHeaderProps> = ({
   });
 
   return (
-    <Animated.View style={headerStyle} className="overflow-hidden">
+    <Animated.View style={headerStyle}>
       <LinearGradient
         colors={["#3B82F6", "#8B5CF6"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
-        className="flex-1"
       >
-        <Animated.View
-          style={contentStyle}
-          className="flex-1 flex-row items-center px-4 justify-between"
-        >
-          <View className="flex-row items-center flex-1">
-            <Pressable onPress={onAvatarPress} className="active:opacity-70">
-              <View className="w-10 h-10 rounded-full bg-white p-0.5 shadow-lg mr-3">
-                {avatarUrl ? (
-                  <Image
-                    source={{ uri: avatarUrl }}
-                    className="w-full h-full rounded-full"
-                    resizeMode="cover"
-                  />
-                ) : (
-                  <View className="w-full h-full rounded-full bg-gradient-to-br from-blue-100 to-purple-100 items-center justify-center">
-                    <Ionicons name="person" size={20} color="#8B5CF6" />
-                  </View>
-                )}
-              </View>
-            </Pressable>
-            <Text
-              className="text-white font-dm-sans-bold text-lg flex-1"
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              {name}
-            </Text>
-          </View>
-        </Animated.View>
+        <SafeAreaView edges={["top"]}>
+          <Animated.View
+            style={contentStyle}
+            className="h-14 flex-row items-center px-4 justify-between"
+          >
+            <View className="flex-row items-center flex-1">
+              <Pressable onPress={onAvatarPress} className="active:opacity-70">
+                <View className="w-10 h-10 rounded-full bg-white p-0.5 shadow-lg mr-3">
+                  {avatarUrl ? (
+                    <Image
+                      source={{ uri: avatarUrl }}
+                      className="w-full h-full rounded-full"
+                      resizeMode="cover"
+                    />
+                  ) : (
+                    <View className="w-full h-full rounded-full bg-gradient-to-br from-blue-100 to-purple-100 items-center justify-center">
+                      <Ionicons name="person" size={20} color="#8B5CF6" />
+                    </View>
+                  )}
+                </View>
+              </Pressable>
+              <Text
+                className="text-white font-dm-sans-bold text-lg flex-1"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {name}
+              </Text>
+            </View>
+          </Animated.View>
+        </SafeAreaView>
       </LinearGradient>
     </Animated.View>
   );

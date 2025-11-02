@@ -6,6 +6,7 @@ import {
   Pressable,
   Alert,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
@@ -84,7 +85,7 @@ export default function ProfileScreen() {
     return (
       <>
         <Stack.Screen options={{ headerShown: false }} />
-        <View className="flex-1 bg-gray-50 dark:bg-gray-900">
+        <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={["top"]}>
           <Animated.ScrollView className="flex-1">
           {/* Shimmer Header */}
           <View className="bg-white">
@@ -146,7 +147,7 @@ export default function ProfileScreen() {
             </View>
           </View>
         </Animated.ScrollView>
-        </View>
+        </SafeAreaView>
       </>
     );
   }
@@ -155,7 +156,8 @@ export default function ProfileScreen() {
     return (
       <>
         <Stack.Screen options={{ headerShown: false }} />
-        <View className="flex-1 bg-gray-50 dark:bg-gray-900 items-center justify-center px-6">
+        <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={["top"]}>
+        <View className="flex-1 items-center justify-center px-6">
           <Ionicons name="alert-circle-outline" size={64} color="#EF4444" />
           <Text className="text-gray-900 dark:text-white font-dm-sans-bold text-xl mt-4 text-center">
             Unable to Load Profile
@@ -165,6 +167,7 @@ export default function ProfileScreen() {
           </Text>
           <Button title="Retry" onPress={() => refetch()} variant="primary" />
         </View>
+        </SafeAreaView>
       </>
     );
   }
