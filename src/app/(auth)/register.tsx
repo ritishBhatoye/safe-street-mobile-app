@@ -15,6 +15,7 @@ import Input from '@/components/atoms/Input';
 import { Button } from '@/components/atoms/Button';
 import { Divider } from '@/components/atoms/Divider';
 import { authService } from '@/services/auth.service';
+import { showToast } from '@/utils/toast';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RegisterScreen() {
