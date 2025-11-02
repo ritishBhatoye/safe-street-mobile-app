@@ -1,0 +1,221 @@
+🚀 SUPABASE SETUP GUIDE FOR SAFESTREET
+
+═══════════════════════════════════════════════════════════════
+
+📋 STEP 1: GET YOUR SUPABASE CREDENTIALS
+═══════════════════════════════════════════════════════════════
+
+1. Go to https://supabase.com
+2. Sign up / Log in
+3. Create a new project:
+   - Project name: "SafeStreet" (or your choice)
+   - Database password: (save this securely!)
+   - Region: Choose closest to your users
+   
+4. Wait for project to be created (~2 minutes)
+
+5. Go to Project Settings > API
+   - Copy "Project URL" 
+   - Copy "anon public" key
+
+═══════════════════════════════════════════════════════════════
+
+📝 STEP 2: ADD KEYS TO .env FILE
+═══════════════════════════════════════════════════════════════
+
+Open .env file and replace:
+
+EXPO_PUBLIC_SUPABASE_URL=your-project-url.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+
+With your actual values:
+
+EXPO_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxxx.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+⚠️  IMPORTANT: Never commit .env to git! (already in .gitignore)
+
+═══════════════════════════════════════════════════════════════
+
+🗄️  STEP 3: CREATE DATABASE TABLES
+═══════════════════════════════════════════════════════════════
+
+Go to Supabase Dashboard > SQL Editor > New Query
+
+Run this SQL:
+
+-- Enable PostGIS for geospatial queries
+CREATE EXTENSION IF NOT EXISTS postgis;
+
+-- Users table (extends Supabase auth.users)
+CREATE TABLE public.profiles (
+  id UUID REFERENCES auth.users PRIMARY KEY,
+  email TEXT UNIQUE,
+  name TEXT,
+  avatar_url TEXT,
+  phone TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Incidents table
+CREATE TABLE public.incidents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  type TEXT NOT NULL,
+  severity TEXT NOT NULL CHECK (severity IN ('safe', 'caution', 'danger', 'critical')),
+  title TEXT NOT NULL,
+  description TEXT,
+  location GEOGRAPHY(POINT, 4326) NOT NULL,
+  address TEXT,
+  city TEXT,
+  state TEXT,
+  country TEXT,
+  photos TEXT[],
+  reported_by UUID REFERENCES public.profiles(id),
+  status TEXT DEFAULT 'active' CHECK (status IN ('active', 'resolved', 'flagged')),
+  confirmed_count INTEGER DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create spatial index for fast location queries
+CREATE INDEX incidents_location_idx ON public.incidents USING GIST (location);
+
+-- Reports table
+CREATE TABLE public.reports (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  incident_id UUID REFERENCES public.incidents(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES public.profiles(id),
+  type TEXT NOT NULL,
+  description TEXT,
+  photos TEXT[],
+  location GEOGRAPHY(POINT, 4326),
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Emergency Contacts table
+CREATE TABLE public.emergency_contacts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  relationship TEXT,
+  priority INTEGER DEFAULT 0,
+  is_default BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable Row Level Security
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.incidents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.reports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.emergency_contacts ENABLE ROW LEVEL SECURITY;
+
+-- Profiles policies
+CREATE POLICY "Public profiles are viewable by everyone"
+  ON public.profiles FOR SELECT
+  USING (true);
+
+CREATE POLICY "Users can update own profile"
+  ON public.profiles FOR UPDATE
+  USING (auth.uid() = id);
+
+-- Incidents policies
+CREATE POLICY "Incidents are viewable by everyone"
+  ON public.incidents FOR SELECT
+  USING (true);
+
+CREATE POLICY "Authenticated users can create incidents"
+  ON public.incidents FOR INSERT
+  WITH CHECK (auth.role() = 'authenticated');
+
+CREATE POLICY "Users can update own incidents"
+  ON public.incidents FOR UPDATE
+  USING (auth.uid() = reported_by);
+
+-- Reports policies
+CREATE POLICY "Users can view own reports"
+  ON public.reports FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Authenticated users can create reports"
+  ON public.reports FOR INSERT
+  WITH CHECK (auth.role() = 'authenticated');
+
+-- Emergency contacts policies
+CREATE POLICY "Users can view own emergency contacts"
+  ON public.emergency_contacts FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can manage own emergency contacts"
+  ON public.emergency_contacts FOR ALL
+  USING (auth.uid() = user_id);
+
+═══════════════════════════════════════════════════════════════
+
+🔧 STEP 4: ENABLE REALTIME (OPTIONAL)
+═══════════════════════════════════════════════════════════════
+
+Go to Database > Replication
+
+Enable realtime for tables:
+☑️ incidents
+☑️ reports
+
+This allows live updates when new incidents are reported!
+
+═══════════════════════════════════════════════════════════════
+
+✅ STEP 5: TEST CONNECTION
+═══════════════════════════════════════════════════════════════
+
+Restart your Expo app:
+npm start
+
+The Supabase client is ready at: src/lib/supabase.ts
+
+Test it:
+import { supabase } from '@/lib/supabase';
+
+// Test query
+const { data, error } = await supabase
+  .from('incidents')
+  .select('*')
+  .limit(10);
+
+═══════════════════════════════════════════════════════════════
+
+📚 USEFUL QUERIES
+═══════════════════════════════════════════════════════════════
+
+// Get incidents within 5km radius
+const { data } = await supabase.rpc('nearby_incidents', {
+  lat: 37.7749,
+  long: -122.4194,
+  radius_km: 5
+});
+
+// Create this function in SQL Editor:
+CREATE OR REPLACE FUNCTION nearby_incidents(lat float, long float, radius_km float)
+RETURNS SETOF incidents AS $$
+  SELECT *
+  FROM incidents
+  WHERE ST_DWithin(
+    location,
+    ST_SetSRID(ST_MakePoint(long, lat), 4326)::geography,
+    radius_km * 1000
+  )
+  ORDER BY created_at DESC;
+$$ LANGUAGE sql;
+
+═══════════════════════════════════════════════════════════════
+
+🎉 YOU'RE ALL SET!
+
+Next steps:
+1. Add your Supabase keys to .env
+2. Run the SQL to create tables
+3. Start building features!
+
+Need help? Check: https://supabase.com/docs
