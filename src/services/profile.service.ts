@@ -89,17 +89,20 @@ export const profileApi = createApi({
     uploadAvatar: builder.mutation<string, { userId: string; imageUri: string }>({
       queryFn: async ({ userId, imageUri }) => {
         try {
+          // For React Native, read the file as ArrayBuffer
           const response = await fetch(imageUri);
-          const blob = await response.blob();
-
-          const fileExt = imageUri.split('.').pop() || 'jpg';
+          const arrayBuffer = await response.arrayBuffer();
+          
+          const fileExt = imageUri.split('.').pop()?.toLowerCase() || 'jpg';
           const fileName = `${userId}/avatar.${fileExt}`;
+          const contentType = `image/${fileExt === 'jpg' ? 'jpeg' : fileExt}`;
 
           const { error: uploadError } = await supabase.storage
             .from('avatars')
-            .upload(fileName, blob, {
+            .upload(fileName, arrayBuffer, {
               cacheControl: '3600',
               upsert: true,
+              contentType,
             });
 
           if (uploadError) {
