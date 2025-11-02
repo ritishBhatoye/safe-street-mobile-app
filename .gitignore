@@ -57,3 +57,6 @@ tasks.md
 .env.local
 .env.*.local
 !.env.example
+
+#Database
+/CREATE_TABLES.sql

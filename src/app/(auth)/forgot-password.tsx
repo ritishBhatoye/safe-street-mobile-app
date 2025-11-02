@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Input from '@/components/atoms/Input';
 import { Button } from '@/components/atoms/Button';
 import { authService } from '@/services/auth.service';
+import { showToast } from '@/utils/toast';
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
@@ -22,7 +23,7 @@ export default function ForgotPasswordScreen() {
 
   const handleResetPassword = async () => {
     if (!email) {
-      alert('Please enter your email address');
+      showToast.warning('Email Required', 'Please enter your email address');
       return;
     }
 
@@ -32,15 +33,16 @@ export default function ForgotPasswordScreen() {
       const result = await authService.resetPassword(email);
 
       if (result.error) {
-        alert(result.error.message || 'Failed to send reset email');
+        showToast.error('Reset Failed', result.error.message || 'Failed to send reset email');
         setLoading(false);
         return;
       }
 
       setLoading(false);
       setEmailSent(true);
+      showToast.success('Email Sent!', 'Check your inbox for reset instructions');
     } catch (error) {
-      alert('An unexpected error occurred');
+      showToast.error('Error', 'An unexpected error occurred');
       setLoading(false);
     }
   };

@@ -28,22 +28,22 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
-      alert('Please fill in all fields');
+      showToast.warning('Missing Fields', 'Please fill in all fields');
       return;
     }
 
     if (password !== confirmPassword) {
-      alert('Passwords do not match');
+      showToast.error('Password Mismatch', 'Passwords do not match');
       return;
     }
 
     if (password.length < 6) {
-      alert('Password must be at least 6 characters');
+      showToast.warning('Weak Password', 'Password must be at least 6 characters');
       return;
     }
 
     if (!agreeToTerms) {
-      alert('Please agree to Terms & Privacy Policy');
+      showToast.warning('Terms Required', 'Please agree to Terms & Privacy Policy');
       return;
     }
 
@@ -53,7 +53,7 @@ export default function RegisterScreen() {
       const { user, error } = await authService.signUp({ email, password, name });
 
       if (error) {
-        alert(error.message || 'Failed to create account');
+        showToast.error('Registration Failed', error.message || 'Failed to create account');
         setLoading(false);
         return;
       }
@@ -61,14 +61,15 @@ export default function RegisterScreen() {
       if (user) {
         // Check if email confirmation is required
         if (user.email_confirmed_at) {
-          router.replace('/home' as any);
+          showToast.success('Welcome!', 'Account created successfully');
+          router.replace('/(tabs)/index' as any);
         } else {
-          alert('Please check your email to confirm your account');
+          showToast.info('Verify Email', 'Please check your email to confirm your account');
           router.replace('./sign-in');
         }
       }
     } catch (error) {
-      alert('An unexpected error occurred');
+      showToast.error('Error', 'An unexpected error occurred');
       setLoading(false);
     }
   };
@@ -78,16 +79,16 @@ export default function RegisterScreen() {
       if (provider === 'google') {
         const result = await authService.signInWithGoogle();
         if (result.error) {
-          alert(result.error.message || 'Failed to sign up with Google');
+          showToast.error('Sign Up Failed', result.error.message || 'Failed to sign up with Google');
         }
       } else if (provider === 'apple') {
         const result = await authService.signInWithApple();
         if (result.error) {
-          alert(result.error.message || 'Failed to sign up with Apple');
+          showToast.error('Sign Up Failed', result.error.message || 'Failed to sign up with Apple');
         }
       }
     } catch (error) {
-      alert('An unexpected error occurred');
+      showToast.error('Error', 'An unexpected error occurred');
     }
   };
 
