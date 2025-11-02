@@ -45,19 +45,38 @@ export const useAvatarUpload = () => {
     setIsProcessing(true);
 
     try {
-      // For now, just use the local URI (temporary solution)
-      // TODO: Set up proper storage when Supabase storage is configured
-      
+      // Validate image size
+      const isValidSize = await validateImageSize(imageUri);
+      if (!isValidSize) {
+        showToast.error('File Too Large', 'Please select an image smaller than 2MB');
+        setIsProcessing(false);
+        return;
+      }
+
+      // Compress image
+      const compressedUri = await compressImage(imageUri);
+
+      // TEMPORARY: Store locally until Supabase Storage RLS is fixed
       // Update profile with local image URI
       await updateProfile({
         userId: user.id,
-        data: { avatar_url: imageUri },
+        data: { avatar_url: compressedUri },
       }).unwrap();
 
-      showToast.success('Success', 'Profile picture updated (local only)');
+      showToast.success('Success', 'Profile picture updated');
+      
+      // TODO: Uncomment when Supabase Storage is properly configured
+      // const avatarUrl = await uploadAvatar({
+      //   userId: user.id,
+      //   imageUri: compressedUri,
+      // }).unwrap();
+      // await updateProfile({
+      //   userId: user.id,
+      //   data: { avatar_url: avatarUrl },
+      // }).unwrap();
     } catch (error) {
-      console.error('Error updating avatar:', error);
-      showToast.error('Update Failed', 'Failed to update profile picture');
+      console.error('Error uploading avatar:', error);
+      showToast.error('Upload Failed', 'Failed to upload profile picture');
     } finally {
       setIsProcessing(false);
     }

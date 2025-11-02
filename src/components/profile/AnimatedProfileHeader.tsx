@@ -40,12 +40,13 @@ export const AnimatedProfileHeader: React.FC<AnimatedProfileHeaderProps> = ({
   });
 
   return (
-    <Animated.View style={headerStyle}>
+   
       <LinearGradient
         colors={["#3B82F6", "#8B5CF6"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
       >
+         <Animated.View style={headerStyle}>
         <SafeAreaView edges={["top"]}>
           <Animated.View
             style={contentStyle}
@@ -77,7 +78,8 @@ export const AnimatedProfileHeader: React.FC<AnimatedProfileHeaderProps> = ({
             </View>
           </Animated.View>
         </SafeAreaView>
-      </LinearGradient>
     </Animated.View>
+
+      </LinearGradient>
   );
 };
