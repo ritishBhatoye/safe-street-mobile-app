@@ -6,6 +6,8 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
+import { Provider } from "react-redux";
+import { store } from "@/store";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { toastConfig } from "@/components/ui/Toast";
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
@@ -73,8 +75,10 @@ export default function RootLayout() {
   }
 
   return (
-    <AuthProvider>
-      <RootLayoutNav />
-    </AuthProvider>
+    <Provider store={store}>
+      <AuthProvider>
+        <RootLayoutNav />
+      </AuthProvider>
+    </Provider>
   );
 }

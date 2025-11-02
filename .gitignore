@@ -58,5 +58,6 @@ tasks.md
 .env.*.local
 !.env.example
 
-#Database
-/CREATE_TABLES.sql
+# Database & SQL files (keep private)
+*.sql
+!example.sql
