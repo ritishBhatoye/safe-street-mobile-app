@@ -8,18 +8,38 @@ import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { toastConfig } from "@/components/ui/Toast";
+import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 import "../global.css";
 
 // Keep splash screen visible while fonts load
 SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
-  anchor: "(tabs)",
+  initialRouteName: "index",
 };
 
-export default function RootLayout() {
+function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  
+  // Protect routes based on auth state
+  useProtectedRoute();
 
+  return (
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(onboarding)" />
+        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(screens)" />
+      </Stack>
+      <StatusBar style="auto" />
+      <Toast config={toastConfig} />
+    </ThemeProvider>
+  );
+}
+
+export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     // DM Sans
     'dm-sans-black': require('../../assets/fonts/DM_Sans/static/DMSans-Black.ttf'),
@@ -54,17 +74,7 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="(screens)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal", title: "Modal" }} />
-        </Stack>
-        <StatusBar style="auto" />
-        <Toast config={toastConfig} />
-      </ThemeProvider>
+      <RootLayoutNav />
     </AuthProvider>
   );
 }
