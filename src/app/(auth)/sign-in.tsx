@@ -1,6 +1,6 @@
-import { router } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState } from 'react';
+import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,23 +9,23 @@ import {
   Platform,
   ScrollView,
   StatusBar,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import Input from '@/components/atoms/Input';
-import { Button } from '@/components/atoms/Button';
-import { Divider } from '@/components/atoms/Divider';
-import { authService } from '@/services/auth.service';
-import { showToast } from '@/utils/toast';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import Input from "@/components/atoms/Input";
+import { Button } from "@/components/atoms/Button";
+import { Divider } from "@/components/atoms/Divider";
+import { authService } from "@/services/auth.service";
+import { showToast } from "@/utils/toast";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SignInScreen() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSignIn = async () => {
     if (!email || !password) {
-      showToast.warning('Missing Fields', 'Please fill in all fields');
+      showToast.warning("Missing Fields", "Please fill in all fields");
       return;
     }
 
@@ -35,37 +35,40 @@ export default function SignInScreen() {
       const { user, error } = await authService.signIn({ email, password });
 
       if (error) {
-        showToast.error('Sign In Failed', error.message || 'Failed to sign in');
+        showToast.error("Sign In Failed", error.message || "Failed to sign in");
         setLoading(false);
         return;
       }
 
       if (user) {
-        showToast.success('Welcome Back!', 'Successfully signed in');
+        showToast.success("Welcome Back!", "Successfully signed in");
         // Navigate to home
-       router.replace('/(tabs)/index' as any);
+        router.replace("/(tabs)/" as any);
       }
     } catch (error) {
-      showToast.error('Error', 'An unexpected error occurred');
+      showToast.error("Error", "An unexpected error occurred");
       setLoading(false);
     }
   };
 
-  const handleSocialSignIn = async (provider: 'google' | 'apple') => {
+  const handleSocialSignIn = async (provider: "google" | "apple") => {
     try {
-      if (provider === 'google') {
+      if (provider === "google") {
         const result = await authService.signInWithGoogle();
         if (result.error) {
-          showToast.error('Sign In Failed', result.error.message || 'Failed to sign in with Google');
+          showToast.error(
+            "Sign In Failed",
+            result.error.message || "Failed to sign in with Google",
+          );
         }
-      } else if (provider === 'apple') {
+      } else if (provider === "apple") {
         const result = await authService.signInWithApple();
         if (result.error) {
-          showToast.error('Sign In Failed', result.error.message || 'Failed to sign in with Apple');
+          showToast.error("Sign In Failed", result.error.message || "Failed to sign in with Apple");
         }
       }
     } catch (error) {
-      showToast.error('Error', 'An unexpected error occurred');
+      showToast.error("Error", "An unexpected error occurred");
     }
   };
 
@@ -75,7 +78,7 @@ export default function SignInScreen() {
 
       {/* Header with Gradient */}
       <LinearGradient
-        colors={['#3399FF', '#0080FF']}
+        colors={["#3399FF", "#0080FF"]}
         className="pb-8 pt-16"
         style={{ borderBottomLeftRadius: 32, borderBottomRightRadius: 32 }}
       >
@@ -90,9 +93,7 @@ export default function SignInScreen() {
 
           {/* Title */}
           <View className="mb-4">
-            <Text className="font-dm-sans-bold mb-2 text-4xl text-white">
-              Welcome Back
-            </Text>
+            <Text className="font-dm-sans-bold mb-2 text-4xl text-white">Welcome Back</Text>
             <Text className="font-dm-sans text-lg text-white/80">
               Sign in to stay safe and connected
             </Text>
@@ -108,7 +109,7 @@ export default function SignInScreen() {
       </LinearGradient>
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
       >
         <ScrollView
@@ -144,7 +145,7 @@ export default function SignInScreen() {
 
             {/* Forgot Password */}
             <Pressable
-              onPress={() => router.push('/(auth)/forgot-password')}
+              onPress={() => router.push("/(auth)/forgot-password")}
               className="mb-6 self-end"
             >
               <Text className="font-dm-sans-semibold text-sm text-primary-500">
@@ -154,7 +155,7 @@ export default function SignInScreen() {
 
             {/* Sign In Button */}
             <Button
-              title={loading ? 'Signing In...' : 'Sign In'}
+              title={loading ? "Signing In..." : "Sign In"}
               onPress={handleSignIn}
               loading={loading}
               disabled={!email || !password}
@@ -173,7 +174,7 @@ export default function SignInScreen() {
             {/* Social Sign In */}
             <View className="mb-8 flex-row gap-4">
               <Pressable
-                onPress={() => handleSocialSignIn('google')}
+                onPress={() => handleSocialSignIn("google")}
                 className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl border-2 border-gray-200 bg-white py-4 dark:border-gray-700 dark:bg-gray-800"
               >
                 <Ionicons name="logo-google" size={20} color="#EA4335" />
@@ -183,7 +184,7 @@ export default function SignInScreen() {
               </Pressable>
 
               <Pressable
-                onPress={() => handleSocialSignIn('apple')}
+                onPress={() => handleSocialSignIn("apple")}
                 className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl border-2 border-gray-200 bg-white py-4 dark:border-gray-700 dark:bg-gray-800"
               >
                 <Ionicons name="logo-apple" size={20} color="#000000" />
@@ -198,7 +199,7 @@ export default function SignInScreen() {
               <Text className="font-dm-sans text-gray-600 dark:text-gray-400">
                 Don&apos;t have an account?
               </Text>
-              <Pressable onPress={() => router.push('./register')}>
+              <Pressable onPress={() => router.push("./register")}>
                 <Text className="font-dm-sans-bold text-primary-500">Sign Up</Text>
               </Pressable>
             </View>
