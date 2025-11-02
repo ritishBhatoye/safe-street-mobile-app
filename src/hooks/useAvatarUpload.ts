@@ -16,7 +16,7 @@ export const useAvatarUpload = () => {
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
       
       if (!permissionResult.granted) {
-        showToast('error', 'Permission Denied', 'Please allow access to your photos');
+        showToast.error('Permission Denied', 'Please allow access to your photos');
         return;
       }
 
@@ -32,13 +32,13 @@ export const useAvatarUpload = () => {
       }
     } catch (error) {
       console.error('Error picking image:', error);
-      showToast('error', 'Error', 'Failed to select image');
+      showToast.error('Error', 'Failed to select image');
     }
   };
 
   const handleImageSelected = async (imageUri: string) => {
     if (!user?.id) {
-      showToast('error', 'Error', 'User not authenticated');
+      showToast.error('Error', 'User not authenticated');
       return;
     }
 
@@ -48,7 +48,7 @@ export const useAvatarUpload = () => {
       // Validate image size
       const isValidSize = await validateImageSize(imageUri);
       if (!isValidSize) {
-        showToast('error', 'File Too Large', 'Please select an image smaller than 2MB');
+        showToast.error('File Too Large', 'Please select an image smaller than 2MB');
         setIsProcessing(false);
         return;
       }
@@ -68,10 +68,10 @@ export const useAvatarUpload = () => {
         data: { avatar_url: avatarUrl },
       }).unwrap();
 
-      showToast('success', 'Success', 'Profile picture updated');
+      showToast.success('Success', 'Profile picture updated');
     } catch (error) {
       console.error('Error uploading avatar:', error);
-      showToast('error', 'Upload Failed', 'Failed to upload profile picture');
+      showToast.error('Upload Failed', 'Failed to upload profile picture');
     } finally {
       setIsProcessing(false);
     }

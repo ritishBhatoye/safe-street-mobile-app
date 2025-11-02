@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from '@/components/atoms/Button';
-import type { UserProfile, ProfileUpdateData } from '@/types/profile';
+import type { UserProfile, ProfileUpdateData } from '@/types';
 
 interface EditProfileModalProps {
   visible: boolean;

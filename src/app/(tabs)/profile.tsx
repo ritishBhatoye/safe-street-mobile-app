@@ -20,11 +20,11 @@ import { EditProfileModal } from '@/components/profile/EditProfileModal';
 import { Card } from '@/components/atoms/Card';
 import { Button } from '@/components/atoms/Button';
 import { showToast } from '@/utils/toast';
-import type { ProfileUpdateData } from '@/types/profile';
+import type { ProfileUpdateData } from '@/types';
 
 export default function ProfileScreen() {
   const { user, signOut } = useAuth();
-  const { profile, isLoading, isError, refetch } = useProfile();
+  const { profile, isLoading, isError, refetch, updateProfile } = useProfile();
   const { stats, refetch: refetchStats } = useProfileStats();
   const { pickImage, isUploading } = useAvatarUpload();
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -42,11 +42,10 @@ export default function ProfileScreen() {
 
   const handleEditProfile = async (data: ProfileUpdateData) => {
     try {
-      const { updateProfile } = useProfile();
       await updateProfile(data);
-      showToast('success', 'Success', 'Profile updated successfully');
+      showToast.success('Success', 'Profile updated successfully');
     } catch (error) {
-      showToast('error', 'Error', 'Failed to update profile. Please try again.');
+      showToast.error('Error', 'Failed to update profile. Please try again.');
       throw error;
     }
   };
@@ -66,9 +65,9 @@ export default function ProfileScreen() {
           onPress: async () => {
             try {
               await signOut();
-              showToast('success', 'Signed Out', 'You have been signed out successfully');
+              showToast.success('Signed Out', 'You have been signed out successfully');
             } catch (error) {
-              showToast('error', 'Error', 'Unable to sign out. Please try again.');
+              showToast.error('Error', 'Unable to sign out. Please try again.');
               console.error('Sign out error:', error);
             }
           },
@@ -99,7 +98,7 @@ export default function ProfileScreen() {
             Unable to Load Profile
           </Text>
           <Text className="text-gray-600 dark:text-gray-400 font-dm-sans text-center mt-2 mb-6">
-            We couldn't load your profile data. Please try again.
+            We could not load your profile data. Please try again.
           </Text>
           <Button
             title="Retry"
