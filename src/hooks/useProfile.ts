@@ -5,7 +5,7 @@ import type { ProfileUpdateData } from '@/types';
 export const useProfile = () => {
   const { user } = useAuth();
   
-  console.log('useProfile - user:', user?.id);
+  // console.log('useProfile - user:', user?.id);
   
   const {
     data: profile,
@@ -17,7 +17,7 @@ export const useProfile = () => {
     skip: !user?.id,
   });
   
-  console.log('useProfile - profile:', profile, 'isLoading:', isLoading, 'isError:', isError, 'error:', error);
+  // console.log('useProfile - profile:', profile, 'isLoading:', isLoading, 'isError:', isError, 'error:', error);
 
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
 
