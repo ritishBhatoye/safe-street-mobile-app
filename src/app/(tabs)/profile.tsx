@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import {
   View,
-  ScrollView,
   RefreshControl,
-  ActivityIndicator,
   Text,
   Pressable,
   Alert,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 import { useProfileStats } from "@/hooks/useProfileStats";
 import { useAvatarUpload } from "@/hooks/useAvatarUpload";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { AnimatedProfileHeader } from "@/components/profile/AnimatedProfileHeader";
 import { ProfileStats } from "@/components/profile/ProfileStats";
 import { EditProfileModal } from "@/components/profile/EditProfileModal";
 import { Card } from "@/components/atoms/Card";
@@ -29,6 +29,14 @@ export default function ProfileScreen() {
   const { pickImage, isUploading } = useAvatarUpload();
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  
+  const scrollY = useSharedValue(0);
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollY.value = event.contentOffset.y;
+    },
+  });
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -74,8 +82,10 @@ export default function ProfileScreen() {
 
   if (isLoading) {
     return (
-      <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={["top"]}>
-        <ScrollView className="flex-1">
+      <>
+        <Stack.Screen options={{ headerShown: false }} />
+        <View className="flex-1 bg-gray-50 dark:bg-gray-900">
+          <Animated.ScrollView className="flex-1">
           {/* Shimmer Header */}
           <View className="bg-white">
             <View className="bg-gradient-to-r from-blue-500 to-purple-500 pt-16 pb-24 px-6">
@@ -135,15 +145,17 @@ export default function ProfileScreen() {
               </View>
             </View>
           </View>
-        </ScrollView>
-      </SafeAreaView>
+        </Animated.ScrollView>
+        </View>
+      </>
     );
   }
 
   if (isError || !profile) {
     return (
-      <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900">
-        <View className="flex-1 items-center justify-center px-6">
+      <>
+        <Stack.Screen options={{ headerShown: false }} />
+        <View className="flex-1 bg-gray-50 dark:bg-gray-900 items-center justify-center px-6">
           <Ionicons name="alert-circle-outline" size={64} color="#EF4444" />
           <Text className="text-gray-900 dark:text-white font-dm-sans-bold text-xl mt-4 text-center">
             Unable to Load Profile
@@ -153,16 +165,33 @@ export default function ProfileScreen() {
           </Text>
           <Button title="Retry" onPress={() => refetch()} variant="primary" />
         </View>
-      </SafeAreaView>
+      </>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={["top"]}>
-      <ScrollView
-        className="flex-1"
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
-      >
+    <>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          header: () => (
+            <AnimatedProfileHeader
+              avatarUrl={profile.avatar_url}
+              name={profile.name}
+              scrollY={scrollY}
+              onAvatarPress={handleAvatarPress}
+            />
+          ),
+        }}
+      />
+      <View className="flex-1 bg-gray-50 dark:bg-gray-900">
+        <Animated.ScrollView
+          className="flex-1"
+          showsVerticalScrollIndicator={false}
+          onScroll={scrollHandler}
+          scrollEventThrottle={16}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+        >
         {/* Profile Header */}
         <ProfileHeader
           avatarUrl={profile.avatar_url}
@@ -170,6 +199,7 @@ export default function ProfileScreen() {
           email={profile.email}
           onAvatarPress={handleAvatarPress}
           isUploading={isUploading}
+          scrollY={scrollY}
         />
 
         {/* Profile Stats */}
@@ -237,6 +267,7 @@ export default function ProfileScreen() {
                 )}
               </View>
             </View>
+            
           </Card>
 
           {/* Sign Out Button */}
@@ -251,16 +282,17 @@ export default function ProfileScreen() {
 
         {/* Bottom Spacing */}
         <View className="h-8" />
-      </ScrollView>
+        </Animated.ScrollView>
 
-      {/* Edit Profile Modal */}
-      <EditProfileModal
-        visible={editModalVisible}
-        currentProfile={profile}
-        onClose={() => setEditModalVisible(false)}
-        onSave={handleEditProfile}
-        onAvatarPress={handleAvatarPress}
-      />
-    </SafeAreaView>
+        {/* Edit Profile Modal */}
+        <EditProfileModal
+          visible={editModalVisible}
+          currentProfile={profile}
+          onClose={() => setEditModalVisible(false)}
+          onSave={handleEditProfile}
+          onAvatarPress={handleAvatarPress}
+        />
+      </View>
+    </>
   );
 }
