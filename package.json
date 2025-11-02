@@ -19,6 +19,7 @@
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
     "@reduxjs/toolkit": "^2.9.2",
+    "@rnmapbox/maps": "^10.2.6",
     "@supabase/supabase-js": "^2.78.0",
     "expo": "~54.0.20",
     "expo-constants": "~18.0.10",
