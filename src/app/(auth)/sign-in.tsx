@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Input from '@/components/atoms/Input';
 import { Button } from '@/components/atoms/Button';
 import { Divider } from '@/components/atoms/Divider';
+import { authService } from '@/services/auth.service';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SignInScreen() {
@@ -22,17 +23,48 @@ export default function SignInScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleSignIn = async () => {
+    if (!email || !password) {
+      alert('Please fill in all fields');
+      return;
+    }
+
     setLoading(true);
-    // TODO: Implement Supabase auth
-    setTimeout(() => {
+
+    try {
+      const { user, error } = await authService.signIn({ email, password });
+
+      if (error) {
+        alert(error.message || 'Failed to sign in');
+        setLoading(false);
+        return;
+      }
+
+      if (user) {
+        // Navigate to home
+        router.replace('/home' as any);
+      }
+    } catch (error) {
+      alert('An unexpected error occurred');
       setLoading(false);
-      router.replace('/home' as any);
-    }, 1500);
+    }
   };
 
-  const handleSocialSignIn = (provider: string) => {
-    console.log(`Sign in with ${provider}`);
-    // TODO: Implement social auth
+  const handleSocialSignIn = async (provider: 'google' | 'apple') => {
+    try {
+      if (provider === 'google') {
+        const result = await authService.signInWithGoogle();
+        if (result.error) {
+          alert(result.error.message || 'Failed to sign in with Google');
+        }
+      } else if (provider === 'apple') {
+        const result = await authService.signInWithApple();
+        if (result.error) {
+          alert(result.error.message || 'Failed to sign in with Apple');
+        }
+      }
+    } catch (error) {
+      alert('An unexpected error occurred');
+    }
   };
 
   return (

@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Input from '@/components/atoms/Input';
 import { Button } from '@/components/atoms/Button';
 import { Divider } from '@/components/atoms/Divider';
+import { authService } from '@/services/auth.service';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RegisterScreen() {
@@ -25,8 +26,18 @@ export default function RegisterScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
+    if (!name || !email || !password || !confirmPassword) {
+      alert('Please fill in all fields');
+      return;
+    }
+
     if (password !== confirmPassword) {
       alert('Passwords do not match');
+      return;
+    }
+
+    if (password.length < 6) {
+      alert('Password must be at least 6 characters');
       return;
     }
 
@@ -36,16 +47,47 @@ export default function RegisterScreen() {
     }
 
     setLoading(true);
-    // TODO: Implement Supabase auth
-    setTimeout(() => {
+
+    try {
+      const { user, error } = await authService.signUp({ email, password, name });
+
+      if (error) {
+        alert(error.message || 'Failed to create account');
+        setLoading(false);
+        return;
+      }
+
+      if (user) {
+        // Check if email confirmation is required
+        if (user.email_confirmed_at) {
+          router.replace('/home' as any);
+        } else {
+          alert('Please check your email to confirm your account');
+          router.replace('./sign-in');
+        }
+      }
+    } catch (error) {
+      alert('An unexpected error occurred');
       setLoading(false);
-      router.replace('/home' as any);
-    }, 1500);
+    }
   };
 
-  const handleSocialSignUp = (provider: string) => {
-    console.log(`Sign up with ${provider}`);
-    // TODO: Implement social auth
+  const handleSocialSignUp = async (provider: 'google' | 'apple') => {
+    try {
+      if (provider === 'google') {
+        const result = await authService.signInWithGoogle();
+        if (result.error) {
+          alert(result.error.message || 'Failed to sign up with Google');
+        }
+      } else if (provider === 'apple') {
+        const result = await authService.signInWithApple();
+        if (result.error) {
+          alert(result.error.message || 'Failed to sign up with Apple');
+        }
+      }
+    } catch (error) {
+      alert('An unexpected error occurred');
+    }
   };
 
   const isFormValid = name && email && password && confirmPassword && agreeToTerms;

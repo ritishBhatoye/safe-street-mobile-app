@@ -13,6 +13,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import Input from '@/components/atoms/Input';
 import { Button } from '@/components/atoms/Button';
+import { authService } from '@/services/auth.service';
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
@@ -20,12 +21,28 @@ export default function ForgotPasswordScreen() {
   const [emailSent, setEmailSent] = useState(false);
 
   const handleResetPassword = async () => {
+    if (!email) {
+      alert('Please enter your email address');
+      return;
+    }
+
     setLoading(true);
-    // TODO: Implement Supabase password reset
-    setTimeout(() => {
+
+    try {
+      const result = await authService.resetPassword(email);
+
+      if (result.error) {
+        alert(result.error.message || 'Failed to send reset email');
+        setLoading(false);
+        return;
+      }
+
       setLoading(false);
       setEmailSent(true);
-    }, 1500);
+    } catch (error) {
+      alert('An unexpected error occurred');
+      setLoading(false);
+    }
   };
 
   if (emailSent) {
