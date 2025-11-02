@@ -8,26 +8,54 @@ import { Ionicons } from "@expo/vector-icons";
 export default function MapScreen() {
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          setErrorMsg("Permission to access location was denied");
+          setIsLoading(false);
+          return;
+        }
 
-      const location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+        const location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        });
+        setLocation(location);
+      } catch (error) {
+        console.error("Error getting location:", error);
+        setErrorMsg("Unable to get your location");
+      } finally {
+        setIsLoading(false);
+      }
     })();
   }, []);
 
+  // Default to India (New Delhi) if no location yet
   const initialRegion = {
-    latitude: location?.coords.latitude || 37.78825,
-    longitude: location?.coords.longitude || -122.4324,
+    latitude: location?.coords.latitude || 28.6139,
+    longitude: location?.coords.longitude || 77.2090,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   };
+
+  if (isLoading) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50" edges={["top"]}>
+        <View className="flex-1 items-center justify-center px-6">
+          <Ionicons name="location" size={64} color="#3B82F6" />
+          <Text className="text-gray-900 font-dm-sans-bold text-xl mt-4 text-center">
+            Getting Your Location
+          </Text>
+          <Text className="text-gray-600 font-dm-sans text-center mt-2">
+            Please wait...
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   if (errorMsg) {
     return (
@@ -50,7 +78,7 @@ export default function MapScreen() {
       <MapView
         style={styles.map}
         provider={PROVIDER_DEFAULT}
-        initialRegion={initialRegion}
+        region={initialRegion}
         showsUserLocation
         showsMyLocationButton
         showsCompass
