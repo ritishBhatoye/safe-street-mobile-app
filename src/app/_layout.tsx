@@ -5,7 +5,9 @@ import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import Toast from "react-native-toast-message";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { toastConfig } from "@/components/ui/Toast";
 import "../global.css";
 
 // Keep splash screen visible while fonts load
@@ -61,6 +63,7 @@ export default function RootLayout() {
           <Stack.Screen name="modal" options={{ presentation: "modal", title: "Modal" }} />
         </Stack>
         <StatusBar style="auto" />
+        <Toast config={toastConfig} />
       </ThemeProvider>
     </AuthProvider>
   );
