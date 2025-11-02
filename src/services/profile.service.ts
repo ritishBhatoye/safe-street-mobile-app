@@ -1,5 +1,6 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { supabase } from '@/lib/supabase';
+import type { UserProfile, ProfileUpdateData, UserStats } from '@/types';
 
 export const profileApi = createApi({
   reducerPath: 'profileApi',
@@ -16,6 +17,37 @@ export const profileApi = createApi({
             .single();
 
           if (error) {
+            // If profile doesn't exist, try to create it
+            if (error.code === 'PGRST116') {
+              console.log('Profile not found, attempting to create...');
+              
+              // Get user email from auth
+              const { data: { user } } = await supabase.auth.getUser();
+              
+              if (user) {
+                const newProfile = {
+                  id: userId,
+                  email: user.email || '',
+                  name: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+                  created_at: new Date().toISOString(),
+                  updated_at: new Date().toISOString(),
+                };
+                
+                const { data: createdProfile, error: createError } = await supabase
+                  .from('profiles')
+                  .insert(newProfile)
+                  .select()
+                  .single();
+                
+                if (createError) {
+                  console.error('Error creating profile:', createError);
+                  return { error: { status: 'CUSTOM_ERROR', error: createError.message } };
+                }
+                
+                return { data: createdProfile as UserProfile };
+              }
+            }
+            
             return { error: { status: 'CUSTOM_ERROR', error: error.message } };
           }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   ScrollView,
@@ -7,20 +7,20 @@ import {
   Text,
   Pressable,
   Alert,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '@/contexts/AuthContext';
-import { useProfile } from '@/hooks/useProfile';
-import { useProfileStats } from '@/hooks/useProfileStats';
-import { useAvatarUpload } from '@/hooks/useAvatarUpload';
-import { ProfileHeader } from '@/components/profile/ProfileHeader';
-import { ProfileStats } from '@/components/profile/ProfileStats';
-import { EditProfileModal } from '@/components/profile/EditProfileModal';
-import { Card } from '@/components/atoms/Card';
-import { Button } from '@/components/atoms/Button';
-import { showToast } from '@/utils/toast';
-import type { ProfileUpdateData } from '@/types';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
+import { useAuth } from "@/contexts/AuthContext";
+import { useProfile } from "@/hooks/useProfile";
+import { useProfileStats } from "@/hooks/useProfileStats";
+import { useAvatarUpload } from "@/hooks/useAvatarUpload";
+import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { ProfileStats } from "@/components/profile/ProfileStats";
+import { EditProfileModal } from "@/components/profile/EditProfileModal";
+import { Card } from "@/components/atoms/Card";
+import { Button } from "@/components/atoms/Button";
+import { showToast } from "@/utils/toast";
+import type { ProfileUpdateData } from "@/types";
 
 export default function ProfileScreen() {
   const { user, signOut } = useAuth();
@@ -43,37 +43,33 @@ export default function ProfileScreen() {
   const handleEditProfile = async (data: ProfileUpdateData) => {
     try {
       await updateProfile(data);
-      showToast.success('Success', 'Profile updated successfully');
+      showToast.success("Success", "Profile updated successfully");
     } catch (error) {
-      showToast.error('Error', 'Failed to update profile. Please try again.');
+      showToast.error("Error", "Failed to update profile. Please try again.");
       throw error;
     }
   };
 
   const handleSignOut = () => {
-    Alert.alert(
-      'Sign Out',
-      'Are you sure you want to sign out?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
+    Alert.alert("Sign Out", "Are you sure you want to sign out?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Sign Out",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await signOut();
+            showToast.success("Signed Out", "You have been signed out successfully");
+          } catch (error) {
+            showToast.error("Error", "Unable to sign out. Please try again.");
+            console.error("Sign out error:", error);
+          }
         },
-        {
-          text: 'Sign Out',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await signOut();
-              showToast.success('Signed Out', 'You have been signed out successfully');
-            } catch (error) {
-              showToast.error('Error', 'Unable to sign out. Please try again.');
-              console.error('Sign out error:', error);
-            }
-          },
-        },
-      ]
-    );
+      },
+    ]);
   };
 
   if (isLoading) {
@@ -100,23 +96,17 @@ export default function ProfileScreen() {
           <Text className="text-gray-600 dark:text-gray-400 font-dm-sans text-center mt-2 mb-6">
             We could not load your profile data. Please try again.
           </Text>
-          <Button
-            title="Retry"
-            onPress={() => refetch()}
-            variant="primary"
-          />
+          <Button title="Retry" onPress={() => refetch()} variant="primary" />
         </View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={["top"]}>
       <ScrollView
         className="flex-1"
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-        }
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
       >
         {/* Profile Header */}
         <ProfileHeader
@@ -169,7 +159,7 @@ export default function ProfileScreen() {
                   Account Information
                 </Text>
               </View>
-              
+
               <View className="ml-13 space-y-2">
                 <View className="mb-2">
                   <Text className="text-gray-600 dark:text-gray-400 font-dm-sans text-xs">
@@ -179,7 +169,7 @@ export default function ProfileScreen() {
                     {user?.id.substring(0, 8)}...
                   </Text>
                 </View>
-                
+
                 {profile.phone && (
                   <View>
                     <Text className="text-gray-600 dark:text-gray-400 font-dm-sans text-xs">
