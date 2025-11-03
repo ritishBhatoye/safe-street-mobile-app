@@ -40,11 +40,11 @@ const TabBarIcon = ({ focused, iconName, title }: TabBarIconProps) => {
         className="items-center"
       >
         {focused ? (
-          <View className="items-center justify-center bg-blue-500 rounded-full w-12 h-12 shadow-lg">
-            <Ionicons name={iconName as any} size={26} color="#ffffff" />
+          <View className="items-center justify-center bg-blue-500 rounded-full w-10 h-10 shadow-lg">
+            <Ionicons name={iconName as any} size={22} color="#ffffff" />
           </View>
         ) : (
-          <Ionicons name={iconName as any} size={24} color="#9ca3af" />
+          <Ionicons name={iconName as any} size={22} color="#9ca3af" />
         )}
         <Text
           className={`text-[10px] w-full mt-1 font-dm-sans-medium ${
