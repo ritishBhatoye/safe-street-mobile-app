@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import React from "react";
-import { Animated, Text, View, Platform } from "react-native";
+import { Animated, View, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import GlassTabBarBackground from "@/components/atoms/GlassTabBarBackground";
 
@@ -13,22 +13,29 @@ interface TabBarIconProps {
 const TabBarIcon = ({ focused, iconName, title }: TabBarIconProps) => {
   const scaleAnim = React.useRef(new Animated.Value(focused ? 1 : 0.9)).current;
   const opacityAnim = React.useRef(new Animated.Value(focused ? 1 : 0.6)).current;
+  const bgScaleAnim = React.useRef(new Animated.Value(focused ? 1 : 0)).current;
 
   React.useEffect(() => {
     Animated.parallel([
       Animated.spring(scaleAnim, {
         toValue: focused ? 1 : 0.9,
         useNativeDriver: true,
-        friction: 8,
-        tension: 100,
+        friction: 10,
+        tension: 80,
       }),
       Animated.timing(opacityAnim, {
         toValue: focused ? 1 : 0.6,
-        duration: 200,
+        duration: 300,
         useNativeDriver: true,
       }),
+      Animated.spring(bgScaleAnim, {
+        toValue: focused ? 1 : 0,
+        useNativeDriver: true,
+        friction: 8,
+        tension: 60,
+      }),
     ]).start();
-  }, [focused, scaleAnim, opacityAnim]);
+  }, [focused, scaleAnim, opacityAnim, bgScaleAnim]);
 
   return (
     <View className="items-center justify-center py-2">
@@ -39,20 +46,26 @@ const TabBarIcon = ({ focused, iconName, title }: TabBarIconProps) => {
         }}
         className="items-center"
       >
-        {focused ? (
-          <View className="items-center justify-center bg-blue-500 rounded-full w-10 h-10 shadow-lg">
-            <Ionicons name={iconName as any} size={22} color="#ffffff" />
-          </View>
-        ) : (
-          <Ionicons name={iconName as any} size={22} color="#9ca3af" />
-        )}
-        <Text
+        <View className="items-center justify-center w-10 h-10 relative">
+          <Animated.View
+            style={{
+              transform: [{ scale: bgScaleAnim }],
+              opacity: bgScaleAnim,
+            }}
+            className="absolute items-center justify-center bg-blue-500 rounded-full w-10 h-10 shadow-lg"
+          />
+          <Ionicons name={iconName as any} size={22} color={focused ? "#ffffff" : "#9ca3af"} />
+        </View>
+        <Animated.Text
+          style={{
+            opacity: opacityAnim,
+          }}
           className={`text-[10px] w-full mt-1 font-dm-sans-medium ${
             focused ? "text-blue-600" : "text-gray-400"
           }`}
         >
           {title}
-        </Text>
+        </Animated.Text>
       </Animated.View>
     </View>
   );
@@ -75,7 +88,7 @@ export default function TabLayout() {
           backgroundColor: "transparent",
           borderTopWidth: 0,
           marginHorizontal: 20,
-          paddingTop:15,
+          paddingTop: 15,
           ...Platform.select({
             ios: {
               shadowColor: "#000",
