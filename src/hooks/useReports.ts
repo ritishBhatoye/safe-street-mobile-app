@@ -3,46 +3,58 @@ import { reportsService, Report } from "@/services/reports.service";
 
 interface UseReportsResult {
   reports: Report[];
-  currentPage: number;
-  totalPages: number;
   totalReports: number;
   loading: boolean;
   refreshing: boolean;
+  loadingMore: boolean;
+  hasMore: boolean;
   error: string | null;
-  fetchReports: (page: number) => Promise<void>;
   onRefresh: () => Promise<void>;
-  handlePageChange: (newPage: number) => Promise<void>;
+  loadMore: () => Promise<void>;
 }
 
 export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
   const [reports, setReports] = useState<Report[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [totalReports, setTotalReports] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchReports = useCallback(
-    async (page: number) => {
+    async (page: number, append: boolean = false) => {
       try {
-        setLoading(true);
+        if (page === 1) {
+          setLoading(true);
+        } else {
+          setLoadingMore(true);
+        }
         setError(null);
+        
         const response = await reportsService.getReports(page, itemsPerPage);
-        setReports(response.reports);
-        setTotalPages(response.totalPages);
+        
+        if (append) {
+          setReports((prev) => [...prev, ...response.reports]);
+        } else {
+          setReports(response.reports);
+        }
+        
         setTotalReports(response.total);
         setCurrentPage(page);
+        setHasMore(page < response.totalPages);
       } catch (err: any) {
         console.error("Error fetching reports:", err);
         const errorMessage = err?.message || "Failed to load reports";
         setError(errorMessage);
-        setReports([]);
-        setTotalPages(1);
-        setTotalReports(0);
-        setCurrentPage(1);
+        if (!append) {
+          setReports([]);
+          setTotalReports(0);
+        }
       } finally {
         setLoading(false);
+        setLoadingMore(false);
       }
     },
     [itemsPerPage],
@@ -50,16 +62,16 @@ export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await fetchReports(currentPage);
+    setCurrentPage(1);
+    await fetchReports(1, false);
     setRefreshing(false);
-  }, [currentPage, fetchReports]);
+  }, [fetchReports]);
 
-  const handlePageChange = useCallback(
-    async (newPage: number) => {
-      await fetchReports(newPage);
-    },
-    [fetchReports],
-  );
+  const loadMore = useCallback(async () => {
+    if (!loadingMore && !loading && hasMore) {
+      await fetchReports(currentPage + 1, true);
+    }
+  }, [currentPage, hasMore, loading, loadingMore, fetchReports]);
 
   useEffect(() => {
     fetchReports(1);
@@ -67,14 +79,13 @@ export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
 
   return {
     reports,
-    currentPage,
-    totalPages,
     totalReports,
     loading,
     refreshing,
+    loadingMore,
+    hasMore,
     error,
-    fetchReports,
     onRefresh,
-    handlePageChange,
+    loadMore,
   };
 };

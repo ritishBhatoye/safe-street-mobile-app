@@ -5,7 +5,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useReports } from "@/hooks/useReports";
 import { ReportCard } from "@/components/reports/ReportCard";
 import { ReportsHeader } from "@/components/reports/ReportsHeader";
-import { ReportsPagination } from "@/components/reports/ReportsPagination";
 import { ReportsEmptyState } from "@/components/reports/ReportsEmptyState";
 import { Report } from "@/services/reports.service";
 
@@ -14,20 +13,40 @@ const ITEMS_PER_PAGE = 10;
 export default function ReportsScreen() {
   const {
     reports,
-    currentPage,
-    totalPages,
     totalReports,
     loading,
     refreshing,
+    loadingMore,
+    hasMore,
     error,
-    fetchReports,
     onRefresh,
-    handlePageChange,
+    loadMore,
   } = useReports(ITEMS_PER_PAGE);
 
   const handleReportPress = (report: Report) => {
     console.log("Report pressed:", report.id);
     // TODO: Navigate to report details
+  };
+
+  const renderFooter = () => {
+    if (!loadingMore) return null;
+    
+    return (
+      <View className="py-6 items-center">
+        <ActivityIndicator size="small" color="#3b82f6" />
+        <Text className="text-gray-500 font-dm-sans text-sm mt-2">Loading more...</Text>
+      </View>
+    );
+  };
+
+  const renderEndMessage = () => {
+    if (loading || loadingMore || hasMore || reports.length === 0) return null;
+    
+    return (
+      <View className="py-6 items-center">
+        <Text className="text-gray-400 font-dm-sans text-sm">You&apos;ve reached the end</Text>
+      </View>
+    );
   };
 
   if (loading && !refreshing) {
@@ -80,20 +99,18 @@ export default function ReportsScreen() {
               />
             }
             ListFooterComponent={
-              reports.length > 0 ? (
-                <ReportsPagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  loading={loading}
-                  onPageChange={handlePageChange}
-                />
-              ) : null
+              <>
+                {renderFooter()}
+                {renderEndMessage()}
+              </>
             }
             ListEmptyComponent={
               !loading ? (
-                <ReportsEmptyState error={error} onRetry={() => fetchReports(1)} />
+                <ReportsEmptyState error={error} onRetry={onRefresh} />
               ) : null
             }
+            onEndReached={loadMore}
+            onEndReachedThreshold={0.5}
             showsVerticalScrollIndicator={false}
           />
         </SafeAreaView>
