@@ -20,7 +20,7 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
   const resolvedCount = reports.filter((r) => r.status === "resolved").length;
 
   return (
-    <View className="px-6 pt-4 pb-6">
+    <View className=" pt-4 pb-6">
       <View className="flex-row items-center justify-between mb-6">
         <View>
           <Text className="text-4xl font-dm-sans-bold text-gray-900 mb-1">Reports</Text>
@@ -44,8 +44,8 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
         >
           <BlurView intensity={40} tint="light">
             <LinearGradient
-              colors={["rgba(59, 130, 246, 0.9)", "rgba(37, 99, 235, 0.9)"]}
-              className="p-3"
+              colors={["rgba(59, 130, 246, 0.9)", "rgba(37, 99, 235, 0.9)","rgba(37, 99, 255, 0.4)"]}
+              style={{padding:12}}
             >
               <Ionicons name="filter" size={24} color="#ffffff" />
             </LinearGradient>
@@ -54,12 +54,12 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
       </View>
 
       {/* Stats Cards */}
-      <View className="flex-row gap-3 mb-4">
+      <View className="flex-row gap-3 mb-4 justify-around">
         <View className="flex-1 rounded-2xl overflow-hidden">
-          <BlurView intensity={30} tint="light">
+          <BlurView intensity={100} tint="prominent">
             <LinearGradient
               colors={["rgba(239, 68, 68, 0.15)", "rgba(220, 38, 38, 0.1)"]}
-              className="p-4"
+              style={{padding:20}}
             >
               <Ionicons name="alert-circle" size={20} color="#ef4444" />
               <Text className="text-2xl font-dm-sans-bold text-gray-900 mt-2">
@@ -73,7 +73,7 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
           <BlurView intensity={30} tint="light">
             <LinearGradient
               colors={["rgba(34, 197, 94, 0.15)", "rgba(22, 163, 74, 0.1)"]}
-              className="p-4"
+           style={{padding:20}}
             >
               <Ionicons name="checkmark-circle" size={20} color="#22c55e" />
               <Text className="text-2xl font-dm-sans-bold text-gray-900 mt-2">
