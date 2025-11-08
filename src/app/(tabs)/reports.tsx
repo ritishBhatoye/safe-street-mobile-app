@@ -33,8 +33,10 @@ export default function ReportsScreen() {
     return reports.filter((report) => 
       report.title?.toLowerCase().includes(query) ||
       report.description?.toLowerCase().includes(query) ||
-      report.category?.toLowerCase().includes(query) ||
-      report.location?.toLowerCase().includes(query)
+      report.type?.toLowerCase().includes(query) ||
+      report.location?.toLowerCase().includes(query) ||
+      report.status?.toLowerCase().includes(query) ||
+      report.priority?.toLowerCase().includes(query)
     );
   }, [reports, searchQuery]);
 
@@ -128,7 +130,14 @@ export default function ReportsScreen() {
             }
             ListEmptyComponent={
               !loading ? (
-                <ReportsEmptyState error={error} onRetry={onRefresh} />
+                searchQuery.trim() ? (
+                  <View className="py-12 items-center">
+                    <Text className="text-gray-500 font-dm-sans-bold text-lg mb-2">No results found</Text>
+                    <Text className="text-gray-400 font-dm-sans text-sm">Try a different search term</Text>
+                  </View>
+                ) : (
+                  <ReportsEmptyState error={error} onRetry={onRefresh} />
+                )
               ) : null
             }
             onEndReached={loadMore}
