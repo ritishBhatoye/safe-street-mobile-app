@@ -17,14 +17,35 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
   totalReports,
   reports,
   onFilterPress,
+  searchQuery = "",
+  onSearchChange,
 }) => {
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+  const [searchWidth] = useState(new Animated.Value(48));
   const criticalCount = reports.filter((r) => r.priority === "critical").length;
   const resolvedCount = reports.filter((r) => r.status === "resolved").length;
+
+  const toggleSearch = () => {
+    const toValue = isSearchExpanded ? 48 : 300;
+    
+    Animated.spring(searchWidth, {
+      toValue,
+      useNativeDriver: false,
+      tension: 50,
+      friction: 7,
+    }).start();
+
+    setIsSearchExpanded(!isSearchExpanded);
+    
+    if (isSearchExpanded && searchQuery && onSearchChange) {
+      onSearchChange("");
+    }
+  };
 
   return (
     <View className=" pt-4 pb-6">
       <View className="flex-row items-center justify-between mb-6">
-        <View>
+        <View className="flex-1">
           <Text className="text-4xl font-dm-sans-bold text-gray-900 mb-1">Reports</Text>
           <View className="flex-row items-center">
             <View className="bg-blue-500 rounded-full w-2 h-2 mr-2" />
@@ -33,26 +54,63 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
             </Text>
           </View>
         </View>
-        <TouchableOpacity
-          className="rounded-2xl overflow-hidden"
-          onPress={onFilterPress}
-          style={{
-            shadowColor: "#3b82f6",
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.2,
-            shadowRadius: 8,
-            elevation: 4,
-          }}
-        >
-          <BlurView intensity={40} tint="light">
-            <LinearGradient
-              colors={["rgba(59, 130, 246, 0.9)", "rgba(37, 99, 235, 0.9)","rgba(37, 99, 255, 0.4)"]}
-              style={{padding:12}}
-            >
-              <Ionicons name="filter" size={24} color="#ffffff" />
-            </LinearGradient>
-          </BlurView>
-        </TouchableOpacity>
+        
+        <View className="flex-row gap-2">
+          {/* Animated Search Bar */}
+          <Animated.View 
+            style={{ width: searchWidth }}
+            className="rounded-2xl overflow-hidden"
+          >
+            <BlurView intensity={40} tint="light">
+              <LinearGradient
+                colors={["rgba(255, 255, 255, 0.9)", "rgba(249, 250, 251, 0.9)"]}
+                className="flex-row items-center"
+                style={{ padding: 12 }}
+              >
+                <TouchableOpacity onPress={toggleSearch}>
+                  <Ionicons 
+                    name={isSearchExpanded ? "close" : "search"} 
+                    size={24} 
+                    color="#6B7280" 
+                  />
+                </TouchableOpacity>
+                
+                {isSearchExpanded && (
+                  <TextInput
+                    placeholder="Search reports..."
+                    value={searchQuery}
+                    onChangeText={onSearchChange}
+                    className="flex-1 ml-2 font-dm-sans text-base text-gray-700"
+                    placeholderTextColor="#9CA3AF"
+                    autoFocus
+                  />
+                )}
+              </LinearGradient>
+            </BlurView>
+          </Animated.View>
+
+          {/* Filter Button */}
+          <TouchableOpacity
+            className="rounded-2xl overflow-hidden"
+            onPress={onFilterPress}
+            style={{
+              shadowColor: "#3b82f6",
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.2,
+              shadowRadius: 8,
+              elevation: 4,
+            }}
+          >
+            <BlurView intensity={40} tint="light">
+              <LinearGradient
+                colors={["rgba(59, 130, 246, 0.9)", "rgba(37, 99, 235, 0.9)","rgba(37, 99, 255, 0.4)"]}
+                style={{padding:12}}
+              >
+                <Ionicons name="filter" size={24} color="#ffffff" />
+              </LinearGradient>
+            </BlurView>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Stats Cards */}
