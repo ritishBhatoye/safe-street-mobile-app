@@ -35,9 +35,9 @@ export const HeroSafetySnapshot: React.FC<HeroSafetySnapshotProps> = ({ safetySc
     return "bg-danger-50 dark:bg-danger-900/20";
   };
 
-  const getBadgeVariant = (): "success" | "warning" | "danger" => {
-    if (safetyScore.score >= 7) return "success";
-    if (safetyScore.score >= 4) return "warning";
+  const getBadgeVariant = (): "safe" | "caution" | "danger" => {
+    if (safetyScore.score >= 7) return "safe";
+    if (safetyScore.score >= 4) return "caution";
     return "danger";
   };
 
