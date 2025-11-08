@@ -1,67 +1,47 @@
-import React from 'react';
-import { View } from 'react-native';
-
-import { Text } from './Text';
+import React from "react";
+import { View, Text } from "react-native";
 
 interface BadgeProps {
-  text: string;
-  variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'error';
-  size?: 'small' | 'medium';
-  className?: string;
+  label: string;
+  variant: "safe" | "caution" | "danger" | "critical" | "danger" | "info" | "error";
+  size?: "small" | "medium" | "large";
 }
 
-export const Badge: React.FC<BadgeProps> = ({
-  text,
-  variant = 'primary',
-  size = 'medium',
-  className,
-}) => {
-  const getVariantStyles = () => {
-    switch (variant) {
-      case 'primary':
-        return 'bg-blue-100';
-      case 'secondary':
-        return 'bg-gray-100';
-      case 'success':
-        return 'bg-green-100';
-      case 'warning':
-        return 'bg-orange-100';
-      case 'error':
-        return 'bg-red-100';
-      default:
-        return 'bg-blue-100';
-    }
+export const Badge: React.FC<BadgeProps> = ({ label, variant, size = "medium" }) => {
+  const variantStyles = {
+    safe: "bg-success-100 dark:bg-success-900/30",
+    caution: "bg-warning-100 dark:bg-warning-900/30",
+    danger: "bg-danger-100 dark:bg-danger-900/30",
+    critical: "bg-red-100 dark:bg-red-900/30",
+    error: "bg-red-100 dark:bg-red-900/30",
+    info: "bg-info-100 dark:bg-info-900/30",
   };
 
-  const getTextColor = () => {
-    switch (variant) {
-      case 'primary':
-        return 'text-blue-600';
-      case 'secondary':
-        return 'text-gray-600';
-      case 'success':
-        return 'text-green-600';
-      case 'warning':
-        return 'text-orange-600';
-      case 'error':
-        return 'text-red-600';
-      default:
-        return 'text-blue-600';
-    }
+  const textStyles = {
+    safe: "text-success-700 dark:text-success-300",
+    caution: "text-warning-700 dark:text-warning-300",
+    danger: "text-danger-700 dark:text-danger-300",
+    critical: "text-red-700 dark:text-red-300",
+    error: "text-red-700 dark:text-red-300",
+    info: "text-info-700 dark:text-info-300",
   };
 
-  const getSizeStyles = () => (size === 'small' ? 'px-2 py-1' : 'px-3 py-2');
+  const sizeStyles = {
+    small: "px-2 py-0.5",
+    medium: "px-3 py-1",
+    large: "px-4 py-1.5",
+  };
+
+  const textSizeStyles = {
+    small: "text-xs",
+    medium: "text-sm",
+    large: "text-base",
+  };
 
   return (
-    <View
-      className={`rounded-full ${getVariantStyles()} ${getSizeStyles()} ${className}`}
-    >
-      <Text
-        variant={size === 'small' ? 'label' : 'caption'}
-        weight="medium"
-        className={getTextColor()}
-      >
-        {text}
+    <View className={`rounded-full ${variantStyles[variant]} ${sizeStyles[size]}`}>
+      <Text className={`font-dm-sans-semibold ${textStyles[variant]} ${textSizeStyles[size]}`}>
+        {label}
       </Text>
     </View>
   );

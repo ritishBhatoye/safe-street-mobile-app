@@ -1,14 +1,14 @@
-import React from 'react';
-import { View, Image } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Text } from '../atoms/Text';
-import { Badge } from '../atoms/Badge';
-import { Card } from '../atoms/Card';
+import React from "react";
+import { View, Image } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Text } from "../atoms/Text";
+import { Badge } from "../atoms/Badge";
+import { Card } from "../atoms/Card";
 
 interface IncidentCardProps {
   id: string;
   type: string;
-  severity: 'safe' | 'caution' | 'danger' | 'critical';
+  severity: "safe" | "caution" | "danger" | "critical" | "danger" | "info";
   title: string;
   description: string;
   location: string;
@@ -33,31 +33,31 @@ export const IncidentCard: React.FC<IncidentCardProps> = ({
 }) => {
   const getSeverityColor = () => {
     switch (severity) {
-      case 'safe':
-        return 'success';
-      case 'caution':
-        return 'warning';
-      case 'danger':
-        return 'error';
-      case 'critical':
-        return 'error';
+      case "safe":
+        return "safe";
+      case "caution":
+        return "caution";
+      case "danger":
+        return "danger";
+      case "critical":
+        return "critical";
       default:
-        return 'primary';
+        return "info";
     }
   };
 
   const getSeverityIcon = () => {
     switch (severity) {
-      case 'safe':
-        return 'checkmark-circle';
-      case 'caution':
-        return 'warning';
-      case 'danger':
-        return 'alert-circle';
-      case 'critical':
-        return 'alert';
+      case "safe":
+        return "checkmark-circle";
+      case "caution":
+        return "warning";
+      case "danger":
+        return "alert-circle";
+      case "critical":
+        return "alert";
       default:
-        return 'information-circle';
+        return "information-circle";
     }
   };
 
@@ -66,28 +66,24 @@ export const IncidentCard: React.FC<IncidentCardProps> = ({
       <View className="flex-row gap-3">
         {/* Image */}
         {imageUrl && (
-          <Image
-            source={{ uri: imageUrl }}
-            className="h-20 w-20 rounded-xl"
-            resizeMode="cover"
-          />
+          <Image source={{ uri: imageUrl }} className="h-20 w-20 rounded-xl" resizeMode="cover" />
         )}
 
         {/* Content */}
         <View className="flex-1">
           {/* Header */}
           <View className="mb-2 flex-row items-center justify-between">
-            <Badge text={type} variant={getSeverityColor()} size="small" />
+            <Badge  variant={getSeverityColor()} size="small" label={type} />
             <View className="flex-row items-center gap-1">
               <Ionicons
                 name={getSeverityIcon()}
                 size={16}
                 color={
-                  severity === 'critical' || severity === 'danger'
-                    ? '#EF4444'
-                    : severity === 'caution'
-                      ? '#F59E0B'
-                      : '#22C55E'
+                  severity === "critical" || severity === "danger"
+                    ? "#EF4444"
+                    : severity === "caution"
+                      ? "#F59E0B"
+                      : "#22C55E"
                 }
               />
               <Text variant="caption" className="text-gray-500 dark:text-gray-400">
@@ -97,11 +93,7 @@ export const IncidentCard: React.FC<IncidentCardProps> = ({
           </View>
 
           {/* Title */}
-          <Text
-            variant="body"
-            weight="semibold"
-            className="mb-1 text-gray-900 dark:text-white"
-          >
+          <Text variant="body" weight="semibold" className="mb-1 text-gray-900 dark:text-white">
             {title}
           </Text>
 
