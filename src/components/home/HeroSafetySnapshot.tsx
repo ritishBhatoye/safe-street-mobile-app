@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
 import { View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 import { Card } from "../atoms/Card";
 import { Badge } from "../atoms/Badge";
 
@@ -60,14 +65,16 @@ export const HeroSafetySnapshot: React.FC<HeroSafetySnapshotProps> = ({ safetySc
 
   return (
     <Animated.View style={animatedStyle}>
-      <Card variant="elevated" className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
+      <Card
+        variant="elevated"
+        className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900"
+      >
         <View className="items-center py-4">
           {/* Score Circle */}
-          <View className={`mb-4 h-36 w-36 items-center justify-center rounded-full ${getScoreBgColor()}`}>
-            <Text
-              className="text-5xl font-dm-sans-bold mb-1"
-              style={{ color: getScoreColor() }}
-            >
+          <View
+            className={`mb-4 h-36 w-36 items-center justify-center rounded-full ${getScoreBgColor()}`}
+          >
+            <Text className="text-5xl font-dm-sans-bold mb-1" style={{ color: getScoreColor() }}>
               {safetyScore.score}
             </Text>
             <Text className="text-sm font-dm-sans-medium text-gray-600 dark:text-gray-400">
@@ -80,7 +87,7 @@ export const HeroSafetySnapshot: React.FC<HeroSafetySnapshotProps> = ({ safetySc
             <Badge label={getBadgeLabel()} variant={getBadgeVariant()} size="large" />
           </View>
 
-          {/* Location */}
+
           <View className="flex-row items-center gap-1 mb-2">
             <Ionicons name="location" size={16} color="#6B7280" />
             <Text className="text-base font-dm-sans-medium text-gray-700 dark:text-gray-300">

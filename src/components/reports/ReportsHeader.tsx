@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, TextInput, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
@@ -9,6 +9,8 @@ interface ReportsHeaderProps {
   totalReports: number;
   reports: Report[];
   onFilterPress?: () => void;
+  searchQuery?: string;
+  onSearchChange?: (text: string) => void;
 }
 
 export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
