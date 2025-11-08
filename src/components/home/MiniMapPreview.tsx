@@ -3,12 +3,12 @@ import { View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withDelay } from "react-native-reanimated";
 import { Card } from "../atoms/Card";
-import { NearbyIncident } from "@/services/home.service";
+
 import * as Location from "expo-location";
 
 interface MiniMapPreviewProps {
   userLocation: Location.LocationObject | null;
-  incidents: NearbyIncident[];
+  incidents: NearbyIncidentType[];
   onPress: () => void;
 }
 

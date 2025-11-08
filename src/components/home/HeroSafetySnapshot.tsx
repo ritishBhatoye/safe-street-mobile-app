@@ -4,10 +4,9 @@ import { Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import { Card } from "../atoms/Card";
 import { Badge } from "../atoms/Badge";
-import { SafetyScore } from "@/services/home.service";
 
 interface HeroSafetySnapshotProps {
-  safetyScore: SafetyScore;
+  safetyScore: SafetyScoreType;
 }
 
 export const HeroSafetySnapshot: React.FC<HeroSafetySnapshotProps> = ({ safetyScore }) => {

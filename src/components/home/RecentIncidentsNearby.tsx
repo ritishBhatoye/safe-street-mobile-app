@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withDelay } from "react-native-reanimated";
-import { NearbyIncident } from "@/services/home.service";
+
 import { NearbyIncidentCard } from "./NearbyIncidentCard";
 
 interface RecentIncidentsNearbyProps {
-  incidents: NearbyIncident[];
+  incidents: NearbyIncidentType[];
 }
 
 export const RecentIncidentsNearby: React.FC<RecentIncidentsNearbyProps> = ({ incidents }) => {

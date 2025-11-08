@@ -1,10 +1,9 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { NearbyIncident } from "@/services/home.service";
 
 interface NearbyIncidentCardProps {
-  incident: NearbyIncident;
+  incident: NearbyIncidentType;
   onPress?: () => void;
 }
 

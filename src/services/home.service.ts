@@ -1,36 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import * as Location from "expo-location";
 
-export interface NearbyIncident {
-  id: string;
-  title: string;
-  type: "incident" | "hazard" | "maintenance" | "other";
-  priority: "low" | "medium" | "high" | "critical";
-  location: string;
-  latitude: number;
-  longitude: number;
-  distance?: number; // in km
-  created_at: string;
-}
-
-export interface Hotspot {
-  location: string;
-  latitude: number;
-  longitude: number;
-  incident_count: number;
-  distance?: number; // in km
-}
-
-export interface CommunityActivity {
-  new_reports_24h: number;
-  confirmations_24h: number;
-}
-
-export interface SafetyScore {
-  score: number; // 0-10
-  location: string;
-  trend: "up" | "down" | "stable";
-}
 
 export const homeService = {
   /**
@@ -83,7 +53,7 @@ export const homeService = {
     latitude: number,
     longitude: number,
     radiusKm: number = 5
-  ): Promise<NearbyIncident[]> {
+  ): Promise<NearbyIncidentType[]> {
     try {
       const { data, error } = await supabase
         .from("reports")
@@ -124,7 +94,7 @@ export const homeService = {
     latitude: number,
     longitude: number,
     radiusKm: number = 10
-  ): Promise<Hotspot[]> {
+  ): Promise<HotspotType[]> {
     try {
       const { data, error } = await supabase
         .from("reports")
@@ -139,7 +109,7 @@ export const homeService = {
       if (error) throw error;
 
       // Group by location and count
-      const locationMap = new Map<string, Hotspot>();
+      const locationMap = new Map<string, HotspotType>();
       
       (data || []).forEach((report) => {
         const distance = this.calculateDistance(
@@ -180,7 +150,7 @@ export const homeService = {
   /**
    * Get community activity pulse
    */
-  async getCommunityActivity(): Promise<CommunityActivity> {
+  async getCommunityActivity(): Promise<CommunityActivityType> {
     try {
       const twentyFourHoursAgo = new Date(
         Date.now() - 24 * 60 * 60 * 1000
@@ -215,7 +185,7 @@ export const homeService = {
   async getSafetyScore(
     latitude: number,
     longitude: number
-  ): Promise<SafetyScore> {
+  ): Promise<SafetyScoreType> {
     try {
       const incidents = await this.getNearbyIncidents(latitude, longitude, 2);
       

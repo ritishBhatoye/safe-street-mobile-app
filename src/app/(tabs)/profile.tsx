@@ -15,7 +15,6 @@ import { EditProfileModal } from "@/components/profile/EditProfileModal";
 import { Card } from "@/components/atoms/Card";
 import { Button } from "@/components/atoms/Button";
 import { showToast } from "@/utils/toast";
-import type { ProfileUpdateData } from "@/types";
 
 export default function ProfileScreen() {
   const { user, signOut } = useAuth();
@@ -79,7 +78,7 @@ export default function ProfileScreen() {
     pickImage();
   };
 
-  const handleEditProfile = async (data: ProfileUpdateData) => {
+  const handleEditProfile = async (data: ProfileUpdateDataType) => {
     try {
       await updateProfile(data);
       showToast.success("Success", "Profile updated successfully");

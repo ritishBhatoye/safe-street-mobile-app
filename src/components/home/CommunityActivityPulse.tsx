@@ -11,10 +11,9 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { Card } from "../atoms/Card";
-import { CommunityActivity } from "@/services/home.service";
 
 interface CommunityActivityPulseProps {
-  activity: CommunityActivity;
+  activity: CommunityActivityType;
 }
 
 export const CommunityActivityPulse: React.FC<CommunityActivityPulseProps> = ({ activity }) => {

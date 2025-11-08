@@ -1,4 +1,4 @@
-export interface UserProfile {
+ interface UserProfileType {
   id: string;
   email: string;
   name: string;
@@ -8,13 +8,13 @@ export interface UserProfile {
   updated_at: string;
 }
 
-export interface ProfileUpdateData {
+ interface ProfileUpdateDataType {
   name?: string;
   phone?: string;
   avatar_url?: string;
 }
 
-export interface UserStats {
+interface UserStatsType {
   incidentsReported: number;
   memberSince: string;
 }

@@ -3,10 +3,9 @@ import { View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withDelay } from "react-native-reanimated";
 import { Card } from "../atoms/Card";
-import { Hotspot } from "@/services/home.service";
 
 interface HotspotsNearYouProps {
-  hotspots: Hotspot[];
+  hotspots: HotspotType[];
 }
 
 export const HotspotsNearYou: React.FC<HotspotsNearYouProps> = ({ hotspots }) => {

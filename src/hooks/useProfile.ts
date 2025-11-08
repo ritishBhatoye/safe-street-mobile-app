@@ -1,6 +1,6 @@
 import { useGetProfileQuery, useUpdateProfileMutation } from '@/services/profile.service';
 import { useAuth } from '@/contexts/AuthContext';
-import type { ProfileUpdateData } from '@/types';
+
 
 export const useProfile = () => {
   const { user } = useAuth();
@@ -21,7 +21,7 @@ export const useProfile = () => {
 
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
 
-  const handleUpdateProfile = async (data: ProfileUpdateData) => {
+  const handleUpdateProfile = async (data: ProfileUpdateDataType) => {
     if (!user?.id) throw new Error('User not authenticated');
     
     return await updateProfile({ userId: user.id, data }).unwrap();

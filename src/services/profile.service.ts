@@ -1,13 +1,13 @@
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { supabase } from "@/lib/supabase";
-import type { UserProfile, ProfileUpdateData, UserStats } from "@/types";
+
 
 export const profileApi = createApi({
   reducerPath: "profileApi",
   baseQuery: fakeBaseQuery(),
   tagTypes: ["Profile", "Stats"],
   endpoints: (builder) => ({
-    getProfile: builder.query<UserProfile, string>({
+    getProfile: builder.query<UserProfileType, string>({
       queryFn: async (userId) => {
         try {
           const { data, error } = await supabase
@@ -46,14 +46,14 @@ export const profileApi = createApi({
                   return { error: { status: "CUSTOM_ERROR", error: createError.message } };
                 }
 
-                return { data: createdProfile as UserProfile };
+                return { data: createdProfile as UserProfileType };
               }
             }
 
             return { error: { status: "CUSTOM_ERROR", error: error.message } };
           }
 
-          return { data: data as UserProfile };
+          return { data: data as UserProfileType };
         } catch (error) {
           return { error: { status: "CUSTOM_ERROR", error: String(error) } };
         }
@@ -61,7 +61,7 @@ export const profileApi = createApi({
       providesTags: ["Profile"],
     }),
 
-    updateProfile: builder.mutation<UserProfile, { userId: string; data: ProfileUpdateData }>({
+    updateProfile: builder.mutation<UserProfileType, { userId: string; data: ProfileUpdateDataType }>({
       queryFn: async ({ userId, data }) => {
         try {
           const updateData = {
@@ -80,7 +80,7 @@ export const profileApi = createApi({
             return { error: { status: "CUSTOM_ERROR", error: error.message } };
           }
 
-          return { data: updatedData as UserProfile };
+          return { data: updatedData as UserProfileType };
         } catch (error) {
           return { error: { status: "CUSTOM_ERROR", error: String(error) } };
         }
@@ -121,7 +121,7 @@ export const profileApi = createApi({
       invalidatesTags: ["Profile"],
     }),
 
-    getUserStats: builder.query<UserStats, string>({
+    getUserStats: builder.query<UserStatsType, string>({
       queryFn: async (userId) => {
         try {
           const { count, error: countError } = await supabase
