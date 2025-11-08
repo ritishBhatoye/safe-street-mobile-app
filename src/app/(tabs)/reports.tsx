@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { View, FlatList, RefreshControl, StatusBar, ActivityIndicator, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -11,6 +11,8 @@ import { Report } from "@/services/reports.service";
 const ITEMS_PER_PAGE = 10;
 
 export default function ReportsScreen() {
+  const [searchQuery, setSearchQuery] = useState("");
+  
   const {
     reports,
     totalReports,
@@ -22,6 +24,21 @@ export default function ReportsScreen() {
     onRefresh,
     loadMore,
   } = useReports(ITEMS_PER_PAGE);
+
+  // Filter reports based on search query
+  const filteredReports = useMemo(() => {
+    if (!searchQuery.trim()) return reports;
+    
+    const query = searchQuery.toLowerCase();
+    return reports.filter((report) => 
+      report.title?.toLowerCase().includes(query) ||
+      report.description?.toLowerCase().includes(query) ||
+      report.type?.toLowerCase().includes(query) ||
+      report.location?.toLowerCase().includes(query) ||
+      report.status?.toLowerCase().includes(query) ||
+      report.priority?.toLowerCase().includes(query)
+    );
+  }, [reports, searchQuery]);
 
   const handleReportPress = (report: Report) => {
     console.log("Report pressed:", report.id);
@@ -83,12 +100,19 @@ export default function ReportsScreen() {
           <StatusBar barStyle="dark-content" />
 
           <FlatList
-            data={reports}
+            data={filteredReports}
             renderItem={({ item, index }) => (
               <ReportCard item={item} index={index} onPress={handleReportPress} />
             )}
             keyExtractor={(item) => item.id}
-            ListHeaderComponent={<ReportsHeader totalReports={totalReports} reports={reports} />}
+            ListHeaderComponent={
+              <ReportsHeader 
+                totalReports={totalReports} 
+                reports={reports}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+              />
+            }
             contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 100 }}
             refreshControl={
               <RefreshControl
@@ -106,7 +130,14 @@ export default function ReportsScreen() {
             }
             ListEmptyComponent={
               !loading ? (
-                <ReportsEmptyState error={error} onRetry={onRefresh} />
+                searchQuery.trim() ? (
+                  <View className="py-12 items-center">
+                    <Text className="text-gray-500 font-dm-sans-bold text-lg mb-2">No results found</Text>
+                    <Text className="text-gray-400 font-dm-sans text-sm">Try a different search term</Text>
+                  </View>
+                ) : (
+                  <ReportsEmptyState error={error} onRetry={onRefresh} />
+                )
               ) : null
             }
             onEndReached={loadMore}

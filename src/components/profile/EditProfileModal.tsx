@@ -12,13 +12,13 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from '@/components/atoms/Button';
-import type { UserProfile, ProfileUpdateData } from '@/types';
+
 
 interface EditProfileModalProps {
   visible: boolean;
-  currentProfile: UserProfile;
+  currentProfile: UserProfileType;
   onClose: () => void;
-  onSave: (data: ProfileUpdateData) => Promise<void>;
+  onSave: (data: ProfileUpdateDataType) => Promise<void>;
   onAvatarPress: () => void;
 }
 

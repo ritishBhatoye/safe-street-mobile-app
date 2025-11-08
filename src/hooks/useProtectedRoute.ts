@@ -21,11 +21,11 @@ export function useProtectedRoute() {
     if (!user && isProtectedRoute) {
       // User is not signed in but trying to access protected route
       // Redirect to sign in
-      router.replace('/(auth)/sign-in');
+      router.replace('/(auth)/sign-in' as any);
     } else if (user && (inAuthGroup || inOnboarding)) {
       // User is signed in but on auth/onboarding screens
       // Redirect to main app
-      router.replace('/(tabs)/');
+      router.replace('/(tabs)/' as any);
     }
   }, [user, loading, segments]);
 }

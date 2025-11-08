@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
-import { homeService, NearbyIncident, Hotspot, CommunityActivity, SafetyScore } from "@/services/home.service";
+import { homeService } from "@/services/home.service";
 import * as Location from "expo-location";
 
 interface UseHomeDataResult {
-  safetyScore: SafetyScore | null;
-  nearbyIncidents: NearbyIncident[];
-  hotspots: Hotspot[];
-  communityActivity: CommunityActivity | null;
+  safetyScore: SafetyScoreType | null;
+  nearbyIncidents: NearbyIncidentType[];
+  hotspots: HotspotType[];
+  communityActivity: CommunityActivityType | null;
   userLocation: Location.LocationObject | null;
   loading: boolean;
   refreshing: boolean;
@@ -15,10 +15,10 @@ interface UseHomeDataResult {
 }
 
 export const useHomeData = (): UseHomeDataResult => {
-  const [safetyScore, setSafetyScore] = useState<SafetyScore | null>(null);
-  const [nearbyIncidents, setNearbyIncidents] = useState<NearbyIncident[]>([]);
-  const [hotspots, setHotspots] = useState<Hotspot[]>([]);
-  const [communityActivity, setCommunityActivity] = useState<CommunityActivity | null>(null);
+  const [safetyScore, setSafetyScore] = useState<SafetyScoreType | null>(null);
+  const [nearbyIncidents, setNearbyIncidents] = useState<NearbyIncidentType[]>([]);
+  const [hotspots, setHotspots] = useState<HotspotType[]>([]);
+  const [communityActivity, setCommunityActivity] = useState<CommunityActivityType | null>(null);
   const [userLocation, setUserLocation] = useState<Location.LocationObject | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
