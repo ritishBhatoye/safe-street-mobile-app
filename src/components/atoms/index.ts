@@ -12,3 +12,5 @@ export { default as ActionTile } from './ActionTile';
 export { default as GlassTabBarBackground } from './GlassTabBarBackground';
 export { default as GradientCTA } from './GradientCTA';
 export {Icon} from './Icon'
+export {
+ ShimmerEffect } from './ShimmerEffect';

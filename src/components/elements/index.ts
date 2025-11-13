@@ -1,3 +1,4 @@
+export { ActionSheet } from './ActionSheet';
 export { CategoryChip } from './CategoryChip';
 export { EmergencyContactCard } from './EmergencyContactCard';
 export { IncidentCard } from './IncidentCard';

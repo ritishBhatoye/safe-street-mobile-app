@@ -45,7 +45,7 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
   return (
     <View className=" pt-4 pb-6">
       <View className="flex-row items-center justify-between mb-6">
-        <View className="flex-1">
+       {!isSearchExpanded &&( <View className="flex-1">
           <Text className="text-4xl font-dm-sans-bold text-gray-900 mb-1">Reports</Text>
           <View className="flex-row items-center">
             <View className="bg-blue-500 rounded-full w-2 h-2 mr-2" />
@@ -53,7 +53,7 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
               {totalReports} total reports
             </Text>
           </View>
-        </View>
+        </View>)}
         
         <View className="flex-row gap-2">
           {/* Animated Search Bar */}
@@ -61,11 +61,11 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
             style={{ width: searchWidth }}
             className="rounded-2xl overflow-hidden"
           >
-            <BlurView intensity={40} tint="light">
+            <BlurView intensity={40} tint="prominent">
               <LinearGradient
                 colors={["rgba(255, 255, 255, 0.9)", "rgba(249, 250, 251, 0.9)"]}
                 className="flex-row items-center"
-                style={{ padding: 12 }}
+                style={{ padding: 12,flexDirection:'row-reverse',alignItems:'center' }}
               >
                 <TouchableOpacity onPress={toggleSearch}>
                   <Ionicons 
