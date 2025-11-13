@@ -29,7 +29,7 @@ export const ActionSheet = forwardRef<ActionSheetRef, ActionSheetProps>(
       <ActionsSheet
         ref={ref}
         containerStyle={styles.container}
-        gestureEnabled={true}
+        // gestureEnabled={true}
         defaultOverlayOpacity={0.3}
         {...props}
       >
