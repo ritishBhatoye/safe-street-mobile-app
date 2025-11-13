@@ -61,11 +61,11 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
             style={{ width: searchWidth }}
             className="rounded-2xl overflow-hidden"
           >
-            <BlurView intensity={40} tint="light">
+            <BlurView intensity={40} tint="prominent">
               <LinearGradient
                 colors={["rgba(255, 255, 255, 0.9)", "rgba(249, 250, 251, 0.9)"]}
                 className="flex-row items-center"
-                style={{ padding: 12 }}
+                style={{ padding: 12,flexDirection:'row-reverse',alignItems:'center' }}
               >
                 <TouchableOpacity onPress={toggleSearch}>
                   <Ionicons 
