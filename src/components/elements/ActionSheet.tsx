@@ -29,8 +29,12 @@ export const ActionSheet = forwardRef<ActionSheetRef, ActionSheetProps>(
       <ActionsSheet
         ref={ref}
         containerStyle={styles.container}
-        // gestureEnabled={true}
+        gestureEnabled={true}
         defaultOverlayOpacity={0.3}
+        snapPoints={[50, 75, 100]}
+        initialSnapIndex={1}
+        enableGesturesInScrollView={false}
+        indicatorStyle={styles.hiddenIndicator}
         {...props}
       >
         <View style={styles.content}>
@@ -92,6 +96,11 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     backgroundColor: '#ffffff',
+  },
+  hiddenIndicator: {
+    width: 0,
+    height: 0,
+    opacity: 0,
   },
   content: {
     paddingBottom: 20,
