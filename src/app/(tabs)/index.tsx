@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, RefreshControl, View, Text, ActivityIndicator } from "react-native";
+import { ScrollView, RefreshControl, View, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useHomeData } from "@/hooks/useHomeData";
@@ -13,6 +13,7 @@ import { EmergencyCard } from "@/components/home/EmergencyCard";
 import { ContributeCTA } from "@/components/home/ContributeCTA";
 import { SafetyTips } from "@/components/home/SafetyTips";
 import { UserImpactTeaser } from "@/components/home/UserImpactTeaser";
+import { HomeLoadingSkeleton } from "@/components/home/HomeLoadingSkeleton";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -29,16 +30,7 @@ export default function HomeScreen() {
   } = useHomeData();
 
   if (loading) {
-    return (
-      <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900">
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#3399FF" />
-          <Text className="mt-4 text-base font-dm-sans-medium text-gray-600 dark:text-gray-400">
-            Loading your safety dashboard...
-          </Text>
-        </View>
-      </SafeAreaView>
-    );
+    return <HomeLoadingSkeleton />;
   }
 
   if (error) {
