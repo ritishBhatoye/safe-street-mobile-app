@@ -163,6 +163,7 @@ export default function ReportsScreen() {
                 reports={reports}
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
+                onFilterPress={handleFilterPress}
               />
             }
             contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 100 }}
@@ -195,6 +196,14 @@ export default function ReportsScreen() {
             onEndReached={loadMore}
             onEndReachedThreshold={0.5}
             showsVerticalScrollIndicator={false}
+          />
+
+          {/* Filter Sheet */}
+          <ReportsFilterSheet
+            sheetRef={filterSheetRef}
+            filters={filters}
+            onFiltersChange={setFilters}
+            onReset={handleResetFilters}
           />
         </SafeAreaView>
       </LinearGradient>

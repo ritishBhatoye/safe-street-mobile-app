@@ -12,7 +12,7 @@ export interface ReportFilters {
 }
 
 interface ReportsFilterSheetProps {
-  sheetRef: React.RefObject<ActionSheetRef>;
+  sheetRef: React.RefObject<ActionSheetRef | null>;
   filters: ReportFilters;
   onFiltersChange: (filters: ReportFilters) => void;
   onReset: () => void;
