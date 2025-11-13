@@ -8,6 +8,7 @@ import { ReportCard } from "@/components/reports/ReportCard";
 import { ReportsHeader } from "@/components/reports/ReportsHeader";
 import { ReportsEmptyState } from "@/components/reports/ReportsEmptyState";
 import { ReportsFilterSheet, ReportFilters } from "@/components/reports/ReportsFilterSheet";
+import { ReportsLoadingSkeleton } from "@/components/reports/ReportsLoadingSkeleton";
 import { Report } from "@/services/reports.service";
 
 const ITEMS_PER_PAGE = 10;
@@ -125,15 +126,13 @@ export default function ReportsScreen() {
           colors={["#eff6ff", "#faf5ff", "#f5f3ff"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          className="flex-1 items-center justify-center"
+          style={{flex:1}}
+      
         >
-          <View className="items-center">
-            <View className="bg-white/80 rounded-full p-6 mb-4">
-              <ActivityIndicator size="large" color="#3b82f6" />
-            </View>
-            <Text className="text-gray-700 font-dm-sans-bold text-lg">Loading reports...</Text>
-            <Text className="text-gray-500 font-dm-sans text-sm mt-2">Please wait</Text>
-          </View>
+          <SafeAreaView className="flex-1" edges={["top"]}>
+            <StatusBar barStyle="dark-content" />
+            <ReportsLoadingSkeleton />
+          </SafeAreaView>
         </LinearGradient>
       </View>
     );
