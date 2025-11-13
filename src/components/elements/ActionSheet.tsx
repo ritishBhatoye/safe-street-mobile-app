@@ -1,6 +1,6 @@
 import React, { forwardRef, ReactNode } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import ActionsSheet, { SheetProps } from 'react-native-actions-sheet';
+import ActionsSheet, { SheetProps, ActionSheetRef } from 'react-native-actions-sheet';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -10,10 +10,10 @@ interface ActionSheetProps extends Partial<SheetProps> {
   subtitle?: string;
   children: ReactNode;
   showCloseButton?: boolean;
-  headerGradient?: string[];
+  headerGradient?: [string, string, ...string[]];
 }
 
-export const ActionSheet = forwardRef<ActionsSheet, ActionSheetProps>(
+export const ActionSheet = forwardRef<ActionSheetRef, ActionSheetProps>(
   (
     {
       title,
