@@ -147,6 +147,7 @@ export default function ReportDetailScreen() {
                 <LinearGradient
                   colors={['#1c1c1c', '#000000']}
                   className="flex-1"
+                  style={{flex:1}}
                 >
                   <ScrollView
                     contentContainerStyle={{ padding: 22 }}
