@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StatusBar, ScrollView, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StatusBar, ScrollView, Dimensions, useColorScheme } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PagerView from 'react-native-pager-view';
@@ -21,6 +21,7 @@ export default function ReportDetailScreen() {
   const params = useLocalSearchParams();
   const router = useRouter();
   const pagerRef = useRef<PagerView>(null);
+  const colorScheme = useColorScheme();
 
   const reports: Report[] = params.reports ? JSON.parse(params.reports as string) : [];
   const initialIndex = params.initialIndex ? parseInt(params.initialIndex as string) : 0;
@@ -51,9 +52,9 @@ export default function ReportDetailScreen() {
 
   if (reports.length === 0) {
     return (
-      <SafeAreaView className="flex-1 bg-black">
+      <SafeAreaView className="flex-1 bg-white dark:bg-black">
         <View className="flex-1 items-center justify-center">
-          <Text className="text-white">No reports found</Text>
+          <Text className="text-black dark:text-white">No reports found</Text>
         </View>
       </SafeAreaView>
     );
@@ -81,35 +82,35 @@ export default function ReportDetailScreen() {
   };
 
   return (
-    <View className="flex-1 bg-black">
+    <View className="flex-1 bg-white dark:bg-black">
       <StatusBar barStyle="light-content" />
 
       {/* Dimmed Overlay when expanded */}
       {isExpanded && (
         <Animated.View
-          className="absolute inset-0 bg-black/60 z-0"
+          className="absolute inset-0 bg-black/60 dark:bg-black/60 z-0"
           pointerEvents="none"
         />
       )}
 
       {/* Header */}
       <SafeAreaView edges={['top']} className="absolute top-0 left-0 right-0 z-20">
-        <BlurView intensity={20} tint="dark" className="px-4 py-3">
+        <BlurView intensity={20} tint={colorScheme === 'dark' ? 'dark' : 'light'} className="px-4 py-3">
           <View className="flex-row items-center justify-between">
 
             <TouchableOpacity
               onPress={() => (isExpanded ? collapseCard() : router.back())}
-              className="w-10 h-10 rounded-full bg-white/20 items-center justify-center"
+              className="w-10 h-10 rounded-full bg-black/20 dark:bg-white/20 items-center justify-center"
             >
-              <Ionicons name={isExpanded ? "arrow-down" : "close"} size={20} color="#fff" />
+              <Ionicons name={isExpanded ? "arrow-down" : "close"} size={20} color={colorScheme === 'dark' ? '#fff' : '#000'} />
             </TouchableOpacity>
 
-            <Text className="text-white font-dm-sans-bold text-base">
+            <Text className="text-black dark:text-white font-dm-sans-bold text-base">
               {currentPage + 1} / {reports.length}
             </Text>
 
-            <TouchableOpacity className="w-10 h-10 rounded-full bg-white/20 items-center justify-center">
-              <Ionicons name="ellipsis-horizontal" size={24} color="#ffffff" />
+            <TouchableOpacity className="w-10 h-10 rounded-full bg-black/20 dark:bg-white/20 items-center justify-center">
+              <Ionicons name="ellipsis-horizontal" size={24} color={colorScheme === 'dark' ? '#ffffff' : '#000000'} />
             </TouchableOpacity>
           </View>
         </BlurView>
@@ -146,7 +147,7 @@ export default function ReportDetailScreen() {
                 className="flex-1"
               >
                 <LinearGradient
-                  colors={['#1c1c1c', '#000000']}
+                  colors={colorScheme === 'dark' ? ['#1c1c1c', '#000000'] : ['#f8f9fa', '#ffffff']}
                   style={{flex:1}}
                 >
                   <ScrollView
@@ -165,50 +166,50 @@ export default function ReportDetailScreen() {
                     </View>
 
                     {/* Title */}
-                    <Text className="text-white font-dm-sans-bold text-2xl mb-4">
+                    <Text className="text-black dark:text-white font-dm-sans-bold text-2xl mb-4">
                       {report.title}
                     </Text>
 
                     {/* Location & Date */}
                     <View className="flex-row items-center gap-4 mb-6">
                       <View className="flex-row items-center">
-                        <Ionicons name="location" size={14} color="#9ca3af" />
-                        <Text className="text-gray-400 ml-1">{report.location}</Text>
+                        <Ionicons name="location" size={14} color="#6b7280" />
+                        <Text className="text-gray-600 dark:text-gray-400 ml-1">{report.location}</Text>
                       </View>
                       <View className="flex-row items-center">
-                        <Ionicons name="time" size={14} color="#9ca3af" />
-                        <Text className="text-gray-400 ml-1">
+                        <Ionicons name="time" size={14} color="#6b7280" />
+                        <Text className="text-gray-600 dark:text-gray-400 ml-1">
                           {new Date(report.created_at).toLocaleDateString()}
                         </Text>
                       </View>
                     </View>
 
                     {/* Description */}
-                    <BlurView intensity={40} tint="dark" className="rounded-3xl p-4 mb-5">
-                      <Text className="text-white/90">{report.description}</Text>
+                    <BlurView intensity={40} tint={colorScheme === 'dark' ? 'dark' : 'light'} className="rounded-3xl p-4 mb-5">
+                      <Text className="text-black/90 dark:text-white/90">{report.description}</Text>
                     </BlurView>
 
                     {isExpanded && (
                       <>
                         {/* Status */}
-                        <BlurView intensity={40} tint="dark" className="rounded-3xl p-4 mb-5">
-                          <Text className="text-gray-400 text-xs uppercase mb-2">Status</Text>
+                        <BlurView intensity={40} tint={colorScheme === 'dark' ? 'dark' : 'light'} className="rounded-3xl p-4 mb-5">
+                          <Text className="text-gray-600 dark:text-gray-400 text-xs uppercase mb-2">Status</Text>
                           <View className="flex-row items-center">
                             <View className="w-2 h-2 rounded-full mr-2" style={{ backgroundColor: getStatusColor(report.status) }} />
-                            <Text className="text-white capitalize">{report.status}</Text>
+                            <Text className="text-black dark:text-white capitalize">{report.status}</Text>
                           </View>
                         </BlurView>
 
                         {/* Type */}
-                        <BlurView intensity={40} tint="dark" className="rounded-3xl p-4 mb-5">
-                          <Text className="text-gray-400 text-xs uppercase mb-2">Incident Type</Text>
-                          <Text className="text-white capitalize">{report.type}</Text>
+                        <BlurView intensity={40} tint={colorScheme === 'dark' ? 'dark' : 'light'} className="rounded-3xl p-4 mb-5">
+                          <Text className="text-gray-600 dark:text-gray-400 text-xs uppercase mb-2">Incident Type</Text>
+                          <Text className="text-black dark:text-white capitalize">{report.type}</Text>
                         </BlurView>
 
                         {/* ID */}
-                        <BlurView intensity={40} tint="dark" className="rounded-3xl p-4">
-                          <Text className="text-gray-400 text-xs uppercase mb-2">Report ID</Text>
-                          <Text className="text-white/80">#{report.id.slice(0, 8)}</Text>
+                        <BlurView intensity={40} tint={colorScheme === 'dark' ? 'dark' : 'light'} className="rounded-3xl p-4">
+                          <Text className="text-gray-600 dark:text-gray-400 text-xs uppercase mb-2">Report ID</Text>
+                          <Text className="text-black/80 dark:text-white/80">#{report.id.slice(0, 8)}</Text>
                         </BlurView>
                       </>
                     )}
