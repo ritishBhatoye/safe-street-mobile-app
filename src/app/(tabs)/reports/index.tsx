@@ -98,7 +98,7 @@ export default function ReportsScreen() {
   const handleReportPress = (report: Report) => {
     const reportIndex = filteredReports.findIndex((r) => r.id === report.id);
     router.push({
-      pathname: '/report-detail',
+      pathname: '/(tabs)/reports/detail',
       params: {
         reports: JSON.stringify(filteredReports),
         initialIndex: reportIndex.toString(),

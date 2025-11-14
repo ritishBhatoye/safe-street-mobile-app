@@ -5,7 +5,9 @@ const ReportsLayout = () => {
   return (
     <Stack screenOptions={{headerShown:false}}>
         <Stack.Screen name='index'/>
-        <Stack.Screen name=''/>
+        <Stack.Screen name='details'/>
+        <Stack.Screen name='create-report'/>
+
     </Stack>
   )
 }
