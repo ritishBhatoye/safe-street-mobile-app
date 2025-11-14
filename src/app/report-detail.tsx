@@ -132,6 +132,7 @@ export default function ReportDetailScreen() {
             <Animated.View
               style={[
                 {
+                marginTop:isExpanded?200:0,
                   width: isExpanded ? SCREEN_WIDTH : CARD_WIDTH,
                   height: isExpanded ? SCREEN_HEIGHT : CARD_HEIGHT,
                   overflow: 'hidden',
@@ -146,7 +147,6 @@ export default function ReportDetailScreen() {
               >
                 <LinearGradient
                   colors={['#1c1c1c', '#000000']}
-                  className="flex-1"
                   style={{flex:1}}
                 >
                   <ScrollView
