@@ -3,6 +3,7 @@ import { View, FlatList, RefreshControl, StatusBar, ActivityIndicator, Text } fr
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { ActionSheetRef } from "react-native-actions-sheet";
+import { useRouter } from "expo-router";
 import { useReports } from "@/hooks/useReports";
 import { ReportCard } from "@/components/reports/ReportCard";
 import { ReportsHeader } from "@/components/reports/ReportsHeader";
@@ -14,6 +15,7 @@ import { Report } from "@/services/reports.service";
 const ITEMS_PER_PAGE = 10;
 
 export default function ReportsScreen() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const filterSheetRef = useRef<ActionSheetRef>(null);
   const [filters, setFilters] = useState<ReportFilters>({
@@ -94,8 +96,14 @@ export default function ReportsScreen() {
   };
 
   const handleReportPress = (report: Report) => {
-    console.log("Report pressed:", report.id);
-    // TODO: Navigate to report details
+    const reportIndex = filteredReports.findIndex((r) => r.id === report.id);
+    router.push({
+      pathname: '/report-detail',
+      params: {
+        reports: JSON.stringify(filteredReports),
+        initialIndex: reportIndex.toString(),
+      },
+    });
   };
 
   const renderFooter = () => {
