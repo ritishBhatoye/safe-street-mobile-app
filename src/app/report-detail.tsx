@@ -10,26 +10,56 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { BlurView } from 'expo-blur';
 import { Report } from '@/services/reports.service';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-const CARD_WIDTH = SCREEN_WIDTH * 0.85;
-const CARD_HEIGHT = SCREEN_HEIGHT * 0.75;
+const CARD_WIDTH = SCREEN_WIDTH * 0.90;
+const CARD_HEIGHT = SCREEN_HEIGHT * 0.68;
 
 export default function ReportDetailScreen() {
   const params = useLocalSearchParams();
   const router = useRouter();
   const pagerRef = useRef<PagerView>(null);
-  
+
   const reports: Report[] = params.reports ? JSON.parse(params.reports as string) : [];
   const initialIndex = params.initialIndex ? parseInt(params.initialIndex as string) : 0;
-  
+
   const [currentPage, setCurrentPage] = useState(initialIndex);
   const [isExpanded, setIsExpanded] = useState(false);
-  
-  const scale = useSharedValue(0.9);
-  const translateY = useSharedValue(40);
 
+  // Animation
+  const scale = useSharedValue(0.92);
+  const radius = useSharedValue(28);
+
+  const expandCard = () => {
+    setIsExpanded(true);
+    scale.value = withSpring(1, { damping: 15 });
+    radius.value = withSpring(0, { damping: 15 });
+  };
+
+  const collapseCard = () => {
+    setIsExpanded(false);
+    scale.value = withSpring(0.92, { damping: 15 });
+    radius.value = withSpring(28, { damping: 15 });
+  };
+
+  const cardStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+    borderRadius: radius.value,
+  }));
+
+  if (reports.length === 0) {
+    return (
+      <SafeAreaView className="flex-1 bg-black">
+        <View className="flex-1 items-center justify-center">
+          <Text className="text-white">No reports found</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // Colors
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'critical': return '#ef4444';
@@ -50,237 +80,145 @@ export default function ReportDetailScreen() {
     }
   };
 
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
-    scale.value = withSpring(isExpanded ? 0.9 : 1, { damping: 15 });
-    translateY.value = withSpring(isExpanded ? 40 : 0, { damping: 15 });
-  };
-
-  const cardAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        { scale: scale.value },
-        { translateY: translateY.value },
-      ],
-    };
-  });
-
-  if (reports.length === 0) {
-    return (
-      <SafeAreaView className="flex-1 bg-black">
-        <View className="flex-1 items-center justify-center">
-          <Text className="text-white">No reports found</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   return (
     <View className="flex-1 bg-black">
       <StatusBar barStyle="light-content" />
-      
+
+      {/* Dimmed Overlay when expanded */}
+      {isExpanded && (
+        <Animated.View
+          className="absolute inset-0 bg-black/60 z-0"
+          pointerEvents="none"
+        />
+      )}
+
       {/* Header */}
       <SafeAreaView edges={['top']} className="absolute top-0 left-0 right-0 z-20">
-        <View className="px-4 py-3">
+        <BlurView intensity={20} tint="dark" className="px-4 py-3">
           <View className="flex-row items-center justify-between">
+
             <TouchableOpacity
-              onPress={() => router.back()}
-              className="w-10 h-10 rounded-full bg-white/10 items-center justify-center"
+              onPress={() => (isExpanded ? collapseCard() : router.back())}
+              className="w-10 h-10 rounded-full bg-white/20 items-center justify-center"
             >
-              <Ionicons name="close" size={24} color="#ffffff" />
+              <Ionicons name={isExpanded ? "arrow-down" : "close"} size={20} color="#fff" />
             </TouchableOpacity>
-            
+
             <Text className="text-white font-dm-sans-bold text-base">
               {currentPage + 1} / {reports.length}
             </Text>
-            
-            <TouchableOpacity className="w-10 h-10 rounded-full bg-white/10 items-center justify-center">
-              <Ionicons name="share-social" size={20} color="#ffffff" />
+
+            <TouchableOpacity className="w-10 h-10 rounded-full bg-white/20 items-center justify-center">
+              <Ionicons name="ellipsis-horizontal" size={24} color="#ffffff" />
             </TouchableOpacity>
           </View>
-        </View>
+        </BlurView>
       </SafeAreaView>
 
-      {/* Page Indicators */}
-      <View className="absolute top-24 left-0 right-0 z-20 flex-row px-6 gap-1">
-        {reports.map((_, index) => (
-          <View
-            key={index}
-            className="flex-1 h-1 rounded-full overflow-hidden bg-white/20"
-          >
-            {index === currentPage && (
-              <View className="h-full bg-white rounded-full" />
-            )}
-          </View>
-        ))}
-      </View>
+      {/* PagerView */}
+      <PagerView
+        ref={pagerRef}
+        style={{ flex: 1 }}
+        initialPage={initialIndex}
+        onPageSelected={(e) => {
+          setCurrentPage(e.nativeEvent.position);
+          collapseCard();
+        }}
+      >
+        {reports.map((report) => (
+          <View key={report.id} className="flex-1 items-center justify-center px-4">
 
-      {/* PagerView with Animated Cards */}
-      <View className="flex-1 justify-center">
-        <PagerView
-          ref={pagerRef}
-          style={{ flex: 1 }}
-          initialPage={initialIndex}
-          onPageSelected={(e) => {
-            setCurrentPage(e.nativeEvent.position);
-            setIsExpanded(false);
-            scale.value = withSpring(0.9, { damping: 15 });
-            translateY.value = withSpring(40, { damping: 15 });
-          }}
-        >
-          {reports.map((report) => (
-            <View key={report.id} className="flex-1 items-center justify-center">
-              <Animated.View
-                style={[
-                  {
-                    width: CARD_WIDTH,
-                    height: isExpanded ? SCREEN_HEIGHT : CARD_HEIGHT,
-                    borderRadius: isExpanded ? 0 : 32,
-                    overflow: 'hidden',
-                  },
-                  cardAnimatedStyle,
-                ]}
+            {/* Animated Report Card */}
+            <Animated.View
+              style={[
+                {
+                  width: isExpanded ? SCREEN_WIDTH : CARD_WIDTH,
+                  height: isExpanded ? SCREEN_HEIGHT : CARD_HEIGHT,
+                  overflow: 'hidden',
+                },
+                cardStyle,
+              ]}
+            >
+              <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => (isExpanded ? collapseCard() : expandCard())}
+                className="flex-1"
               >
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={toggleExpand}
-                  style={{ flex: 1 }}
+                <LinearGradient
+                  colors={['#1c1c1c', '#000000']}
+                  className="flex-1"
                 >
-                  <LinearGradient
-                    colors={['#1a1a1a', '#0a0a0a']}
-                    className="flex-1"
+                  <ScrollView
+                    contentContainerStyle={{ padding: 22 }}
+                    scrollEnabled={isExpanded}
+                    showsVerticalScrollIndicator={false}
                   >
-                    <ScrollView
-                      className="flex-1"
-                      contentContainerStyle={{ padding: 24 }}
-                      showsVerticalScrollIndicator={false}
-                      scrollEnabled={isExpanded}
+                    {/* Priority Badge */}
+                    <View
+                      className="self-start px-4 py-2 rounded-full mb-4"
+                      style={{ backgroundColor: `${getPriorityColor(report.priority)}20` }}
                     >
-                      {/* Priority Badge */}
-                      <View className="mb-4">
-                        <View
-                          className="self-start px-4 py-2 rounded-full"
-                          style={{ backgroundColor: `${getPriorityColor(report.priority)}20` }}
-                        >
-                          <Text
-                            className="font-dm-sans-bold text-xs uppercase"
-                            style={{ color: getPriorityColor(report.priority) }}
-                          >
-                            {report.priority}
-                          </Text>
-                        </View>
-                      </View>
-
-                      {/* Title */}
-                      <Text className="text-white font-dm-sans-bold text-2xl mb-3">
-                        {report.title}
+                      <Text className="font-dm-sans-bold text-xs uppercase" style={{ color: getPriorityColor(report.priority) }}>
+                        {report.priority}
                       </Text>
+                    </View>
 
-                      {/* Meta Info */}
-                      <View className="flex-row items-center mb-4 gap-3">
-                        <View className="flex-row items-center">
-                          <Ionicons name="location" size={14} color="#9ca3af" />
-                          <Text className="text-gray-400 font-dm-sans text-xs ml-1">
-                            {report.location}
-                          </Text>
-                        </View>
-                        <View className="flex-row items-center">
-                          <Ionicons name="time" size={14} color="#9ca3af" />
-                          <Text className="text-gray-400 font-dm-sans text-xs ml-1">
-                            {new Date(report.created_at).toLocaleDateString()}
-                          </Text>
-                        </View>
+                    {/* Title */}
+                    <Text className="text-white font-dm-sans-bold text-2xl mb-4">
+                      {report.title}
+                    </Text>
+
+                    {/* Location & Date */}
+                    <View className="flex-row items-center gap-4 mb-6">
+                      <View className="flex-row items-center">
+                        <Ionicons name="location" size={14} color="#9ca3af" />
+                        <Text className="text-gray-400 ml-1">{report.location}</Text>
                       </View>
-
-                      {/* Description */}
-                      <View className="bg-white/5 rounded-2xl p-4 mb-4">
-                        <Text className="text-white/90 font-dm-sans text-sm leading-5">
-                          {report.description}
+                      <View className="flex-row items-center">
+                        <Ionicons name="time" size={14} color="#9ca3af" />
+                        <Text className="text-gray-400 ml-1">
+                          {new Date(report.created_at).toLocaleDateString()}
                         </Text>
                       </View>
+                    </View>
 
-                      {isExpanded && (
-                        <>
-                          {/* Status */}
-                          <View className="bg-white/5 rounded-2xl p-4 mb-4">
-                            <Text className="text-gray-400 font-dm-sans-bold text-xs uppercase mb-2">
-                              Status
-                            </Text>
-                            <View className="flex-row items-center">
-                              <View
-                                className="w-2 h-2 rounded-full mr-2"
-                                style={{ backgroundColor: getStatusColor(report.status) }}
-                              />
-                              <Text className="text-white font-dm-sans-bold capitalize">
-                                {report.status}
-                              </Text>
-                            </View>
+                    {/* Description */}
+                    <BlurView intensity={40} tint="dark" className="rounded-3xl p-4 mb-5">
+                      <Text className="text-white/90">{report.description}</Text>
+                    </BlurView>
+
+                    {isExpanded && (
+                      <>
+                        {/* Status */}
+                        <BlurView intensity={40} tint="dark" className="rounded-3xl p-4 mb-5">
+                          <Text className="text-gray-400 text-xs uppercase mb-2">Status</Text>
+                          <View className="flex-row items-center">
+                            <View className="w-2 h-2 rounded-full mr-2" style={{ backgroundColor: getStatusColor(report.status) }} />
+                            <Text className="text-white capitalize">{report.status}</Text>
                           </View>
+                        </BlurView>
 
-                          {/* Type */}
-                          <View className="bg-white/5 rounded-2xl p-4 mb-4">
-                            <Text className="text-gray-400 font-dm-sans-bold text-xs uppercase mb-2">
-                              Incident Type
-                            </Text>
-                            <Text className="text-white font-dm-sans-bold capitalize">
-                              {report.type}
-                            </Text>
-                          </View>
+                        {/* Type */}
+                        <BlurView intensity={40} tint="dark" className="rounded-3xl p-4 mb-5">
+                          <Text className="text-gray-400 text-xs uppercase mb-2">Incident Type</Text>
+                          <Text className="text-white capitalize">{report.type}</Text>
+                        </BlurView>
 
-                          {/* Report ID */}
-                          <View className="bg-white/5 rounded-2xl p-4">
-                            <Text className="text-gray-400 font-dm-sans-bold text-xs uppercase mb-2">
-                              Report ID
-                            </Text>
-                            <Text className="text-white/70 font-dm-sans text-sm">
-                              #{report.id.slice(0, 8)}
-                            </Text>
-                          </View>
-                        </>
-                      )}
-
-                      {!isExpanded && (
-                        <View className="items-center mt-4">
-                          <Text className="text-gray-500 font-dm-sans text-xs">
-                            Tap to expand
-                          </Text>
-                        </View>
-                      )}
-                    </ScrollView>
-                  </LinearGradient>
-                </TouchableOpacity>
-              </Animated.View>
-            </View>
-          ))}
-        </PagerView>
-      </View>
-
-      {/* Navigation Hints */}
-      {!isExpanded && (
-        <>
-          {currentPage > 0 && (
-            <View className="absolute left-4 top-1/2 -translate-y-6 z-10">
-              <TouchableOpacity
-                onPress={() => pagerRef.current?.setPage(currentPage - 1)}
-                className="w-10 h-10 rounded-full bg-white/10 items-center justify-center"
-              >
-                <Ionicons name="chevron-back" size={20} color="#ffffff" />
+                        {/* ID */}
+                        <BlurView intensity={40} tint="dark" className="rounded-3xl p-4">
+                          <Text className="text-gray-400 text-xs uppercase mb-2">Report ID</Text>
+                          <Text className="text-white/80">#{report.id.slice(0, 8)}</Text>
+                        </BlurView>
+                      </>
+                    )}
+                  </ScrollView>
+                </LinearGradient>
               </TouchableOpacity>
-            </View>
-          )}
-          
-          {currentPage < reports.length - 1 && (
-            <View className="absolute right-4 top-1/2 -translate-y-6 z-10">
-              <TouchableOpacity
-                onPress={() => pagerRef.current?.setPage(currentPage + 1)}
-                className="w-10 h-10 rounded-full bg-white/10 items-center justify-center"
-              >
-                <Ionicons name="chevron-forward" size={20} color="#ffffff" />
-              </TouchableOpacity>
-            </View>
-          )}
-        </>
-      )}
+            </Animated.View>
+
+          </View>
+        ))}
+      </PagerView>
     </View>
   );
 }
