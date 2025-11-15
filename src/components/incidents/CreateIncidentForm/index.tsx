@@ -10,6 +10,9 @@ import { StepIndicator } from './StepIndicator';
 import { IncidentTypeStep } from './IncidentTypeStep';
 import { SeverityDetailsStep } from './SeverityDetailsStep';
 import { LocationDescriptionStep } from './LocationDescriptionStep';
+import { SkiaAnimatedBackground } from './SkiaAnimatedBackground';
+import { SkiaStepTransition } from './SkiaStepTransition';
+import { SkiaAnimatedButton } from './SkiaAnimatedButton';
 
 interface CreateIncidentFormProps {
   // Form Data
@@ -121,13 +124,8 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
 
   return (
     <View className="flex-1">
-      {/* Background Gradient */}
-      <LinearGradient
-        colors={['#F8FAFC', '#F1F5F9', '#E2E8F0']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        className="absolute inset-0"
-      />
+      {/* Skia Animated Background */}
+      <SkiaAnimatedBackground currentStep={currentStep} />
 
       <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
         {/* Error Messages */}
@@ -148,12 +146,17 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
           </Animated.View>
         )}
 
-        {/* Step Indicator */}
-        <StepIndicator
-          currentStep={currentStep}
-          totalSteps={3}
-          stepTitles={stepTitles}
-        />
+        {/* Skia Step Transition */}
+        <Animated.View entering={FadeInDown.delay(100)}>
+          <SkiaStepTransition currentStep={currentStep} totalSteps={3} />
+        </Animated.View>
+
+        {/* Step Titles */}
+        <Animated.View entering={FadeInUp.delay(200)} className="mb-6">
+          <Text className="text-center text-gray-600 dark:text-gray-400 font-dm-sans text-sm">
+            {stepTitles[currentStep - 1]}
+          </Text>
+        </Animated.View>
 
         {/* Step Content */}
         <Animated.View entering={FadeInUp.delay(200)} className="flex-1">
