@@ -164,84 +164,50 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
         </Animated.View>
       </ScrollView>
 
-      {/* Navigation Footer */}
+      {/* Navigation Footer with Skia Buttons */}
       <Animated.View entering={FadeInUp.delay(400)}>
         <BlurView intensity={20} tint="light" className="border-t border-gray-200/50">
           <View className="p-4">
-            <View className="flex-row gap-3">
+            <View className="flex-row gap-3 items-center justify-center">
               {currentStep > 1 && (
-                <TouchableOpacity
+                <SkiaAnimatedButton
+                  title="Back"
                   onPress={prevStep}
-                  className="flex-1 p-4 bg-gray-100 dark:bg-gray-800 rounded-2xl"
-                >
-                  <View className="flex-row items-center justify-center">
-                    <Ionicons name="chevron-back" size={20} color="#6B7280" />
-                    <Text className="text-gray-700 dark:text-gray-300 font-dm-sans-medium ml-1">
-                      Back
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                  variant="secondary"
+                  icon="chevron-back"
+                  width={100}
+                  height={50}
+                />
               )}
               
               {currentStep < 3 ? (
-                <TouchableOpacity
+                <SkiaAnimatedButton
+                  title="Continue"
                   onPress={nextStep}
                   disabled={!canProceedToNextStep()}
-                  className={`flex-1 p-4 rounded-2xl ${
-                    !canProceedToNextStep()
-                      ? 'bg-gray-300 dark:bg-gray-700'
-                      : ''
-                  }`}
-                >
-                  {canProceedToNextStep() ? (
-                    <LinearGradient
-                      colors={['#3B82F6', '#1D4ED8']}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
-                      className="absolute inset-0 rounded-2xl"
-                    />
-                  ) : null}
-                  <View className="flex-row items-center justify-center">
-                    <Text className="text-white font-dm-sans-bold mr-1">
-                      Continue
-                    </Text>
-                    <Ionicons name="chevron-forward" size={20} color="white" />
-                  </View>
-                </TouchableOpacity>
+                  variant="primary"
+                  icon="chevron-forward"
+                  width={currentStep > 1 ? 150 : 200}
+                  height={50}
+                />
               ) : (
-                <TouchableOpacity
+                <SkiaAnimatedButton
+                  title={isLoading ? 'Submitting...' : 'Submit Report'}
                   onPress={onSubmit}
-                  disabled={isLoading || !canProceedToNextStep()}
-                  className={`flex-1 p-4 rounded-2xl ${
-                    isLoading || !canProceedToNextStep()
-                      ? 'bg-gray-400'
-                      : ''
-                  }`}
-                >
-                  {!isLoading && canProceedToNextStep() ? (
-                    <LinearGradient
-                      colors={['#10B981', '#059669']}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
-                      className="absolute inset-0 rounded-2xl"
-                    />
-                  ) : null}
-                  <View className="flex-row items-center justify-center">
-                    {isLoading && (
-                      <Ionicons name="hourglass-outline" size={20} color="white" />
-                    )}
-                    <Text className="text-white font-dm-sans-bold ml-2">
-                      {isLoading ? 'Submitting...' : 'Submit Report'}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                  disabled={!canProceedToNextStep()}
+                  loading={isLoading}
+                  variant="success"
+                  icon={!isLoading ? "checkmark-circle" : undefined}
+                  width={currentStep > 1 ? 180 : 220}
+                  height={50}
+                />
               )}
             </View>
             
             {currentStep === 1 && onCancel && (
               <TouchableOpacity
                 onPress={onCancel}
-                className="mt-3 p-3"
+                className="mt-4 p-3"
               >
                 <Text className="text-center text-gray-500 font-dm-sans">
                   Cancel
