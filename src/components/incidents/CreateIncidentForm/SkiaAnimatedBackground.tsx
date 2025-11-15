@@ -5,13 +5,10 @@ import {
   Circle,
   LinearGradient,
   vec,
-  useSharedValueEffect,
-  useValue,
-  runTiming,
-  Easing,
   Path,
   Skia,
   BlurMask,
+  useValue,
 } from '@shopify/react-native-skia';
 import { useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 
