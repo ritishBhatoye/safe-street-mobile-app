@@ -8,9 +8,9 @@ import { IncidentType, IncidentSeverity } from '@/constants/incidents';
 import { IncidentTypeStep } from './Steps/IncidentTypeStep';
 import { SeverityDetailsStep } from './Steps/SeverityDetailsStep';
 import { LocationDescriptionStep } from './Steps/LocationDescriptionStep';
-import { SkiaAnimatedBackground } from './SkiaAnimatedBackground';
-import { SkiaStepTransition } from './SkiaStepTransition';
-import { SkiaAnimatedButton } from './SkiaAnimatedButton';
+import { ReanimatedBackground } from './ReanimatedBackground';
+import { ReanimatedStepTransition } from './ReanimatedStepTransition';
+import { ReanimatedButton } from './ReanimatedButton';
 
 interface CreateIncidentFormProps {
   // Form Data
@@ -122,8 +122,8 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
 
   return (
     <View className="flex-1">
-      {/* Skia Animated Background */}
-      <SkiaAnimatedBackground currentStep={currentStep} />
+      {/* Reanimated Background */}
+      <ReanimatedBackground currentStep={currentStep} />
 
       <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
         {/* Error Messages */}
@@ -144,16 +144,13 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
           </Animated.View>
         )}
 
-        {/* Skia Step Transition */}
+        {/* Reanimated Step Transition */}
         <Animated.View entering={FadeInDown.delay(100)}>
-          <SkiaStepTransition currentStep={currentStep} totalSteps={3} />
-        </Animated.View>
-
-        {/* Step Titles */}
-        <Animated.View entering={FadeInUp.delay(200)} className="mb-6">
-          <Text className="text-center text-gray-600 dark:text-gray-400 font-dm-sans text-sm">
-            {stepTitles[currentStep - 1]}
-          </Text>
+          <ReanimatedStepTransition 
+            currentStep={currentStep} 
+            totalSteps={3} 
+            stepTitles={stepTitles}
+          />
         </Animated.View>
 
         {/* Step Content */}
@@ -168,7 +165,7 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
           <View className="p-4">
             <View className="flex-row gap-3 items-center justify-center">
               {currentStep > 1 && (
-                <SkiaAnimatedButton
+                <ReanimatedButton
                   title="Back"
                   onPress={prevStep}
                   variant="secondary"
@@ -179,7 +176,7 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
               )}
               
               {currentStep < 3 ? (
-                <SkiaAnimatedButton
+                <ReanimatedButton
                   title="Continue"
                   onPress={nextStep}
                   disabled={!canProceedToNextStep()}
@@ -189,7 +186,7 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
                   height={50}
                 />
               ) : (
-                <SkiaAnimatedButton
+                <ReanimatedButton
                   title={isLoading ? 'Submitting...' : 'Submit Report'}
                   onPress={onSubmit}
                   disabled={!canProceedToNextStep()}
