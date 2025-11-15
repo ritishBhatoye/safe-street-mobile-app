@@ -18,7 +18,7 @@
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
-    "@reduxjs/toolkit": "^2.9.2",
+    "@reduxjs/toolkit": "^2.10.1",
     "@rnmapbox/maps": "^10.2.6",
     "@supabase/supabase-js": "^2.78.0",
     "clsx": "^2.1.1",

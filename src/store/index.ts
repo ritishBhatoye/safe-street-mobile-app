@@ -1,16 +1,28 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { setupListeners } from '@reduxjs/toolkit/query';
-import { profileApi } from '@/services/profile.service';
+import { incidentsApi } from './api/incidentsApi';
 
 export const store = configureStore({
   reducer: {
-    [profileApi.reducerPath]: profileApi.reducer,
+    [incidentsApi.reducerPath]: incidentsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(profileApi.middleware),
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [
+          // RTK Query actions
+          'incidentsApi/executeQuery/pending',
+          'incidentsApi/executeQuery/fulfilled',
+          'incidentsApi/executeQuery/rejected',
+          'incidentsApi/executeMutation/pending',
+          'incidentsApi/executeMutation/fulfilled',
+          'incidentsApi/executeMutation/rejected',
+        ],
+      },
+    }).concat(incidentsApi.middleware),
 });
-
-setupListeners(store.dispatch);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type AppStore = typeof store;
