@@ -1,50 +1,54 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Animated, useColorScheme } from 'react-native';
+import React from 'react';
+import { View, TouchableOpacity, Text, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import { useCreateIncidentMutation } from '@/store/api/incidentsApi';
-import { CreateIncidentRequest } from '@/types/incidents';
-import { 
-  INCIDENT_TYPES, 
-  INCIDENT_SEVERITY, 
-  INCIDENT_TYPE_LABELS, 
-  SEVERITY_LABELS,
-  SEVERITY_COLORS,
-  INCIDENT_TYPE_ICONS 
-} from '@/constants/incidents';
-import { IncidentValidator } from '@/utils/validation';
-import { LocationService } from '@/utils/location';
+import { CreateIncidentRequest, IncidentType, IncidentSeverity } from '@/types/incidents';
+import { StepIndicator } from './StepIndicator';
+import { IncidentTypeStep } from './IncidentTypeStep';
+import { SeverityDetailsStep } from './SeverityDetailsStep';
+import { LocationDescriptionStep } from './LocationDescriptionStep';
 
 interface CreateIncidentFormProps {
-  onSuccess?: () => void;
+  // Form Data
+  formData: Partial<CreateIncidentRequest>;
+  onFormDataChange: (data: Partial<CreateIncidentRequest>) => void;
+  
+  // Step Management
+  currentStep: number;
+  onStepChange: (step: number) => void;
+  
+  // Actions
+  onSubmit: () => void;
   onCancel?: () => void;
+  
+  // State
+  isLoading: boolean;
+  isGettingLocation: boolean;
+  errors: string[];
+  
+  // Location Handler
+  onGetLocation: () => void;
 }
 
 export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
-  onSuccess,
+  formData,
+  onFormDataChange,
+  currentStep,
+  onStepChange,
+  onSubmit,
   onCancel,
+  isLoading,
+  isGettingLocation,
+  errors,
+  onGetLocation,
 }) => {
-  const [createIncident, { isLoading }] = useCreateIncidentMutation();
-  const colorScheme = useColorScheme();
-  
-  const [formData, setFormData] = useState<Partial<CreateIncidentRequest>>({
-    type: undefined,
-    severity: undefined,
-    title: '',
-    description: '',
-    latitude: undefined,
-    longitude: undefined,
-    address: '',
-    city: '',
-    state: '',
-    country: '',
-  });
-
-  const [errors, setErrors] = useState<string[]>([]);
-  const [isGettingLocation, setIsGettingLocation] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [fadeAnim] = useState(new Animated.Value(1));
+  const stepTitles = [
+    'Select Incident Type',
+    'Set Severity & Title', 
+    'Add Location & Details'
+  ];
 
   const handleGetCurrentLocation = async () => {
     setIsGettingLocation(true);
