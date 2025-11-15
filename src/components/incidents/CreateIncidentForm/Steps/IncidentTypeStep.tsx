@@ -1,7 +1,15 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import Animated, { 
+  FadeInDown, 
+  FadeInUp, 
+  useSharedValue, 
+  useAnimatedStyle, 
+  withSpring,
+  withTiming,
+  Easing 
+} from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { 
   INCIDENT_TYPE_LABELS, 

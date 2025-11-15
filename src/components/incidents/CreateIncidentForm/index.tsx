@@ -11,6 +11,7 @@ import { LocationDescriptionStep } from './Steps/LocationDescriptionStep';
 import { ReanimatedBackground } from './ReanimatedBackground';
 import { ReanimatedStepTransition } from './ReanimatedStepTransition';
 import { ReanimatedButton } from './ReanimatedButton';
+import { LoadingOverlay } from './LoadingOverlay';
 
 interface CreateIncidentFormProps {
   // Form Data
@@ -212,6 +213,12 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
           </View>
         </BlurView>
       </Animated.View>
+
+      {/* Loading Overlay */}
+      <LoadingOverlay 
+        visible={isLoading} 
+        message="Creating your safety report and notifying the community..."
+      />
     </View>
   );
 };

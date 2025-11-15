@@ -44,7 +44,7 @@ export const SeverityDetailsStep: React.FC<SeverityDetailsStepProps> = ({
           Severity Level
         </Text>
         
-        <View className="space-y-3">
+        <View className="gap-5">
           {Object.entries(SEVERITY_LABELS).map(([key, label], index) => (
             <Animated.View
               key={key}
@@ -53,12 +53,12 @@ export const SeverityDetailsStep: React.FC<SeverityDetailsStepProps> = ({
               <TouchableOpacity
                 onPress={() => onSeveritySelect(key as IncidentSeverity)}
                 className={`p-4 rounded-2xl border-2 ${
-                  selectedSeverity === key ? 'border-2' : 'border-gray-200 dark:border-gray-700'
+                  selectedSeverity === key ? 'border-2' : 'border-gray-200 dark:border-gray-400'
                 }`}
                 style={{
                   borderColor: selectedSeverity === key 
                     ? SEVERITY_COLORS[key as keyof typeof SEVERITY_COLORS] 
-                    : undefined,
+                    : '#9ca3af',
                 }}
               >
                 {selectedSeverity === key && (
