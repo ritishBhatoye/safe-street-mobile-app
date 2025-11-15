@@ -102,13 +102,7 @@ const CreateReportScreen = () => {
         className="absolute inset-0"
       />
 
-      {/* Backdrop Tap Area */}
-      <TouchableOpacity 
-        style={{ height: SCREEN_HEIGHT * 0.15 }}
-        onPress={() => router.back()}
-        activeOpacity={1}
-      />
-      
+     
       {/* Modal Content */}
       <View 
         style={{

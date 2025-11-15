@@ -3,17 +3,8 @@ import { ScrollView, RefreshControl, View, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useHomeData } from "@/hooks/useHomeData";
-import { HeroSafetySnapshot } from "@/components/home/HeroSafetySnapshot";
-import { QuickActions } from "@/components/home/QuickActions";
-import { RecentIncidentsNearby } from "@/components/home/RecentIncidentsNearby";
-import { HotspotsNearYou } from "@/components/home/HotspotsNearYou";
-import { CommunityActivityPulse } from "@/components/home/CommunityActivityPulse";
-import { MiniMapPreview } from "@/components/home/MiniMapPreview";
-import { EmergencyCard } from "@/components/home/EmergencyCard";
-import { ContributeCTA } from "@/components/home/ContributeCTA";
-import { SafetyTips } from "@/components/home/SafetyTips";
-import { UserImpactTeaser } from "@/components/home/UserImpactTeaser";
-import { HomeLoadingSkeleton } from "@/components/home/HomeLoadingSkeleton";
+import { CommunityActivityPulse, ContributeCTA, EmergencyCard, HeroSafetySnapshot, HomeLoadingSkeleton, HotspotsNearYou, MiniMapPreview, QuickActions, RecentIncidentsNearby, SafetyTips, UserImpactTeaser } from "@/components/home";
+
 
 export default function HomeScreen() {
   const router = useRouter();
