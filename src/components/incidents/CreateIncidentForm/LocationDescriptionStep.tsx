@@ -1,5 +1,5 @@
-import React, { useColorScheme } from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import React from 'react';
+import { useColorScheme , View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeInDown, FadeInUp, FadeInRight } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
