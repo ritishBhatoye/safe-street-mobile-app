@@ -6,7 +6,13 @@ const ReportsLayout = () => {
     <Stack screenOptions={{headerShown:false}}>
         <Stack.Screen name='index'/>
         <Stack.Screen name='details'/>
-        <Stack.Screen name='create-report'/>
+       <Stack.Screen
+  name="create-report"
+  options={{
+    presentation: 'modal',
+    headerShown: false,
+  }}
+/>
 
     </Stack>
   )

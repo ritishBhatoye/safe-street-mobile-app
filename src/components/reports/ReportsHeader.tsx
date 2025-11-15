@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import { Report } from "@/services/reports.service";
+import { router } from "expo-router";
 
 interface ReportsHeaderProps {
   totalReports: number;
@@ -88,7 +89,26 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
               </LinearGradient>
             </BlurView>
           </Animated.View>
-
+                 <TouchableOpacity
+            className="rounded-2xl overflow-hidden"
+            onPress={()=>router.push('/(tabs)/reports/create-report')}
+            style={{
+              shadowColor: "#3b82f6",
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.2,
+              shadowRadius: 8,
+              elevation: 4,
+            }}
+          >
+            <BlurView intensity={40} tint="light">
+              <LinearGradient
+                colors={["rgba(59, 130, 246, 0.9)", "rgba(37, 99, 235, 0.9)","rgba(37, 99, 255, 0.4)"]}
+                style={{padding:12}}
+              >
+                <Ionicons name="add-outline" size={24} color="#ffffff" />
+              </LinearGradient>
+            </BlurView>
+          </TouchableOpacity>
           {/* Filter Button */}
           <TouchableOpacity
             className="rounded-2xl overflow-hidden"
