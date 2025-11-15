@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { incidentsApi } from './api/incidentsApi';
-
+import { profileApi } from '@/services/profile.service';
 export const store = configureStore({
   reducer: {
     [incidentsApi.reducerPath]: incidentsApi.reducer,
+    [profileApi.reducerPath]:profileApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -16,9 +17,10 @@ export const store = configureStore({
           'incidentsApi/executeMutation/pending',
           'incidentsApi/executeMutation/fulfilled',
           'incidentsApi/executeMutation/rejected',
+          
         ],
       },
-    }).concat(incidentsApi.middleware),
+    }).concat(incidentsApi.middleware,profileApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
