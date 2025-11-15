@@ -16,6 +16,8 @@ interface SeverityDetailsStepProps {
   title: string;
   onSeveritySelect: (severity: IncidentSeverity) => void;
   onTitleChange: (title: string) => void;
+  severityError?: string;
+  titleError?: string;
 }
 
 export const SeverityDetailsStep: React.FC<SeverityDetailsStepProps> = ({
@@ -23,6 +25,8 @@ export const SeverityDetailsStep: React.FC<SeverityDetailsStepProps> = ({
   title,
   onSeveritySelect,
   onTitleChange,
+  severityError,
+  titleError,
 }) => {
   const colorScheme = useColorScheme();
 
@@ -138,9 +142,16 @@ export const SeverityDetailsStep: React.FC<SeverityDetailsStepProps> = ({
           </View>
         </BlurView>
         
-        <Text className="text-gray-400 font-dm-sans text-xs mt-2 text-right">
-          {title.length}/100 characters
-        </Text>
+        <View className="flex-row justify-between items-center mt-2">
+          <Text className="text-gray-400 font-dm-sans text-xs">
+            {title.length}/100 characters
+          </Text>
+          {titleError && (
+            <Text className="text-red-500 font-dm-sans text-xs">
+              {titleError}
+            </Text>
+          )}
+        </View>
       </Animated.View>
     </View>
   );

@@ -13,6 +13,8 @@ interface LocationDescriptionStepProps {
   isGettingLocation: boolean;
   onGetLocation: () => void;
   onDescriptionChange: (description: string) => void;
+  locationError?: string;
+  descriptionError?: string;
 }
 
 export const LocationDescriptionStep: React.FC<LocationDescriptionStepProps> = ({
@@ -23,6 +25,8 @@ export const LocationDescriptionStep: React.FC<LocationDescriptionStepProps> = (
   isGettingLocation,
   onGetLocation,
   onDescriptionChange,
+  locationError,
+  descriptionError,
 }) => {
   const colorScheme = useColorScheme();
   const hasLocation = latitude && longitude;
@@ -153,10 +157,31 @@ export const LocationDescriptionStep: React.FC<LocationDescriptionStepProps> = (
           </View>
         </BlurView>
         
-        <Text className="text-gray-400 font-dm-sans text-xs mt-2 text-right">
-          {description.length}/1000 characters
-        </Text>
+        <View className="flex-row justify-between items-center mt-2">
+          <Text className="text-gray-400 font-dm-sans text-xs">
+            {description.length}/1000 characters
+          </Text>
+          {descriptionError && (
+            <Text className="text-red-500 font-dm-sans text-xs">
+              {descriptionError}
+            </Text>
+          )}
+        </View>
       </Animated.View>
+
+      {/* Location Error Display */}
+      {locationError && (
+        <Animated.View entering={FadeInUp.delay(600)}>
+          <View className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-2xl">
+            <View className="flex-row items-center">
+              <Ionicons name="warning" size={16} color="#EF4444" />
+              <Text className="text-red-600 dark:text-red-400 font-dm-sans text-sm ml-2">
+                {locationError}
+              </Text>
+            </View>
+          </View>
+        </Animated.View>
+      )}
 
       {/* Safety Tips */}
       <Animated.View entering={FadeInUp.delay(800)}>

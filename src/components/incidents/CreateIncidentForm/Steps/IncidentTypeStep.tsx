@@ -20,11 +20,13 @@ import {
 interface IncidentTypeStepProps {
   selectedType?: IncidentType;
   onTypeSelect: (type: IncidentType) => void;
+  error?: string;
 }
 
 export const IncidentTypeStep: React.FC<IncidentTypeStepProps> = ({
   selectedType,
   onTypeSelect,
+  error,
 }) => {
   return (
     <View className="flex-1">

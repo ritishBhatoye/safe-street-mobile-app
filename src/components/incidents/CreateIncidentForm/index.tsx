@@ -3,7 +3,8 @@ import { View, TouchableOpacity, Text, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
-import { CreateIncidentRequest } from '@/types/incidents';
+import { FormikProps } from 'formik';
+import { IncidentFormValues } from '@/utils/incidentValidation';
 import { IncidentType, IncidentSeverity } from '@/constants/incidents';
 import { IncidentTypeStep } from './Steps/IncidentTypeStep';
 import { SeverityDetailsStep } from './Steps/SeverityDetailsStep';
@@ -14,48 +15,48 @@ import { ReanimatedButton } from './ReanimatedButton';
 import { LoadingOverlay } from './LoadingOverlay';
 
 interface CreateIncidentFormProps {
-  // Form Data
-  formData: Partial<CreateIncidentRequest>;
-  onFormDataChange: (data: Partial<CreateIncidentRequest>) => void;
+  // Formik Props
+  formikProps: FormikProps<IncidentFormValues>;
   
   // Step Management
   currentStep: number;
   onStepChange: (step: number) => void;
   
   // Actions
-  onSubmit: () => void;
   onCancel?: () => void;
   
   // State
   isLoading: boolean;
   isGettingLocation: boolean;
-  errors: string[];
   
-  // Location Handler
+  // Handlers
   onGetLocation: () => void;
+  validateCurrentStep: (step: number) => Promise<boolean>;
 }
 
 export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
-  formData,
-  onFormDataChange,
+  formikProps,
   currentStep,
   onStepChange,
-  onSubmit,
   onCancel,
   isLoading,
   isGettingLocation,
-  errors,
   onGetLocation,
+  validateCurrentStep,
 }) => {
+  const { values, errors, touched, setFieldValue, handleSubmit } = formikProps;
   const stepTitles = [
     'Select Incident Type',
     'Set Severity & Title', 
     'Add Location & Details'
   ];
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (currentStep < 3) {
-      onStepChange(currentStep + 1);
+      const isValid = await validateCurrentStep(currentStep);
+      if (isValid) {
+        onStepChange(currentStep + 1);
+      }
     }
   };
 
@@ -68,14 +69,36 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
   const canProceedToNextStep = () => {
     switch (currentStep) {
       case 1:
-        return !!formData.type;
+        return !!values.type && !errors.type;
       case 2:
-        return !!formData.severity && !!formData.title?.trim();
+        return !!values.severity && !!values.title?.trim() && !errors.severity && !errors.title;
       case 3:
-        return !!formData.latitude && !!formData.longitude;
+        return !!values.latitude && !!values.longitude && !errors.latitude && !errors.longitude;
       default:
         return false;
     }
+  };
+
+  // Get current step errors
+  const getCurrentStepErrors = () => {
+    const stepErrors: string[] = [];
+    
+    switch (currentStep) {
+      case 1:
+        if (touched.type && errors.type) stepErrors.push(errors.type);
+        break;
+      case 2:
+        if (touched.severity && errors.severity) stepErrors.push(errors.severity);
+        if (touched.title && errors.title) stepErrors.push(errors.title);
+        break;
+      case 3:
+        if (touched.latitude && errors.latitude) stepErrors.push(errors.latitude);
+        if (touched.longitude && errors.longitude) stepErrors.push(errors.longitude);
+        if (touched.description && errors.description) stepErrors.push(errors.description);
+        break;
+    }
+    
+    return stepErrors;
   };
 
   const renderCurrentStep = () => {
@@ -83,37 +106,38 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
       case 1:
         return (
           <IncidentTypeStep
-            selectedType={formData.type}
-            onTypeSelect={(type: IncidentType) => 
-              onFormDataChange({ ...formData, type })
-            }
+            selectedType={values.type as IncidentType}
+            onTypeSelect={(type: IncidentType) => setFieldValue('type', type)}
+            error={touched.type ? errors.type : undefined}
           />
         );
       case 2:
         return (
           <SeverityDetailsStep
-            selectedSeverity={formData.severity}
-            title={formData.title || ''}
-            onSeveritySelect={(severity: IncidentSeverity) => 
-              onFormDataChange({ ...formData, severity })
-            }
-            onTitleChange={(title: string) => 
-              onFormDataChange({ ...formData, title })
-            }
+            selectedSeverity={values.severity as IncidentSeverity}
+            title={values.title}
+            onSeveritySelect={(severity: IncidentSeverity) => setFieldValue('severity', severity)}
+            onTitleChange={(title: string) => setFieldValue('title', title)}
+            severityError={touched.severity ? errors.severity : undefined}
+            titleError={touched.title ? errors.title : undefined}
           />
         );
       case 3:
         return (
           <LocationDescriptionStep
-            latitude={formData.latitude}
-            longitude={formData.longitude}
-            address={formData.address}
-            description={formData.description || ''}
+            latitude={values.latitude}
+            longitude={values.longitude}
+            address={values.address}
+            description={values.description}
             isGettingLocation={isGettingLocation}
             onGetLocation={onGetLocation}
-            onDescriptionChange={(description: string) => 
-              onFormDataChange({ ...formData, description })
+            onDescriptionChange={(description: string) => setFieldValue('description', description)}
+            locationError={
+              (touched.latitude && errors.latitude) || 
+              (touched.longitude && errors.longitude) ? 
+              'Location is required' : undefined
             }
+            descriptionError={touched.description ? errors.description : undefined}
           />
         );
       default:
@@ -128,11 +152,11 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
 
       <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
         {/* Error Messages */}
-        {errors.length > 0 && (
+        {getCurrentStepErrors().length > 0 && (
           <Animated.View entering={FadeInDown.delay(100)}>
             <BlurView intensity={20} tint="light" className="rounded-2xl mb-4 overflow-hidden">
               <View className="p-4 bg-red-500/10">
-                {errors.map((error, index) => (
+                {getCurrentStepErrors().map((error, index) => (
                   <View key={index} className="flex-row items-center mb-1">
                     <Ionicons name="warning" size={16} color="#EF4444" />
                     <Text className="text-red-600 dark:text-red-400 text-sm ml-2 font-dm-sans">
@@ -189,7 +213,7 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
               ) : (
                 <ReanimatedButton
                   title={isLoading ? 'Submitting...' : 'Submit Report'}
-                  onPress={onSubmit}
+                  onPress={() => handleSubmit()}
                   disabled={!canProceedToNextStep()}
                   loading={isLoading}
                   variant="success"

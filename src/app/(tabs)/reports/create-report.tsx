@@ -3,13 +3,18 @@ import { View, Text, TouchableOpacity, Dimensions, Alert, useColorScheme } from 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
+import { Formik } from 'formik';
 import { CreateIncidentForm } from '@/components/incidents/CreateIncidentForm';
 import { useCreateIncidentMutation } from '@/store/api/incidentsApi';
 import { CreateIncidentRequest } from '@/types/incidents';
-import { IncidentValidator } from '@/utils/validation';
 import { LocationService } from '@/utils/location';
+import { 
+  initialIncidentValues, 
+  incidentValidationSchema, 
+  getValidationSchemaForStep,
+  IncidentFormValues 
+} from '@/utils/incidentValidation';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -17,61 +22,48 @@ const CreateReportScreen = () => {
   const router = useRouter();
   const colorScheme = useColorScheme();
   const [createIncident, { isLoading }] = useCreateIncidentMutation();
-
-  // Form State
-  const [formData, setFormData] = useState<Partial<CreateIncidentRequest>>({
-    type: undefined,
-    severity: undefined,
-    title: '',
-    description: '',
-    latitude: undefined,
-    longitude: undefined,
-    address: '',
-    city: '',
-    state: '',
-    country: '',
-  });
-
   const [currentStep, setCurrentStep] = useState(1);
-  const [errors, setErrors] = useState<string[]>([]);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
 
   // Handlers
-  const handleGetCurrentLocation = async () => {
+  const handleGetCurrentLocation = async (setFieldValue: (field: string, value: any) => void) => {
     setIsGettingLocation(true);
     try {
       const coords = await LocationService.getCurrentPosition();
       const addressInfo = await LocationService.reverseGeocode(coords);
       
-      setFormData(prev => ({
-        ...prev,
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-        address: addressInfo.address,
-        city: addressInfo.city,
-        state: addressInfo.state,
-        country: addressInfo.country,
-      }));
-    } catch (error) {
+      // Update Formik values
+      setFieldValue('latitude', coords.latitude);
+      setFieldValue('longitude', coords.longitude);
+      setFieldValue('address', addressInfo.address || '');
+      setFieldValue('city', addressInfo.city || '');
+      setFieldValue('state', addressInfo.state || '');
+      setFieldValue('country', addressInfo.country || '');
+    } catch (err) {
       Alert.alert('Location Error', 'Failed to get current location');
     } finally {
       setIsGettingLocation(false);
     }
   };
 
-  const handleSubmit = async () => {
-    // Clear previous errors
-    setErrors([]);
-    
-    // Validate form
-    const validationErrors = IncidentValidator.validateCreateIncident(formData);
-    if (validationErrors.length > 0) {
-      setErrors(validationErrors.map(e => e.message));
-      return;
-    }
-
+  const handleSubmit = async (values: IncidentFormValues) => {
     try {
-      await createIncident(formData as CreateIncidentRequest).unwrap();
+      // Convert form values to CreateIncidentRequest format
+      const incidentData: CreateIncidentRequest = {
+        type: values.type as any,
+        severity: values.severity as any,
+        title: values.title,
+        description: values.description,
+        latitude: values.latitude!,
+        longitude: values.longitude!,
+        address: values.address,
+        city: values.city,
+        state: values.state,
+        country: values.country,
+        photos: values.photos,
+      };
+
+      await createIncident(incidentData).unwrap();
       Alert.alert('Success', 'Incident reported successfully', [
         { text: 'OK', onPress: () => router.back() }
       ]);
@@ -89,6 +81,17 @@ const CreateReportScreen = () => {
         { text: 'Cancel Report', style: 'destructive', onPress: () => router.back() }
       ]
     );
+  };
+
+  // Step validation helper
+  const validateCurrentStep = async (values: IncidentFormValues, step: number) => {
+    try {
+      const schema = getValidationSchemaForStep(step);
+      await schema.validate(values, { abortEarly: false });
+      return true;
+    } catch (err: any) {
+      return false;
+    }
   };
 
   return (
@@ -130,19 +133,27 @@ const CreateReportScreen = () => {
               </TouchableOpacity>
             </View>
 
-            {/* Form */}
-            <CreateIncidentForm 
-              formData={formData}
-              onFormDataChange={setFormData}
-              currentStep={currentStep}
-              onStepChange={setCurrentStep}
+            {/* Formik Form */}
+            <Formik
+              initialValues={initialIncidentValues}
+              validationSchema={incidentValidationSchema}
               onSubmit={handleSubmit}
-              onCancel={handleCancel}
-              isLoading={isLoading}
-              isGettingLocation={isGettingLocation}
-              errors={errors}
-              onGetLocation={handleGetCurrentLocation}
-            />
+              validateOnChange={true}
+              validateOnBlur={true}
+            >
+              {(formikProps) => (
+                <CreateIncidentForm 
+                  formikProps={formikProps}
+                  currentStep={currentStep}
+                  onStepChange={setCurrentStep}
+                  onCancel={handleCancel}
+                  isLoading={isLoading}
+                  isGettingLocation={isGettingLocation}
+                  onGetLocation={() => handleGetCurrentLocation(formikProps.setFieldValue)}
+                  validateCurrentStep={(step) => validateCurrentStep(formikProps.values, step)}
+                />
+              )}
+            </Formik>
           </>
         </BlurView>
       </View>
