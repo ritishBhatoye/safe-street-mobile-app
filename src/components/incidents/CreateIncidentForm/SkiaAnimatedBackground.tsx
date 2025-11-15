@@ -44,7 +44,7 @@ export const SkiaAnimatedBackground: React.FC<SkiaAnimatedBackgroundProps> = ({
   const stepColors = getStepColors(currentStep);
 
   return (
-    <Canvas style={{ width: SCREEN_WIDTH, height: SCREEN_HEIGHT, position: 'absolute' }}>
+    <Canvas style={{ width: '10%', height: SCREEN_HEIGHT, position: 'absolute' }}>
       <LinearGradient
         start={vec(0, 0)}
         end={vec(SCREEN_WIDTH, SCREEN_HEIGHT)}

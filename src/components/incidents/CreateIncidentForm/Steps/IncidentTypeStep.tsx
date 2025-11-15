@@ -31,7 +31,7 @@ export const IncidentTypeStep: React.FC<IncidentTypeStepProps> = ({
       </Animated.View>
 
       {/* Incident Types Grid */}
-      <View className="space-y-3">
+      <View className="gap-5">
         {Object.entries(INCIDENT_TYPE_LABELS).map(([key, label], index) => (
           <Animated.View
             key={key}
@@ -50,7 +50,7 @@ export const IncidentTypeStep: React.FC<IncidentTypeStepProps> = ({
                   colors={['#3B82F6', '#1D4ED8']}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
-                  className="absolute inset-0 rounded-3xl opacity-10"
+                  style={{position:'absolute',inset:0,borderRadius:24,opacity:0.1}}
                 />
               ) : (
                 <View className="absolute inset-0 bg-white dark:bg-gray-800 rounded-3xl" />

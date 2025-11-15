@@ -5,7 +5,7 @@ import Animated, {
   useAnimatedStyle, 
   withSpring,
   FadeInUp,
-  interpolateColor 
+
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -34,16 +34,17 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
   }));
 
   return (
-    <Animated.View entering={FadeInUp.delay(100)} className="mb-8">
+    <Animated.View entering={FadeInUp.delay(100)} className="">
       {/* Progress Bar */}
-      <View className="mb-6">
+      <View className="">
         <View className="h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
           <Animated.View style={progressStyle}>
             <LinearGradient
               colors={['#3B82F6', '#1D4ED8']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
-              className="h-full"
+              style={{height:'100%'}}
+  
             />
           </Animated.View>
         </View>
@@ -95,7 +96,7 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({
               
               {index < totalSteps - 1 && (
                 <View
-                  className={`w-8 h-0.5 mx-2 ${
+                  className={`w-4 h-0.5 mx-2 ${
                     stepNumber < currentStep
                       ? 'bg-blue-500'
                       : 'bg-gray-200 dark:bg-gray-700'
