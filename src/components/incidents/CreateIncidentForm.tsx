@@ -158,7 +158,7 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
           Select the type of incident you want to report
         </Text>
         
-        <View className="space-y-3">
+        <View className="gap-5">
           {Object.entries(INCIDENT_TYPE_LABELS).map(([key, label]) => (
             <TouchableOpacity
               key={key}
@@ -216,18 +216,18 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
           Help us understand the severity level
         </Text>
         
-        <View className="space-y-3 mb-6">
+        <View className="gap-5 mb-6">
           {Object.entries(SEVERITY_LABELS).map(([key, label]) => (
             <TouchableOpacity
               key={key}
               onPress={() => setFormData(prev => ({ ...prev, severity: key as any }))}
               className={`p-4 rounded-2xl border-2 ${
                 formData.severity === key
-                  ? 'border-2'
-                  : 'border-gray-200 dark:border-gray-700'
+                  ? 'border-2 '
+                  : 'border-gray-200 dark:border-gray-400'
               }`}
               style={{
-                borderColor: formData.severity === key ? SEVERITY_COLORS[key as keyof typeof SEVERITY_COLORS] : undefined,
+                borderColor: formData.severity === key ? SEVERITY_COLORS[key as keyof typeof SEVERITY_COLORS] : '#9ca3af',
                 backgroundColor: formData.severity === key ? `${SEVERITY_COLORS[key as keyof typeof SEVERITY_COLORS]}15` : colorScheme === 'dark' ? '#1F2937' : 'white',
               }}
             >
