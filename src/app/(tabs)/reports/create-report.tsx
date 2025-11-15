@@ -92,22 +92,10 @@ const CreateReportScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      {/* Background Gradient */}
-      <LinearGradient
-        colors={colorScheme === 'dark' 
-          ? ['rgba(0,0,0,0.8)', 'rgba(0,0,0,0.9)'] 
-          : ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
-        }
-        className="absolute inset-0"
-      />
-
-     
-      {/* Modal Content */}
       <View 
         style={{
           flex: 1,
-          maxHeight: SCREEN_HEIGHT * 0.85,
+      
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
           overflow: 'hidden',
@@ -118,7 +106,7 @@ const CreateReportScreen = () => {
           tint={colorScheme === 'dark' ? 'dark' : 'light'} 
           className="flex-1"
         >
-          <SafeAreaView style={{ flex: 1 }}>
+          <>
             {/* Handle Bar */}
             <View className="items-center py-4">
               <View className="w-12 h-1 bg-gray-400 dark:bg-gray-600 rounded-full" />
@@ -155,10 +143,10 @@ const CreateReportScreen = () => {
               errors={errors}
               onGetLocation={handleGetCurrentLocation}
             />
-          </SafeAreaView>
+          </>
         </BlurView>
       </View>
-    </View>
+    
   );
 };
 

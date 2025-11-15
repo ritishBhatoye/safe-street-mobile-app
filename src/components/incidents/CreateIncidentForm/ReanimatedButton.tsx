@@ -185,7 +185,7 @@ export const ReanimatedButton: React.FC<ReanimatedButtonProps> = ({
       >
         {/* Background Gradient */}
         <LinearGradient
-          colors={colors}
+          colors={colors as any}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={{
