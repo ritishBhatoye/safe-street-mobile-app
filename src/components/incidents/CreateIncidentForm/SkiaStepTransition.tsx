@@ -5,14 +5,10 @@ import {
   Circle,
   LinearGradient,
   vec,
-  useSharedValueEffect,
-  useValue,
   Path,
   Skia,
   BlurMask,
-  Group,
 } from '@shopify/react-native-skia';
-import { useSharedValue, withTiming, withSequence, Easing } from 'react-native-reanimated';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -25,36 +21,28 @@ export const SkiaStepTransition: React.FC<SkiaStepTransitionProps> = ({
   currentStep,
   totalSteps,
 }) => {
-  // Animated values
-  const progress = useSharedValue(0);
-  const ripple = useSharedValue(0);
-  
-  // Skia values
-  const skiaProgress = useValue(0);
-  const skiaRipple = useValue(0);
-
-  // Sync values
-  useSharedValueEffect(() => {
-    skiaProgress.current = progress.value;
-  }, progress);
-
-  useSharedValueEffect(() => {
-    skiaRipple.current = ripple.value;
-  }, ripple);
+  const [progress, setProgress] = React.useState(0);
+  const [ripple, setRipple] = React.useState(0);
 
   useEffect(() => {
-    // Animate progress
-    progress.value = withTiming((currentStep - 1) / (totalSteps - 1), {
-      duration: 600,
-      easing: Easing.bezier(0.4, 0, 0.2, 1),
-    });
+    setProgress((currentStep - 1) / (totalSteps - 1));
+    
+    const animateRipple = () => {
+      setRipple(prev => (prev + 0.02) % 1);
+      requestAnimationFrame(animateRipple);
+    };
+    
+    const animationId = requestAnimationFrame(animateRipple);
+    return () => cancelAnimationFrame(animationId);
+  }, [currentStep, totalSteps]);
 
-    // Ripple effect on step change
-    ripple.value = withSequence(
-      withTiming(1, { duration: 300, easing: Easing.out(Easing.quad) }),
-      withTiming(0, { duration: 300, easing: Easing.in(Easing.quad) })
-    );
-  }, [currentStep]);
+  const stepColors = [
+    ['#3B82F6', '#1D4ED8'],
+    ['#F59E0B', '#D97706'], 
+    ['#10B981', '#059669'],
+  ];
+
+  const currentColors = stepColors[Math.min(currentStep - 1, stepColors.length - 1)];
 
   // Create progress path
   const createProgressPath = () => {
@@ -62,43 +50,23 @@ export const SkiaStepTransition: React.FC<SkiaStepTransitionProps> = ({
     const y = 30;
     const startX = 20;
     const endX = SCREEN_WIDTH - 20;
-    const progressX = startX + (endX - startX) * skiaProgress.current;
+    const progressX = startX + (endX - startX) * progress;
     
-    // Background line
-    path.moveTo(startX, y);
-    path.lineTo(endX, y);
-    
-    return path;
-  };
-
-  const createActiveProgressPath = () => {
-    const path = Skia.Path.Make();
-    const y = 30;
-    const startX = 20;
-    const endX = SCREEN_WIDTH - 20;
-    const progressX = startX + (endX - startX) * skiaProgress.current;
-    
-    // Active progress line
     path.moveTo(startX, y);
     path.lineTo(progressX, y);
-    
     return path;
   };
-
-  // Step colors
-  const stepColors = [
-    ['#3B82F6', '#1D4ED8'], // Blue
-    ['#F59E0B', '#D97706'], // Orange  
-    ['#10B981', '#059669'], // Green
-  ];
-
-  const currentColors = stepColors[Math.min(currentStep - 1, stepColors.length - 1)];
 
   return (
     <Canvas style={{ width: SCREEN_WIDTH, height: 80 }}>
-      {/* Background progress line */}
+      {/* Background line */}
       <Path
-        path={createProgressPath()}
+        path={(() => {
+          const path = Skia.Path.Make();
+          path.moveTo(20, 30);
+          path.lineTo(SCREEN_WIDTH - 20, 30);
+          return path;
+        })()}
         style="stroke"
         strokeWidth={4}
         color="#E5E7EB"
@@ -107,7 +75,7 @@ export const SkiaStepTransition: React.FC<SkiaStepTransitionProps> = ({
 
       {/* Active progress line */}
       <Path
-        path={createActiveProgressPath()}
+        path={createProgressPath()}
         style="stroke"
         strokeWidth={4}
         strokeCap="round"
@@ -127,14 +95,14 @@ export const SkiaStepTransition: React.FC<SkiaStepTransitionProps> = ({
         const x = 20 + ((SCREEN_WIDTH - 40) / (totalSteps - 1)) * index;
         
         return (
-          <Group key={stepNumber}>
+          <React.Fragment key={stepNumber}>
             {/* Ripple effect for current step */}
             {isCurrent && (
               <Circle
                 cx={x}
                 cy={30}
-                r={15 + skiaRipple.current * 10}
-                opacity={0.3 - skiaRipple.current * 0.3}
+                r={15 + ripple * 10}
+                opacity={0.3 - ripple * 0.3}
                 color={currentColors[0]}
               >
                 <BlurMask blur={5} style="normal" />
@@ -147,17 +115,9 @@ export const SkiaStepTransition: React.FC<SkiaStepTransitionProps> = ({
               cy={30}
               r={12}
               color={isActive ? currentColors[0] : '#D1D5DB'}
-            >
-              {isActive && (
-                <LinearGradient
-                  start={vec(x - 12, 30 - 12)}
-                  end={vec(x + 12, 30 + 12)}
-                  colors={currentColors}
-                />
-              )}
-            </Circle>
+            />
 
-            {/* Inner circle for completed steps */}
+            {/* Inner circle for active steps */}
             {isActive && (
               <Circle
                 cx={x}
@@ -167,42 +127,7 @@ export const SkiaStepTransition: React.FC<SkiaStepTransitionProps> = ({
                 opacity={0.9}
               />
             )}
-
-            {/* Glow effect for current step */}
-            {isCurrent && (
-              <Circle
-                cx={x}
-                cy={30}
-                r={20}
-                opacity={0.2}
-                color={currentColors[0]}
-              >
-                <BlurMask blur={8} style="normal" />
-              </Circle>
-            )}
-          </Group>
-        );
-      })}
-
-      {/* Floating particles around current step */}
-      {Array.from({ length: 8 }, (_, i) => {
-        const currentStepX = 20 + ((SCREEN_WIDTH - 40) / (totalSteps - 1)) * (currentStep - 1);
-        const angle = (i / 8) * Math.PI * 2 + skiaProgress.current * Math.PI * 2;
-        const radius = 25 + Math.sin(skiaProgress.current * Math.PI * 4) * 5;
-        const x = currentStepX + Math.cos(angle) * radius;
-        const y = 30 + Math.sin(angle) * radius;
-        
-        return (
-          <Circle
-            key={i}
-            cx={x}
-            cy={y}
-            r={2}
-            opacity={0.6}
-            color={currentColors[1]}
-          >
-            <BlurMask blur={1} style="normal" />
-          </Circle>
+          </React.Fragment>
         );
       })}
     </Canvas>
