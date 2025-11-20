@@ -4,13 +4,14 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 import { Provider } from "react-redux";
 import { store } from "@/store";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { toastConfig } from "@/components/ui/Toast";
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
+import { AnimatedSplashScreen } from "@/components/splash/AnimatedSplashScreen";
 import "../global.css";
 
 // Keep splash screen visible while fonts load
@@ -64,14 +65,24 @@ export default function RootLayout() {
     'dm-sans-thin-italic': require('../../assets/fonts/DM_Sans/static/DMSans-ThinItalic.ttf'),
   });
 
+  const [showSplash, setShowSplash] = useState(true);
+
   useEffect(() => {
     if (fontsLoaded) {
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
 
+  const handleSplashComplete = () => {
+    setShowSplash(false);
+  };
+
   if (!fontsLoaded) {
     return null;
+  }
+
+  if (showSplash) {
+    return <AnimatedSplashScreen onAnimationComplete={handleSplashComplete} />;
   }
 
   return (
