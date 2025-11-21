@@ -115,7 +115,7 @@ export default function ProfileScreen() {
       <>
         <Stack.Screen options={{ headerShown: false }} />
         <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={["top"]}>
-          <Animated.ScrollView className="flex-1">
+          <Animated.ScrollView className="flex-1" >
             {/* Shimmer Header */}
             <View className="bg-white">
               <View className="bg-gradient-to-r from-blue-500 to-purple-500 pt-16 pb-24 px-6">
@@ -241,6 +241,7 @@ export default function ProfileScreen() {
           className="flex-1"
           showsVerticalScrollIndicator={false}
           onScroll={scrollHandler}
+          contentContainerStyle={{paddingBottom:140}}
           scrollEventThrottle={16}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
         >
