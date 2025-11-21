@@ -10,7 +10,7 @@ import { ReportsHeader } from "@/components/reports/ReportsHeader";
 import { ReportsEmptyState } from "@/components/reports/ReportsEmptyState";
 import { ReportsFilterSheet, ReportFilters } from "@/components/reports/ReportsFilterSheet";
 import { ReportsLoadingSkeleton } from "@/components/reports/ReportsLoadingSkeleton";
-import { Report } from "@/services/reports.service";
+import { Incident } from "@/types/incidents";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -20,7 +20,7 @@ export default function ReportsScreen() {
   const filterSheetRef = useRef<ActionSheetRef>(null);
   const [filters, setFilters] = useState<ReportFilters>({
     status: [],
-    priority: [],
+    severity: [],
     sortBy: 'newest',
   });
   
@@ -47,9 +47,10 @@ export default function ReportsScreen() {
         report.title?.toLowerCase().includes(query) ||
         report.description?.toLowerCase().includes(query) ||
         report.type?.toLowerCase().includes(query) ||
-        report.location?.toLowerCase().includes(query) ||
+        report.address?.toLowerCase().includes(query) ||
+        report.city?.toLowerCase().includes(query) ||
         report.status?.toLowerCase().includes(query) ||
-        report.priority?.toLowerCase().includes(query)
+        report.severity?.toLowerCase().includes(query)
       );
     }
     
@@ -60,10 +61,10 @@ export default function ReportsScreen() {
       );
     }
     
-    // Apply priority filter
-    if (filters.priority.length > 0) {
+    // Apply severity filter
+    if (filters.severity.length > 0) {
       filtered = filtered.filter((report) => 
-        filters.priority.includes(report.priority)
+        filters.severity.includes(report.severity)
       );
     }
     
@@ -73,9 +74,9 @@ export default function ReportsScreen() {
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       } else if (filters.sortBy === 'oldest') {
         return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-      } else if (filters.sortBy === 'priority') {
-        const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
-        return priorityOrder[a.priority] - priorityOrder[b.priority];
+      } else if (filters.sortBy === 'severity') {
+        const severityOrder = { critical: 0, danger: 1, caution: 2, safe: 3 };
+        return severityOrder[a.severity] - severityOrder[b.severity];
       }
       return 0;
     });
@@ -90,12 +91,12 @@ export default function ReportsScreen() {
   const handleResetFilters = () => {
     setFilters({
       status: [],
-      priority: [],
+      severity: [],
       sortBy: 'newest',
     });
   };
 
-  const handleReportPress = (report: Report) => {
+  const handleReportPress = (report: Incident) => {
     const reportIndex = filteredReports.findIndex((r) => r.id === report.id);
     router.push({
       pathname: '/(tabs)/reports/detail',

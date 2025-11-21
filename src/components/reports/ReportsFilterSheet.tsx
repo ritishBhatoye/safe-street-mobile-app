@@ -7,8 +7,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 export interface ReportFilters {
   status: string[];
-  priority: string[];
-  sortBy: 'newest' | 'oldest' | 'priority';
+  severity: string[];
+  sortBy: 'newest' | 'oldest' | 'severity';
 }
 
 interface ReportsFilterSheetProps {
@@ -19,23 +19,22 @@ interface ReportsFilterSheetProps {
 }
 
 const STATUS_OPTIONS = [
-  { value: 'pending', label: 'Pending', color: '#f59e0b', icon: 'time' },
-  { value: 'investigating', label: 'Investigating', color: '#3b82f6', icon: 'search' },
+  { value: 'active', label: 'Active', color: '#3b82f6', icon: 'alert-circle' },
   { value: 'resolved', label: 'Resolved', color: '#22c55e', icon: 'checkmark-circle' },
-  { value: 'closed', label: 'Closed', color: '#6b7280', icon: 'close-circle' },
+  { value: 'flagged', label: 'Flagged', color: '#ef4444', icon: 'flag' },
 ];
 
-const PRIORITY_OPTIONS = [
-  { value: 'low', label: 'Low', color: '#10b981' },
-  { value: 'medium', label: 'Medium', color: '#f59e0b' },
-  { value: 'high', label: 'High', color: '#f97316' },
+const SEVERITY_OPTIONS = [
+  { value: 'safe', label: 'Safe', color: '#10b981' },
+  { value: 'caution', label: 'Caution', color: '#f59e0b' },
+  { value: 'danger', label: 'Danger', color: '#f97316' },
   { value: 'critical', label: 'Critical', color: '#ef4444' },
 ];
 
 const SORT_OPTIONS = [
   { value: 'newest', label: 'Newest First', icon: 'arrow-down' },
   { value: 'oldest', label: 'Oldest First', icon: 'arrow-up' },
-  { value: 'priority', label: 'Priority', icon: 'alert-circle' },
+  { value: 'severity', label: 'Severity', icon: 'alert-circle' },
 ] as const;
 
 export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
@@ -51,19 +50,19 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
     onFiltersChange({ ...filters, status: newStatuses });
   };
 
-  const togglePriority = (priority: string) => {
-    const newPriorities = filters.priority.includes(priority)
-      ? filters.priority.filter((p) => p !== priority)
-      : [...filters.priority, priority];
-    onFiltersChange({ ...filters, priority: newPriorities });
+  const toggleSeverity = (severity: string) => {
+    const newSeverities = filters.severity.includes(severity)
+      ? filters.severity.filter((s) => s !== severity)
+      : [...filters.severity, severity];
+    onFiltersChange({ ...filters, severity: newSeverities });
   };
 
-  const setSortBy = (sortBy: 'newest' | 'oldest' | 'priority') => {
+  const setSortBy = (sortBy: 'newest' | 'oldest' | 'severity') => {
     onFiltersChange({ ...filters, sortBy });
   };
 
   const activeFiltersCount =
-    filters.status.length + filters.priority.length + (filters.sortBy !== 'newest' ? 1 : 0);
+    filters.status.length + filters.severity.length + (filters.sortBy !== 'newest' ? 1 : 0);
 
   return (
     <ActionSheet
@@ -134,7 +133,7 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
           </View>
         </View>
 
-        {/* Priority Filter */}
+        {/* Severity Filter */}
         <View style={{ marginBottom: 24 }}>
           <Text
             style={{
@@ -144,15 +143,15 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
               marginBottom: 12,
             }}
           >
-            Priority
+            Severity
           </Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-            {PRIORITY_OPTIONS.map((option) => {
-              const isSelected = filters.priority.includes(option.value);
+            {SEVERITY_OPTIONS.map((option) => {
+              const isSelected = filters.severity.includes(option.value);
               return (
                 <TouchableOpacity
                   key={option.value}
-                  onPress={() => togglePriority(option.value)}
+                  onPress={() => toggleSeverity(option.value)}
                   style={{
                     borderRadius: 12,
                     overflow: 'hidden',

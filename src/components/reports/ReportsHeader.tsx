@@ -3,12 +3,12 @@ import { View, Text, TouchableOpacity, TextInput, Animated } from "react-native"
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
-import { Report } from "@/services/reports.service";
+import { Incident } from "@/types/incidents";
 import { router } from "expo-router";
 
 interface ReportsHeaderProps {
   totalReports: number;
-  reports: Report[];
+  reports: Incident[];
   onFilterPress?: () => void;
   searchQuery?: string;
   onSearchChange?: (text: string) => void;
@@ -23,7 +23,7 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 }) => {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [searchWidth] = useState(new Animated.Value(48));
-  const criticalCount = reports.filter((r) => r.priority === "critical").length;
+  const criticalCount = reports.filter((r) => r.severity === "critical").length;
   const resolvedCount = reports.filter((r) => r.status === "resolved").length;
 
   const toggleSearch = () => {
