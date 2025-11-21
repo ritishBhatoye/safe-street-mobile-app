@@ -1,62 +1,60 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Report } from "@/services/reports.service";
+import { Incident } from "@/types/incidents";
 
 interface ReportCardProps {
-  item: Report;
+  item: Incident;
   index: number;
-  onPress?: (report: Report) => void;
+  onPress?: (report: Incident) => void;
 }
 
-const getTypeIcon = (type: Report["type"]) => {
-  switch (type) {
-    case "incident":
-      return "alert-circle";
-    case "hazard":
-      return "warning";
-    case "maintenance":
-      return "construct";
-    case "other":
-      return "document-text";
-  }
+const getTypeIcon = (type: string) => {
+  const typeMap: Record<string, any> = {
+    theft: "bag-remove",
+    assault: "hand-left",
+    vandalism: "hammer",
+    suspicious: "eye",
+    traffic: "car",
+    other: "alert-circle",
+  };
+  return typeMap[type] || "alert-circle";
 };
 
-const getTypeColor = (type: Report["type"]) => {
-  switch (type) {
-    case "incident":
-      return "bg-red-500";
-    case "hazard":
-      return "bg-orange-500";
-    case "maintenance":
-      return "bg-blue-500";
-    case "other":
-      return "bg-gray-500";
-  }
+const getTypeColor = (type: string) => {
+  const colorMap: Record<string, string> = {
+    theft: "bg-red-500",
+    assault: "bg-red-600",
+    vandalism: "bg-orange-500",
+    suspicious: "bg-yellow-500",
+    traffic: "bg-blue-500",
+    other: "bg-gray-500",
+  };
+  return colorMap[type] || "bg-gray-500";
 };
 
-const getPriorityColor = (priority: Report["priority"]) => {
-  switch (priority) {
+const getSeverityColor = (severity: Incident["severity"]) => {
+  switch (severity) {
     case "critical":
       return "bg-red-500";
-    case "high":
+    case "danger":
       return "bg-orange-500";
-    case "medium":
+    case "caution":
       return "bg-yellow-500";
-    case "low":
+    case "safe":
       return "bg-green-500";
   }
 };
 
-const getStatusColor = (status: Report["status"]) => {
+const getStatusColor = (status: Incident["status"]) => {
   switch (status) {
-    case "pending":
-      return "bg-yellow-100 text-yellow-700";
-    case "in-progress":
+    case "active":
       return "bg-blue-100 text-blue-700";
     case "resolved":
       return "bg-green-100 text-green-700";
-    case "closed":
+    case "flagged":
+      return "bg-red-100 text-red-700";
+    default:
       return "bg-gray-100 text-gray-700";
   }
 };
@@ -129,9 +127,9 @@ export const ReportCard: React.FC<ReportCardProps> = ({ item, index, onPress }) 
               </View>
             </View>
           </View>
-          <View className={`px-3 py-1 rounded-full ${getPriorityColor(item.priority)}`}>
+          <View className={`px-3 py-1 rounded-full ${getSeverityColor(item.severity)}`}>
             <Text className="text-xs font-bold text-white capitalize">
-              {item.priority}
+              {item.severity}
             </Text>
           </View>
         </View>
@@ -146,7 +144,7 @@ export const ReportCard: React.FC<ReportCardProps> = ({ item, index, onPress }) 
           <View className="flex-row items-center flex-1">
             <Ionicons name="location" size={14} color="#6b7280" />
             <Text className="text-xs text-gray-600 ml-1 flex-1" numberOfLines={1}>
-              {item.location}
+              {item.address || item.city || 'Unknown location'}
             </Text>
           </View>
           <View className={`px-3 py-1 rounded-full ${getStatusColor(item.status)}`}>
