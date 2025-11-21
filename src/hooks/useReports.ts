@@ -58,29 +58,57 @@ export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
           .order("created_at", { ascending: false })
           .range(from, to);
 
-        if (fetchError) throw fetchError;
+        if (fetchError) {
+          console.error('Supabase error:', fetchError);
+          throw fetchError;
+        }
 
-        const incidents: Incident[] = (data || []).map((item: any) => ({
-          id: item.id,
-          type: item.type,
-          severity: item.severity,
-          title: item.title,
-          description: item.description,
-          location: {
-            latitude: item.location ? parseFloat(item.location.coordinates[1]) : 0,
-            longitude: item.location ? parseFloat(item.location.coordinates[0]) : 0,
-          },
-          address: item.address,
-          city: item.city,
-          state: item.state,
-          country: item.country,
-          photos: item.photos || [],
-          reported_by: item.reported_by,
-          status: item.status,
-          confirmed_count: item.confirmed_count || 0,
-          created_at: item.created_at,
-          updated_at: item.updated_at,
-        }));
+        console.log('Raw incidents data:', data);
+
+        const incidents: Incident[] = (data || []).map((item: any) => {
+          // PostGIS stores location as a geography type
+          // It might come back as an object with coordinates or as WKT string
+          let latitude = 0;
+          let longitude = 0;
+
+          if (item.location) {
+            // Try different formats
+            if (typeof item.location === 'string') {
+              // WKT format: "POINT(lng lat)"
+              const match = item.location.match(/POINT\(([^ ]+) ([^ ]+)\)/);
+              if (match) {
+                longitude = parseFloat(match[1]);
+                latitude = parseFloat(match[2]);
+              }
+            } else if (item.location.coordinates) {
+              // GeoJSON format
+              longitude = item.location.coordinates[0];
+              latitude = item.location.coordinates[1];
+            }
+          }
+
+          return {
+            id: item.id,
+            type: item.type,
+            severity: item.severity,
+            title: item.title,
+            description: item.description,
+            location: {
+              latitude,
+              longitude,
+            },
+            address: item.address,
+            city: item.city,
+            state: item.state,
+            country: item.country,
+            photos: item.photos || [],
+            reported_by: item.reported_by,
+            status: item.status,
+            confirmed_count: item.confirmed_count || 0,
+            created_at: item.created_at,
+            updated_at: item.updated_at,
+          };
+        });
         
         if (append) {
           setReports((prev) => [...prev, ...incidents]);
