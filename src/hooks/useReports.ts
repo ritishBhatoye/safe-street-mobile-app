@@ -63,7 +63,7 @@ export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
           throw fetchError;
         }
 
-        console.log('Raw incidents data:', data);
+        // console.log('Raw incidents data:', data);
 
         const incidents: Incident[] = (data || []).map((item: any) => {
           // PostGIS stores location as a geography type
