@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, useColorScheme, Dimensions } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { ActionSheetRef } from 'react-native-actions-sheet';
 import { useWalk } from '@/hooks/useWalk';
+import { SelectWatchersSheet } from '@/components/walk/SelectWatchersSheet';
 import * as Location from 'expo-location';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -14,6 +15,7 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 export default function StartWalkScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme();
+  const watcherSheetRef = useRef<ActionSheetRef>(null);
   const { createWalk, startWalk, activeWalk } = useWalk();
   
   const [destination, setDestination] = useState('');
@@ -24,32 +26,22 @@ export default function StartWalkScreen() {
   // If there's already an active walk, go to it
   React.useEffect(() => {
     if (activeWalk) {
-      router.replace('/walk-with-me/active');
+      router.replace('/(tabs)/home/walk-with-me/active');
     }
   }, [activeWalk, router]);
 
   const handleAddWatcher = () => {
-    Alert.prompt(
-      'Add Watcher',
-      'Enter name and phone number',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Add',
-          onPress: (text) => {
-            if (text) {
-              const [name, phone] = text.split(',');
-              if (name && phone) {
-                setWatchers([...watchers, { name: name.trim(), phone: phone.trim() }]);
-              }
-            }
-          },
-        },
-      ],
-      'plain-text',
-      '',
-      'default'
-    );
+    watcherSheetRef.current?.show();
+  };
+
+  const handleSelectWatcher = (watcher: { name: string; phone: string }) => {
+    // Check if already added
+    const exists = watchers.some(w => w.phone === watcher.phone);
+    if (exists) {
+      Alert.alert('Already Added', 'This person is already in your watchers list');
+      return;
+    }
+    setWatchers([...watchers, watcher]);
   };
 
   const handleStartWalk = async () => {
@@ -99,7 +91,7 @@ export default function StartWalkScreen() {
         start_address: address[0]?.street || 'Current Location',
       });
 
-      router.replace('/walk-with-me/active');
+      router.replace('/(tabs)/home/walk-with-me/active');
     } catch (error: any) {
       Alert.alert('Error', error.message);
     } finally {
