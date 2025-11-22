@@ -78,10 +78,10 @@ interface CreateWalkRequest {
   destination_lat: number;
   destination_lng: number;
   estimated_duration?: number;
-  watchers?: Array<{
+  watchers?: {
     watcher_name: string;
     watcher_phone: string;
-  }>;
+  }[];
 }
 
 interface StartWalkRequest {
