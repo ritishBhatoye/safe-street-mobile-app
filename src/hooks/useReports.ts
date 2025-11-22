@@ -42,19 +42,19 @@ export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
         const from = (page - 1) * itemsPerPage;
         const to = from + itemsPerPage - 1;
 
-        // Get total count
+        // Get total count - ALL incidents from ALL users
         const { count, error: countError } = await supabase
           .from("incidents")
-          .select("*", { count: "exact", head: true })
-          .eq("reported_by", user.id);
+          .select("*", { count: "exact", head: true });
+          // Removed .eq("reported_by", user.id) to show ALL reports
 
         if (countError) throw countError;
 
-        // Get paginated data
+        // Get paginated data - ALL incidents from ALL users
         const { data, error: fetchError } = await supabase
           .from("incidents")
           .select("*")
-          .eq("reported_by", user.id)
+          // Removed .eq("reported_by", user.id) to show ALL reports
           .order("created_at", { ascending: false })
           .range(from, to);
 
