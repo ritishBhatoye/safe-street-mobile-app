@@ -58,10 +58,7 @@ export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
           .order("created_at", { ascending: false })
           .range(from, to);
 
-        if (fetchError) {
-          console.error('Supabase error:', fetchError);
-          throw fetchError;
-        }
+        if (fetchError) throw fetchError;
 
         // console.log('Raw incidents data:', data);
 
