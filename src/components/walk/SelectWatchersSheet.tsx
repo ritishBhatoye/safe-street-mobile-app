@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,25 +14,24 @@ interface EmergencyContact {
 }
 
 interface SelectWatchersSheetProps {
-  sheetRef: React.RefObject<ActionSheetRef | null>;
   onSelectWatcher: (watcher: { name: string; phone: string }) => void;
 }
 
-export const SelectWatchersSheet: React.FC<SelectWatchersSheetProps> = ({
-  sheetRef,
-  onSelectWatcher,
-}) => {
-  const [contacts, setContacts] = useState<EmergencyContact[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [showManualAdd, setShowManualAdd] = useState(false);
-  const [manualName, setManualName] = useState('');
-  const [manualPhone, setManualPhone] = useState('');
+export type SelectWatchersSheetRef = ActionSheetRef;
 
-  useEffect(() => {
-    loadEmergencyContacts();
-  }, []);
+export const SelectWatchersSheet = forwardRef<ActionSheetRef, SelectWatchersSheetProps>(
+  ({ onSelectWatcher }, ref) => {
+    const [contacts, setContacts] = useState<EmergencyContact[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [showManualAdd, setShowManualAdd] = useState(false);
+    const [manualName, setManualName] = useState('');
+    const [manualPhone, setManualPhone] = useState('');
 
-  const loadEmergencyContacts = async () => {
+    useEffect(() => {
+      loadEmergencyContacts();
+    }, []);
+
+    const loadEmergencyContacts = async () => {
     setLoading(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -53,34 +52,38 @@ export const SelectWatchersSheet: React.FC<SelectWatchersSheetProps> = ({
     }
   };
 
-  const handleSelectContact = (contact: EmergencyContact) => {
-    onSelectWatcher({
-      name: contact.name,
-      phone: contact.phone,
-    });
-    sheetRef.current?.hide();
-  };
+    const handleSelectContact = (contact: EmergencyContact) => {
+      onSelectWatcher({
+        name: contact.name,
+        phone: contact.phone,
+      });
+      if (ref && typeof ref !== 'function' && ref.current) {
+        ref.current.hide();
+      }
+    };
 
-  const handleManualAdd = () => {
-    if (!manualName.trim() || !manualPhone.trim()) return;
-    
-    onSelectWatcher({
-      name: manualName.trim(),
-      phone: manualPhone.trim(),
-    });
-    
-    setManualName('');
-    setManualPhone('');
-    setShowManualAdd(false);
-    sheetRef.current?.hide();
-  };
+    const handleManualAdd = () => {
+      if (!manualName.trim() || !manualPhone.trim()) return;
+      
+      onSelectWatcher({
+        name: manualName.trim(),
+        phone: manualPhone.trim(),
+      });
+      
+      setManualName('');
+      setManualPhone('');
+      setShowManualAdd(false);
+      if (ref && typeof ref !== 'function' && ref.current) {
+        ref.current.hide();
+      }
+    };
 
-  return (
-    <ActionSheet
-      ref={sheetRef}
-      title="Add Watcher"
-      subtitle="Select from emergency contacts or add manually"
-      headerGradient={['rgba(59, 130, 246, 0.1)', 'rgba(147, 51, 234, 0.1)']}
+    return (
+      <ActionSheet
+        ref={ref}
+        title="Add Watcher"
+        subtitle="Select from emergency contacts or add manually"
+        headerGradient={['rgba(59, 130, 246, 0.1)', 'rgba(147, 51, 234, 0.1)']}
     >
       <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 500 }}>
         {/* Emergency Contacts */}
@@ -208,4 +211,6 @@ export const SelectWatchersSheet: React.FC<SelectWatchersSheetProps> = ({
       </ScrollView>
     </ActionSheet>
   );
-};
+});
+
+SelectWatchersSheet.displayName = 'SelectWatchersSheet';
