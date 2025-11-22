@@ -26,7 +26,7 @@ export const QuickActions: React.FC = () => {
           icon="walk"
           label="Walk"
           color="#22C55E"
-          onPress={() => router.push("/(tabs)/walk-with-me")}
+          onPress={() => router.push("/(tabs)/home/walk-with-me")}
         />
         <QuickActionButton
           icon="alert-circle"
