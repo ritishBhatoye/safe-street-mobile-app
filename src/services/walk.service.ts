@@ -54,6 +54,9 @@ export const walkService = {
     // Create started checkpoint
     await this.createCheckpoint(data.walk_id, 'started', data.start_lat, data.start_lng);
 
+    // Send notifications to watchers
+    await this.notifyWatchersWalkStarted(data.walk_id, walk);
+
     return walk;
   },
 
@@ -254,6 +257,9 @@ export const walkService = {
       .from('walks')
       .update({ status: 'alert' })
       .eq('id', walkId);
+
+    // Send notifications to watchers
+    await this.notifyWatchersAlert(walkId, alertType, message);
 
     return data;
   },
