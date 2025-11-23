@@ -6,5 +6,6 @@
   "javascript.preferences.quoteStyle": "auto",
   "typescript.preferences.quoteStyle": "auto",
   "javascript.updateImportsOnFileMove.enabled": "always",
-  "typescript.updateImportsOnFileMove.enabled": "always"
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.autoClosingTags": false
 }
