@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,7 +7,17 @@ import MapView, { Marker, Polyline, Circle } from 'react-native-maps';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useWalkWatcher } from '@/hooks/useWalkWatcher';
-import { formatDistanceToNow } from 'date-fns';
+
+// Helper function to format time ago
+const formatTimeAgo = (date: Date) => {
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (seconds < 60) return 'just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  return `${Math.floor(hours / 24)}d ago`;
+};
 
 export default function WatchWalkScreen() {
   const router = useRouter();
@@ -205,7 +215,7 @@ export default function WatchWalkScreen() {
               <View className="flex-row items-center mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
                 <Ionicons name="radio-button-on" size={12} color="#22C55E" />
                 <Text className="text-xs text-gray-500 dark:text-gray-500 font-dm-sans ml-1">
-                  Updated {formatDistanceToNow(new Date(walk.last_location_update), { addSuffix: true })}
+                  Updated {formatTimeAgo(new Date(walk.last_location_update))}
                 </Text>
               </View>
             )}
@@ -230,7 +240,7 @@ export default function WatchWalkScreen() {
                   </Text>
                 </View>
                 <Text className="text-white/80 font-dm-sans text-xs mt-1">
-                  {formatDistanceToNow(new Date(alert.created_at), { addSuffix: true })}
+                  {formatTimeAgo(new Date(alert.created_at))}
                 </Text>
               </View>
             </Animated.View>
@@ -283,7 +293,7 @@ export default function WatchWalkScreen() {
               </View>
               {walk.completed_at && (
                 <Text className="text-white/80 font-dm-sans text-sm text-center mt-1">
-                  Completed {formatDistanceToNow(new Date(walk.completed_at), { addSuffix: true })}
+                  Completed {formatTimeAgo(new Date(walk.completed_at))}
                 </Text>
               )}
             </View>

@@ -209,7 +209,7 @@ export const walkService = {
   },
 
   // Add watchers
-  async addWatchers(walkId: string, watchers: Array<{ watcher_name: string; watcher_phone: string }>) {
+  async addWatchers(walkId: string, watchers: { watcher_name: string; watcher_phone: string }[]) {
     const watchersData = watchers.map(w => ({
       walk_id: walkId,
       watcher_name: w.watcher_name,
