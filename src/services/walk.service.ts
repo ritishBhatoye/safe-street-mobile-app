@@ -162,6 +162,9 @@ export const walkService = {
     // Create arrived checkpoint
     await this.createCheckpoint(walkId, 'arrived');
 
+    // Send notifications to watchers
+    await this.notifyWatchersCompleted(walkId);
+
     return walk;
   },
 
@@ -308,5 +311,110 @@ export const walkService = {
   getShareLink(walkId: string, token: string): string {
     // This would be your app's deep link or web URL
     return `safestreet://walk/${walkId}?token=${token}`;
+  },
+
+  // Notification methods
+  async notifyWatchersWalkStarted(walkId: string, walk: Walk): Promise<void> {
+    try {
+      // Dynamically import to avoid circular dependency
+      const { notificationService } = await import('./notification.service');
+      
+      // Get walker name
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('name')
+        .eq('id', walk.user_id)
+        .single();
+
+      const walkerName = profile?.name || 'Someone';
+
+      // Get watcher tokens
+      const tokens = await notificationService.getWatcherTokens(walkId);
+
+      if (tokens.length > 0) {
+        await notificationService.notifyWalkStarted(
+          walkId,
+          walkerName,
+          walk.destination_address,
+          tokens
+        );
+      }
+    } catch (error) {
+      console.error('Error notifying watchers:', error);
+    }
+  },
+
+  async notifyWatchersAlert(walkId: string, alertType: AlertType, message: string): Promise<void> {
+    try {
+      const { notificationService } = await import('./notification.service');
+      
+      // Get walk and walker info
+      const { data: walk } = await supabase
+        .from('walks')
+        .select('user_id')
+        .eq('id', walkId)
+        .single();
+
+      if (!walk) return;
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('name')
+        .eq('id', walk.user_id)
+        .single();
+
+      const walkerName = profile?.name || 'Someone';
+
+      // Get watcher tokens
+      const tokens = await notificationService.getWatcherTokens(walkId);
+
+      if (tokens.length > 0) {
+        await notificationService.notifyAlert(
+          walkId,
+          walkerName,
+          alertType,
+          message,
+          tokens
+        );
+      }
+    } catch (error) {
+      console.error('Error notifying watchers of alert:', error);
+    }
+  },
+
+  async notifyWatchersCompleted(walkId: string): Promise<void> {
+    try {
+      const { notificationService } = await import('./notification.service');
+      
+      // Get walk and walker info
+      const { data: walk } = await supabase
+        .from('walks')
+        .select('user_id')
+        .eq('id', walkId)
+        .single();
+
+      if (!walk) return;
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('name')
+        .eq('id', walk.user_id)
+        .single();
+
+      const walkerName = profile?.name || 'Someone';
+
+      // Get watcher tokens
+      const tokens = await notificationService.getWatcherTokens(walkId);
+
+      if (tokens.length > 0) {
+        await notificationService.notifyWalkCompleted(
+          walkId,
+          walkerName,
+          tokens
+        );
+      }
+    } catch (error) {
+      console.error('Error notifying watchers of completion:', error);
+    }
   },
 };
