@@ -96,6 +96,52 @@ export const walkService = {
     };
   },
 
+  // Subscribe to walk updates (status changes)
+  subscribeToWalkUpdates(walkId: string, callback: (walk: Walk) => void) {
+    const channel = supabase
+      .channel(`walk_updates_${walkId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'walks',
+          filter: `id=eq.${walkId}`,
+        },
+        (payload) => {
+          callback(payload.new as Walk);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  },
+
+  // Subscribe to new alerts
+  subscribeToAlerts(walkId: string, callback: (alert: WalkAlert) => void) {
+    const channel = supabase
+      .channel(`walk_alerts_${walkId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'walk_alerts',
+          filter: `walk_id=eq.${walkId}`,
+        },
+        (payload) => {
+          callback(payload.new as WalkAlert);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  },
+
   // Complete walk
   async completeWalk(walkId: string): Promise<Walk> {
     const { data: walk, error } = await supabase
