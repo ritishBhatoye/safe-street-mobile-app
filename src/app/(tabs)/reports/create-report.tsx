@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { BlurView } from 'expo-blur';
 import { Formik } from 'formik';
 import { CreateIncidentForm } from '@/components/incidents/CreateIncidentForm';
+import { LocationPickerModal } from '@/components/incidents/LocationPickerModal';
 import { useCreateIncidentMutation } from '@/store/api/incidentsApi';
 import { CreateIncidentRequest } from '@/types/incidents';
 import { LocationService } from '@/utils/location';
@@ -23,6 +24,8 @@ const CreateReportScreen = () => {
   const [createIncident, { isLoading }] = useCreateIncidentMutation();
   const [currentStep, setCurrentStep] = useState(1);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
+  const [showMapPicker, setShowMapPicker] = useState(false);
+  const [formikRef, setFormikRef] = useState<any>(null);
 
   // Handlers
   const handleGetCurrentLocation = async (setFieldValue: (field: string, value: any) => void) => {
@@ -42,6 +45,28 @@ const CreateReportScreen = () => {
       Alert.alert('Location Error', 'Failed to get current location');
     } finally {
       setIsGettingLocation(false);
+    }
+  };
+
+  const handlePickOnMap = () => {
+    setShowMapPicker(true);
+  };
+
+  const handleLocationSelected = (location: {
+    latitude: number;
+    longitude: number;
+    address: string;
+    city: string;
+    state: string;
+    country: string;
+  }) => {
+    if (formikRef) {
+      formikRef.setFieldValue('latitude', location.latitude);
+      formikRef.setFieldValue('longitude', location.longitude);
+      formikRef.setFieldValue('address', location.address);
+      formikRef.setFieldValue('city', location.city);
+      formikRef.setFieldValue('state', location.state);
+      formikRef.setFieldValue('country', location.country);
     }
   };
 
@@ -134,6 +159,7 @@ const CreateReportScreen = () => {
 
             {/* Formik Form */}
             <Formik
+              innerRef={(ref) => setFormikRef(ref)}
               initialValues={initialIncidentValues}
               validationSchema={incidentValidationSchema}
               onSubmit={handleSubmit}
@@ -149,10 +175,20 @@ const CreateReportScreen = () => {
                   isLoading={isLoading}
                   isGettingLocation={isGettingLocation}
                   onGetLocation={() => handleGetCurrentLocation(formikProps.setFieldValue)}
+                  onPickOnMap={handlePickOnMap}
                   validateCurrentStep={(step) => validateCurrentStep(formikProps.values, step)}
                 />
               )}
             </Formik>
+
+            {/* Location Picker Modal */}
+            <LocationPickerModal
+              visible={showMapPicker}
+              initialLatitude={formikRef?.values?.latitude}
+              initialLongitude={formikRef?.values?.longitude}
+              onClose={() => setShowMapPicker(false)}
+              onSelectLocation={handleLocationSelected}
+            />
           </>
         </BlurView>
       </View>

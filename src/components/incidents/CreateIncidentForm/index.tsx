@@ -31,6 +31,7 @@ interface CreateIncidentFormProps {
   
   // Handlers
   onGetLocation: () => void;
+  onPickOnMap: () => void;
   validateCurrentStep: (step: number) => Promise<boolean>;
 }
 
@@ -42,6 +43,7 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
   isLoading,
   isGettingLocation,
   onGetLocation,
+  onPickOnMap,
   validateCurrentStep,
 }) => {
   const { values, errors, touched, setFieldValue, handleSubmit } = formikProps;
@@ -131,6 +133,7 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
             description={values.description}
             isGettingLocation={isGettingLocation}
             onGetLocation={onGetLocation}
+            onPickOnMap={onPickOnMap}
             onDescriptionChange={(description: string) => setFieldValue('description', description)}
             locationError={
               (touched.latitude && errors.latitude) || 
