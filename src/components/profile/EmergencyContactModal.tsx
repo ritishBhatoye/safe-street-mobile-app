@@ -262,7 +262,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
 
                   {/* Action Buttons */}
                   <View className="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
-                    <View className="flex-row space-x-3">
+                    <View className="flex-row gap-5">
                       <TouchableOpacity
                         onPress={onClose}
                         className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-xl py-4 active:opacity-80"
