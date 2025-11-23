@@ -25,7 +25,7 @@ const CreateReportScreen = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [showMapPicker, setShowMapPicker] = useState(false);
-  const [formikRef, setFormikRef] = useState<any>(null);
+  const formikRef = React.useRef<any>(null);
 
   // Handlers
   const handleGetCurrentLocation = async (setFieldValue: (field: string, value: any) => void) => {
@@ -60,13 +60,13 @@ const CreateReportScreen = () => {
     state: string;
     country: string;
   }) => {
-    if (formikRef) {
-      formikRef.setFieldValue('latitude', location.latitude);
-      formikRef.setFieldValue('longitude', location.longitude);
-      formikRef.setFieldValue('address', location.address);
-      formikRef.setFieldValue('city', location.city);
-      formikRef.setFieldValue('state', location.state);
-      formikRef.setFieldValue('country', location.country);
+    if (formikRef.current) {
+      formikRef.current.setFieldValue('latitude', location.latitude);
+      formikRef.current.setFieldValue('longitude', location.longitude);
+      formikRef.current.setFieldValue('address', location.address);
+      formikRef.current.setFieldValue('city', location.city);
+      formikRef.current.setFieldValue('state', location.state);
+      formikRef.current.setFieldValue('country', location.country);
     }
   };
 
@@ -159,7 +159,7 @@ const CreateReportScreen = () => {
 
             {/* Formik Form */}
             <Formik
-              innerRef={(ref) => setFormikRef(ref)}
+              innerRef={formikRef}
               initialValues={initialIncidentValues}
               validationSchema={incidentValidationSchema}
               onSubmit={handleSubmit}
@@ -184,8 +184,8 @@ const CreateReportScreen = () => {
             {/* Location Picker Modal */}
             <LocationPickerModal
               visible={showMapPicker}
-              initialLatitude={formikRef?.values?.latitude}
-              initialLongitude={formikRef?.values?.longitude}
+              initialLatitude={formikRef.current?.values?.latitude}
+              initialLongitude={formikRef.current?.values?.longitude}
               onClose={() => setShowMapPicker(false)}
               onSelectLocation={handleLocationSelected}
             />
