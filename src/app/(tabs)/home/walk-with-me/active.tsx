@@ -150,44 +150,57 @@ export default function ActiveWalkScreen() {
 
       {/* Bottom Actions */}
       <View className="absolute bottom-0 left-0 right-0 pb-8 px-4">
+        {/* Test Watcher V
+        <TouchableOpacity
+          onPress={() => rout)}
+          className="mb-2 bg-purple-500/95 backdrop-blu-center"
+        >
+          <View className
+            <Ionicons name="eye" size={16} 
+            <Text className="text-white font-dm-sans text-sm ml-2">
+           st)
+            </Text>
+          </View>
+        </TouchableOpacity>
+
         {/* SOS Button */}
         <TouchableOpacity
-          onPress={handleSOS}
-          className="mb-4 overflow-hidden rounded-full"
+andleSOS}
+          className="mb-4 overll"
         >
           <LinearGradient
-            colors={['#EF4444', '#DC2626']}
+            colors={['#EF4444', '#6']}
             className="py-4 items-center flex-row justify-center"
           >
             <Ionicons name="warning" size={24} color="white" />
-            <Text className="text-white font-dm-sans-bold text-lg ml-2">
-              EMERGENCY SOS
+            <Text className="">
+          
             </Text>
           </LinearGradient>
         </TouchableOpacity>
 
-        {/* Action Buttons */}
+        {/* Action Buttons 
         <View className="flex-row gap-3">
           <TouchableOpacity
-            onPress={handleCancel}
-            className="flex-1 bg-white/95 backdrop-blur rounded-xl py-3 items-center"
+            o}
+            className="flex-1 bg-white/95 backdrop-blur rounded-xl py-3 items-ce
           >
-            <Text className="text-gray-700 font-dm-sans-semibold">Cancel</Text>
-          </TouchableOpacity>
+            <Text className="
+          </Tou
           
-          <TouchableOpacity
-            onPress={handleComplete}
-            className="flex-1 overflow-hidden rounded-xl"
-          >
-            <LinearGradient
-              colors={['#22C55E', '#16A34A']}
-              className="py-3 items-center"
-            >
-              <Text className="text-white font-dm-sans-semibold">I'm Safe</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
-      </View>
+          <
+    ete}
+ l"
+w>Vie</iew>
+       </V
+       bleOpacity>   </Toucha>
+       entradi</LinearG         </Text>
+   afed">I'm Solm-sans-semibte font-d"text-whiName=class  <Text               >
+   
+       ems-center""py-3 itsName=clas       ]}
+       #16A34A'', '55E{['#22C     colors=
+         tearGradien<Lin               >
+       rounded-xhidden w-lolex-1 overf"fame=      classN     andleCompl  onPress={h      acitybleOpToucha
     </View>
   );
 }

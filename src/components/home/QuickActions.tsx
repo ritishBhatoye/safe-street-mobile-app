@@ -21,34 +21,34 @@ export const QuickActions: React.FC = () => {
 
   return (
     <Animated.View style={animatedStyle}>
-      <View className="flex-row justify-between gap-3 px-1">
-        <QuickActionButton
-          icon="walk"
-          label="Walk"
-          color="#22C55E"
-          onPress={() => router.push("/(tabs)/home/walk-with-me")}
-        />
-        <QuickActionButton
-          icon="alert-circle"
-          label="Report"
-          color="#EF4444"
-          onPress={() => router.push("/(tabs)/reports")}
-        />
-        <QuickActionButton
-          icon="call"
-          label="SOS"
-          color="#F59E0B"
-          onPress={() => {
-            // Navigate to emergency contacts
-            console.log("Emergency contacts");
-          }}
-        />
-        <QuickActionButton
-          icon="map"
-          label="Map"
-          color="#3B82F6"
-          onPress={() => router.push("/(tabs)/map")}
-        />
+      <View className="gap-3">
+        {/* First Row */}
+        <View className="flex-row justify-between gap-3 px-1">
+          <QuickActionButton
+            icon="walk"
+            label="Walk"
+            color="#22C55E"
+            onPress={() => router.push("/(tabs)/home/walk-with-me")}
+          />
+          <QuickActionButton
+            icon="eye"
+            label="Watches"
+            color="#8B5CF6"
+            onPress={() => router.push("/(tabs)/home/walk-with-me/my-watches")}
+          />
+          <QuickActionButton
+            icon="alert-circle"
+            label="Report"
+            color="#EF4444"
+            onPress={() => router.push("/(tabs)/reports")}
+          />
+          <QuickActionButton
+            icon="map"
+            label="Map"
+            color="#3B82F6"
+            onPress={() => router.push("/(tabs)/map")}
+          />
+        </View>
       </View>
     </Animated.View>
   );
