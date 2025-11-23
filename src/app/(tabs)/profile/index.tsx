@@ -267,9 +267,7 @@ export default function ProfileScreen() {
           {/* Profile Actions */}
           <View className="px-4 mt-2">
             {/* Emergency Contacts Card */}
-            <EmergencyContactsCard
-              onManagePress={() => router.push('/(tabs)/profile/emergency-contacts')}
-            />
+            <EmergencyContactsCard />
 
             {/* Edit Profile Card */}
             <Card variant="elevated" className="mb-3">
