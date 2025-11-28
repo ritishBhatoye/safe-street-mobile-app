@@ -68,7 +68,7 @@ export const profileApi = createApi({
             ...data,
             updated_at: new Date().toISOString(),
           };
-
+          console.log('DATA :- ',JSON.stringify(updateData,null,2))
           const { data: updatedData, error } = await supabase
             .from("profiles")
             .update(updateData)
