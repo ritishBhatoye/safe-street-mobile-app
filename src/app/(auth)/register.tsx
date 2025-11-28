@@ -62,7 +62,7 @@ export default function RegisterScreen() {
         // Check if email confirmation is required
         if (user.email_confirmed_at) {
           showToast.success('Welcome!', 'Account created successfully');
-          router.replace('/(tabs)/index' as any);
+          router.replace('/(tabs)/home');
         } else {
           showToast.info('Verify Email', 'Please check your email to confirm your account');
           router.replace('./sign-in');
