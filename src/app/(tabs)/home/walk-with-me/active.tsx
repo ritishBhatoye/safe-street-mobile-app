@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -13,9 +13,20 @@ export default function ActiveWalkScreen() {
   const { activeWalk, completeWalk, cancelWalk, createAlert } = useWalk();
   const { currentLocation } = useLocationTracking(activeWalk?.id || null, true);
 
+  // Redirect if no active walk - use useEffect to avoid render issues
+  useEffect(() => {
+    if (!activeWalk) {
+      router.replace('/(tabs)/home/walk-with-me');
+    }
+  }, [activeWalk, router]);
+
+  // Show loading while redirecting
   if (!activeWalk) {
-    router.replace('/(tabs)/home/walk-with-me');
-    return null;
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900 items-center justify-center">
+        <ActivityIndicator size="large" color="#3B82F6" />
+      </SafeAreaView>
+    );
   }
 
   const handleComplete = () => {

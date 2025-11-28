@@ -228,20 +228,28 @@ export const notificationService = {
     try {
       const { data, error } = await supabase
         .from('walk_watchers')
-        .select(`
-          watcher_user_id,
-          profiles:watcher_user_id (
-            push_token
-          )
-        `)
+        .select('watcher_user_id')
         .eq('walk_id', walkId)
         .not('watcher_user_id', 'is', null);
 
       if (error) throw error;
 
-      const tokens = data
-        ?.map((w: any) => w.profiles?.push_token)
-        .filter((token: string | null) => token !== null) || [];
+      // Get push tokens for each watcher
+      const watcherIds = data?.map((w: any) => w.watcher_user_id).filter(Boolean) || [];
+      
+      if (watcherIds.length === 0) {
+        return [];
+      }
+
+      const { data: profiles, error: profileError } = await supabase
+        .from('profiles')
+        .select('push_token')
+        .in('id', watcherIds)
+        .not('push_token', 'is', null);
+
+      if (profileError) throw profileError;
+
+      const tokens = profiles?.map((p: any) => p.push_token).filter(Boolean) || [];
 
       return tokens;
     } catch (error) {

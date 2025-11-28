@@ -5,7 +5,8 @@ export default function WalkWithMeLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="active" />
-      <Stack.Screen name="watch/[id]" />
+      <Stack.Screen name="my-watches" />
+      <Stack.Screen name="watch/[walkId]" />
     </Stack>
   );
 }
