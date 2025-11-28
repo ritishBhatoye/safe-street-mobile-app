@@ -21,11 +21,7 @@ export default function StartWalkScreen() {
   const [loading, setLoading] = useState(false);
 
   // If there's already an active walk, go to it
-  React.useEffect(() => {
-    if (activeWalk) {
-      router.replace('/(tabs)/home/walk-with-me/active');
-    }
-  }, [activeWalk, router]);
+
 
   const handleAddWatcher = () => {
     watcherSheetRef.current?.show();

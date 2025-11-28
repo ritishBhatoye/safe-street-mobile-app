@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter, Redirect } from 'expo-router';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useWalk } from '@/hooks/useWalk';
@@ -12,23 +12,10 @@ export default function ActiveWalkScreen() {
   const router = useRouter();
   const { activeWalk, completeWalk, cancelWalk, createAlert } = useWalk();
   const { currentLocation } = useLocationTracking(activeWalk?.id || null, true);
-  const hasRedirected = useRef(false);
 
-  // Redirect if no active walk - use useEffect to avoid render issues
-  useEffect(() => {
-    if (!activeWalk && !hasRedirected.current) {
-      hasRedirected.current = true;
-      router.replace('/(tabs)/home/walk-with-me');
-    }
-  }, [activeWalk, router]);
-
-  // Show loading while redirecting
+  // Redirect if no active walk
   if (!activeWalk) {
-    return (
-      <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900 items-center justify-center">
-        <ActivityIndicator size="large" color="#3B82F6" />
-      </SafeAreaView>
-    );
+    return <Redirect href="/(tabs)/home/walk-with-me" />;
   }
 
   const handleComplete = () => {
