@@ -28,65 +28,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Verify user exists in database, not just in local session
-    const verifyUser = async () => {
+    // Simple auth check - just get the session
+    const initAuth = async () => {
       try {
         const session = await authService.getSession();
-        
-        if (!session?.user) {
-          setUser(null);
-          setLoading(false);
-          return;
-        }
-
-        // Verify user exists in database by checking profile
-        const { data: profile, error } = await supabase
-          .from('profiles')
-          .select('id')
-          .eq('id', session.user.id)
-          .single();
-
-        if (error || !profile) {
-          // User doesn't exist in database, clear session
-          console.log('[Auth] User not found in database, clearing session');
-          await authService.signOut();
-          setUser(null);
-        } else {
-          setUser(session.user);
-        }
+        setUser(session?.user ?? null);
       } catch (error) {
-        console.error('[Auth] Error verifying user:', error);
+        console.error('[Auth] Error getting session:', error);
         setUser(null);
       } finally {
         setLoading(false);
       }
     };
 
-    verifyUser();
+    initAuth();
 
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!session?.user) {
-        setUser(null);
-        return;
-      }
-
-      // Verify user exists in database
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', session.user.id)
-        .single();
-
-      if (error || !profile) {
-        console.log('[Auth] User not found in database, clearing session');
-        await authService.signOut();
-        setUser(null);
-      } else {
-        setUser(session.user);
-      }
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log('[Auth] Auth state changed:', _event);
+      setUser(session?.user ?? null);
+      setLoading(false);
     });
 
     return () => {

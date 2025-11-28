@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { Incident } from "@/types/incidents";
-import { verifyAuthenticatedUser } from "@/utils/authVerification";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface UseReportsResult {
   reports: Incident[];
@@ -16,6 +16,7 @@ interface UseReportsResult {
 }
 
 export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
+  const { user, loading: authLoading } = useAuth();
   const [reports, setReports] = useState<Incident[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalReports, setTotalReports] = useState(0);
@@ -35,8 +36,10 @@ export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
         }
         setError(null);
         
-        // Verify user is authenticated and exists in database
-        await verifyAuthenticatedUser();
+        // Check if user is authenticated
+        if (!user) {
+          throw new Error("User not authenticated");
+        }
 
         const from = (page - 1) * itemsPerPage;
         const to = from + itemsPerPage - 1;
@@ -131,7 +134,7 @@ export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
         setLoadingMore(false);
       }
     },
-    [itemsPerPage],
+    [itemsPerPage, user],
   );
 
   const onRefresh = useCallback(async () => {
@@ -148,8 +151,14 @@ export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
   }, [currentPage, hasMore, loading, loadingMore, fetchReports]);
 
   useEffect(() => {
-    fetchReports(1);
-  }, [fetchReports]);
+    // Only fetch if user is authenticated and auth is not loading
+    if (!authLoading && user) {
+      fetchReports(1);
+    } else if (!authLoading && !user) {
+      // User is not authenticated, set loading to false
+      setLoading(false);
+    }
+  }, [authLoading, user, fetchReports]);
 
   return {
     reports,
