@@ -12,6 +12,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { toastConfig } from "@/components/ui/Toast";
 import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 import { AnimatedSplashScreen } from "@/components/splash/AnimatedSplashScreen";
+import { useNotifications } from "@/hooks/useNotifications";
 import "../global.css";
 
 // Keep splash screen visible while fonts load
@@ -26,6 +27,9 @@ function RootLayoutNav() {
   
   // Protect routes based on auth state
   useProtectedRoute();
+
+  // Initialize notifications
+  useNotifications();
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>

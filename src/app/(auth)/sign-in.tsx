@@ -43,7 +43,7 @@ export default function SignInScreen() {
       if (user) {
         showToast.success("Welcome Back!", "Successfully signed in");
         // Navigate to home
-        router.replace("/(tabs)/" as any);
+        router.replace("/(tabs)/home");
       }
     } catch (error) {
       showToast.error("Error", "An unexpected error occurred");

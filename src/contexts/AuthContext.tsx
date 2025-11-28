@@ -28,16 +28,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check active session
-    authService.getSession().then((session) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    // Simple auth check - just get the session
+    const initAuth = async () => {
+      try {
+        const session = await authService.getSession();
+        setUser(session?.user ?? null);
+      } catch (error) {
+        console.error('[Auth] Error getting session:', error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initAuth();
 
     // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log('[Auth] Auth state changed:', _event);
       setUser(session?.user ?? null);
       setLoading(false);
     });

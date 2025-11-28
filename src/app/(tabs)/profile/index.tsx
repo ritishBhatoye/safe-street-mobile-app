@@ -12,6 +12,7 @@ import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { AnimatedProfileHeader } from "@/components/profile/AnimatedProfileHeader";
 import { ProfileStats } from "@/components/profile/ProfileStats";
 import { EditProfileModal } from "@/components/profile/EditProfileModal";
+import { EmergencyContactsCard } from "@/components/profile/EmergencyContactsCard";
 import { Card } from "@/components/atoms/Card";
 import { Button } from "@/components/atoms/Button";
 import { showToast } from "@/utils/toast";
@@ -265,6 +266,9 @@ export default function ProfileScreen() {
 
           {/* Profile Actions */}
           <View className="px-4 mt-2">
+            {/* Emergency Contacts Card */}
+            <EmergencyContactsCard />
+
             {/* Edit Profile Card */}
             <Card variant="elevated" className="mb-3">
               <Pressable

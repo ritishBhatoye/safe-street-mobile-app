@@ -12,6 +12,7 @@ interface LocationDescriptionStepProps {
   description: string;
   isGettingLocation: boolean;
   onGetLocation: () => void;
+  onPickOnMap: () => void;
   onDescriptionChange: (description: string) => void;
   locationError?: string;
   descriptionError?: string;
@@ -24,6 +25,7 @@ export const LocationDescriptionStep: React.FC<LocationDescriptionStepProps> = (
   description,
   isGettingLocation,
   onGetLocation,
+  onPickOnMap,
   onDescriptionChange,
   locationError,
   descriptionError,
@@ -49,54 +51,86 @@ export const LocationDescriptionStep: React.FC<LocationDescriptionStepProps> = (
           Location
         </Text>
         
-        {/* Location Button */}
-        <LinearGradient
-          colors={hasLocation ? ['#10B981', '#059669'] : ['#3B82F6', '#1D4ED8']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          className="rounded-2xl"
-          style={{
-            shadowColor: hasLocation ? '#10B981' : '#3B82F6',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.3,
-            shadowRadius: 8,
-            elevation: 8,
-          }}
-        >
-          <TouchableOpacity
-            onPress={onGetLocation}
-            disabled={isGettingLocation}
-            className="flex-row items-center justify-center p-4"
-          >
-            <Animated.View
+        {/* Location Buttons */}
+        <View className="flex-row space-x-3 mb-3">
+          {/* Current Location Button */}
+          <View className="flex-1">
+            <LinearGradient
+              colors={hasLocation ? ['#10B981', '#059669'] : ['#3B82F6', '#1D4ED8']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              className="rounded-2xl"
               style={{
-                transform: [{ 
-                  rotate: isGettingLocation ? '360deg' : '0deg' 
-                }]
+                shadowColor: hasLocation ? '#10B981' : '#3B82F6',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+                elevation: 8,
               }}
             >
-              <Ionicons 
-                name={
-                  hasLocation 
-                    ? "checkmark-circle" 
+              <TouchableOpacity
+                onPress={onGetLocation}
+                disabled={isGettingLocation}
+                className="flex-row items-center justify-center p-4"
+              >
+                <Animated.View
+                  style={{
+                    transform: [{ 
+                      rotate: isGettingLocation ? '360deg' : '0deg' 
+                    }]
+                  }}
+                >
+                  <Ionicons 
+                    name={
+                      hasLocation 
+                        ? "checkmark-circle" 
+                        : isGettingLocation 
+                          ? "hourglass-outline" 
+                          : "location-outline"
+                    } 
+                    size={24} 
+                    color="white" 
+                  />
+                </Animated.View>
+                <Text className="text-white font-dm-sans-bold ml-2 text-sm">
+                  {hasLocation 
+                    ? 'Current' 
                     : isGettingLocation 
-                      ? "hourglass-outline" 
-                      : "location-outline"
-                } 
-                size={24} 
-                color="white" 
-              />
-            </Animated.View>
-            <Text className="text-white font-dm-sans-bold ml-3 text-base">
-              {hasLocation 
-                ? 'Location Added' 
-                : isGettingLocation 
-                  ? 'Getting Location...' 
-                  : 'Use Current Location'
-              }
-            </Text>
-          </TouchableOpacity>
-        </LinearGradient>
+                      ? 'Getting...' 
+                      : 'Current'
+                  }
+                </Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          </View>
+
+          {/* Pick on Map Button */}
+          <View className="flex-1">
+            <LinearGradient
+              colors={['#8B5CF6', '#7C3AED']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              className="rounded-2xl"
+              style={{
+                shadowColor: '#8B5CF6',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+                elevation: 8,
+              }}
+            >
+              <TouchableOpacity
+                onPress={onPickOnMap}
+                className="flex-row items-center justify-center p-4"
+              >
+                <Ionicons name="map-outline" size={24} color="white" />
+                <Text className="text-white font-dm-sans-bold ml-2 text-sm">
+                  Pick on Map
+                </Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          </View>
+        </View>
         
         {/* Location Display */}
         {hasLocation && (

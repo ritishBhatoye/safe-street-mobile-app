@@ -13,7 +13,7 @@ export default function Index() {
   // Redirect based on auth state
   if (user) {
     // User is authenticated, go to main app
-    return <Redirect href="/(tabs)" />;
+    return <Redirect href="/(tabs)/home" />;
   }
 
   // User is not authenticated, go to onboarding

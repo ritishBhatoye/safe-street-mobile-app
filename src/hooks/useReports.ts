@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { Incident } from "@/types/incidents";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface UseReportsResult {
   reports: Incident[];
@@ -15,6 +16,7 @@ interface UseReportsResult {
 }
 
 export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
+  const { user, loading: authLoading } = useAuth();
   const [reports, setReports] = useState<Incident[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalReports, setTotalReports] = useState(0);
@@ -34,7 +36,7 @@ export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
         }
         setError(null);
         
-        const { data: { user } } = await supabase.auth.getUser();
+        // Check if user is authenticated
         if (!user) {
           throw new Error("User not authenticated");
         }
@@ -42,19 +44,19 @@ export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
         const from = (page - 1) * itemsPerPage;
         const to = from + itemsPerPage - 1;
 
-        // Get total count
+        // Get total count - ALL incidents from ALL users
         const { count, error: countError } = await supabase
           .from("incidents")
-          .select("*", { count: "exact", head: true })
-          .eq("reported_by", user.id);
+          .select("*", { count: "exact", head: true });
+          // Removed .eq("reported_by", user.id) to show ALL reports
 
         if (countError) throw countError;
 
-        // Get paginated data
+        // Get paginated data - ALL incidents from ALL users
         const { data, error: fetchError } = await supabase
           .from("incidents")
           .select("*")
-          .eq("reported_by", user.id)
+          // Removed .eq("reported_by", user.id) to show ALL reports
           .order("created_at", { ascending: false })
           .range(from, to);
 
@@ -132,7 +134,7 @@ export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
         setLoadingMore(false);
       }
     },
-    [itemsPerPage],
+    [itemsPerPage, user],
   );
 
   const onRefresh = useCallback(async () => {
@@ -149,8 +151,14 @@ export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
   }, [currentPage, hasMore, loading, loadingMore, fetchReports]);
 
   useEffect(() => {
-    fetchReports(1);
-  }, [fetchReports]);
+    // Only fetch if user is authenticated and auth is not loading
+    if (!authLoading && user) {
+      fetchReports(1);
+    } else if (!authLoading && !user) {
+      // User is not authenticated, set loading to false
+      setLoading(false);
+    }
+  }, [authLoading, user, fetchReports]);
 
   return {
     reports,
