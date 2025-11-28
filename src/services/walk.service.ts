@@ -216,12 +216,25 @@ export const walkService = {
 
   // Add watchers
   async addWatchers(walkId: string, watchers: { watcher_name: string; watcher_phone: string }[]) {
-    const watchersData = watchers.map(w => ({
-      walk_id: walkId,
-      watcher_name: w.watcher_name,
-      watcher_phone: w.watcher_phone,
-      share_token: this.generateShareToken(),
-    }));
+    // For each watcher, try to find their user ID by phone number
+    const watchersData = await Promise.all(
+      watchers.map(async (w) => {
+        // Try to find user by phone number in profiles
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('phone', w.watcher_phone)
+          .single();
+
+        return {
+          walk_id: walkId,
+          watcher_user_id: profile?.id || null, // Set user ID if found
+          watcher_name: w.watcher_name,
+          watcher_phone: w.watcher_phone,
+          share_token: this.generateShareToken(),
+        };
+      })
+    );
 
     const { error } = await supabase
       .from('walk_watchers')

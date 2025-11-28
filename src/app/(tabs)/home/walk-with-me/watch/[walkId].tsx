@@ -24,7 +24,7 @@ export default function WatchWalkScreen() {
   const { walkId } = useLocalSearchParams<{ walkId: string }>();
   const { walk, liveLocation, alerts, loading, error } = useWalkWatcher(walkId);
   const [mapReady, setMapReady] = useState(false);
-
+    console.log(' walk :- ', walk)
   if (loading) {
     return (
       <View className="flex-1 bg-white dark:bg-gray-900 items-center justify-center">
