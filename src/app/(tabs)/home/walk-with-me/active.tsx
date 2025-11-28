@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,10 +12,9 @@ export default function ActiveWalkScreen() {
   const router = useRouter();
   const { activeWalk, completeWalk, cancelWalk, createAlert } = useWalk();
   const { currentLocation } = useLocationTracking(activeWalk?.id || null, true);
-  const [showSOS, setShowSOS] = useState(false);
 
   if (!activeWalk) {
-    router.replace('/walk-with-me');
+    router.replace('/(tabs)/home/walk-with-me');
     return null;
   }
 
@@ -26,11 +25,11 @@ export default function ActiveWalkScreen() {
       [
         { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Yes, I\'m Safe',
+          text: "Yes, I'm Safe",
           onPress: async () => {
             await completeWalk(activeWalk.id);
             Alert.alert('Success', 'Walk completed! Stay safe.');
-            router.replace('/(tabs)');
+            router.replace('/(tabs)/home');
           },
         },
       ]
@@ -48,7 +47,7 @@ export default function ActiveWalkScreen() {
           style: 'destructive',
           onPress: async () => {
             await cancelWalk(activeWalk.id);
-            router.replace('/(tabs)');
+            router.replace('/(tabs)/home');
           },
         },
       ]
@@ -150,57 +149,57 @@ export default function ActiveWalkScreen() {
 
       {/* Bottom Actions */}
       <View className="absolute bottom-0 left-0 right-0 pb-8 px-4">
-        {/* Test Watcher V
+        {/* Test Watcher View Button (Development) */}
         <TouchableOpacity
-          onPress={() => rout)}
-          className="mb-2 bg-purple-500/95 backdrop-blu-center"
+          onPress={() => router.push(`/(tabs)/home/walk-with-me/watch/${activeWalk.id}`)}
+          className="mb-2 bg-purple-500/95 backdrop-blur rounded-xl py-2 items-center"
         >
-          <View className
-            <Ionicons name="eye" size={16} 
+          <View className="flex-row items-center">
+            <Ionicons name="eye" size={16} color="white" />
             <Text className="text-white font-dm-sans text-sm ml-2">
-           st)
+              View as Watcher (Test)
             </Text>
           </View>
         </TouchableOpacity>
 
         {/* SOS Button */}
         <TouchableOpacity
-andleSOS}
-          className="mb-4 overll"
+          onPress={handleSOS}
+          className="mb-4 overflow-hidden rounded-full"
         >
           <LinearGradient
-            colors={['#EF4444', '#6']}
+            colors={['#EF4444', '#DC2626']}
             className="py-4 items-center flex-row justify-center"
           >
             <Ionicons name="warning" size={24} color="white" />
-            <Text className="">
-          
+            <Text className="text-white font-dm-sans-bold text-lg ml-2">
+              EMERGENCY SOS
             </Text>
           </LinearGradient>
         </TouchableOpacity>
 
-        {/* Action Buttons 
+        {/* Action Buttons */}
         <View className="flex-row gap-3">
           <TouchableOpacity
-            o}
-            className="flex-1 bg-white/95 backdrop-blur rounded-xl py-3 items-ce
+            onPress={handleCancel}
+            className="flex-1 bg-white/95 backdrop-blur rounded-xl py-3 items-center"
           >
-            <Text className="
-          </Tou
+            <Text className="text-gray-700 font-dm-sans-semibold">Cancel</Text>
+          </TouchableOpacity>
           
-          <
-    ete}
- l"
-w>Vie</iew>
-       </V
-       bleOpacity>   </Toucha>
-       entradi</LinearG         </Text>
-   afed">I'm Solm-sans-semibte font-d"text-whiName=class  <Text               >
-   
-       ems-center""py-3 itsName=clas       ]}
-       #16A34A'', '55E{['#22C     colors=
-         tearGradien<Lin               >
-       rounded-xhidden w-lolex-1 overf"fame=      classN     andleCompl  onPress={h      acitybleOpToucha
+          <TouchableOpacity
+            onPress={handleComplete}
+            className="flex-1 overflow-hidden rounded-xl"
+          >
+            <LinearGradient
+              colors={['#22C55E', '#16A34A']}
+              className="py-3 items-center"
+            >
+              <Text className="text-white font-dm-sans-semibold">I&apos;m Safe</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 }
