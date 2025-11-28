@@ -305,7 +305,7 @@ export default function StartWalkScreen() {
               </ScrollView>
 
               {/* Start Button */}
-              <View className="absolute bottom-0 left-0 right-0 px-6 pb-6 bg-white/80 dark:bg-gray-900/80 backdrop-blur border-t border-gray-200 dark:border-gray-700">
+              <View className="absolute bottom-24   left-0 right-0 px-6 py-6 bg-white/80 dark:bg-gray-900/80 backdrop-blur border-t border-gray-200 dark:border-gray-700">
                 <Animated.View entering={FadeInUp.delay(500).springify()}>
                   <TouchableOpacity
                     onPress={() => formikProps.handleSubmit()}
@@ -317,7 +317,8 @@ export default function StartWalkScreen() {
                       colors={['#3B82F6', '#2563EB', '#1D4ED8']}
                       start={{ x: 0, y: 0 }}
                       end={{ x: 1, y: 1 }}
-                      className="py-5 items-center flex-row justify-center"
+                      style={{paddingVertical:10,justifyContent:'center',flexDirection:'row',alignItems:'center'}}
+
                     >
                       <Ionicons name="walk" size={24} color="white" />
                       <Text className="text-white font-dm-sans-bold text-lg ml-2">
