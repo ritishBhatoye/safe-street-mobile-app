@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,10 +12,12 @@ export default function ActiveWalkScreen() {
   const router = useRouter();
   const { activeWalk, completeWalk, cancelWalk, createAlert } = useWalk();
   const { currentLocation } = useLocationTracking(activeWalk?.id || null, true);
+  const hasRedirected = useRef(false);
 
   // Redirect if no active walk - use useEffect to avoid render issues
   useEffect(() => {
-    if (!activeWalk) {
+    if (!activeWalk && !hasRedirected.current) {
+      hasRedirected.current = true;
       router.replace('/(tabs)/home/walk-with-me');
     }
   }, [activeWalk, router]);
