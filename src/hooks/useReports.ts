@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { Incident } from "@/types/incidents";
+import { verifyAuthenticatedUser } from "@/utils/authVerification";
 
 interface UseReportsResult {
   reports: Incident[];
@@ -34,10 +35,8 @@ export const useReports = (itemsPerPage: number = 10): UseReportsResult => {
         }
         setError(null);
         
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
-          throw new Error("User not authenticated");
-        }
+        // Verify user is authenticated and exists in database
+        await verifyAuthenticatedUser();
 
         const from = (page - 1) * itemsPerPage;
         const to = from + itemsPerPage - 1;
