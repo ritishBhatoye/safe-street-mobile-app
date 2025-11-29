@@ -3,8 +3,19 @@ import { ScrollView, RefreshControl, View, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useHomeData } from "@/hooks/useHomeData";
-import { CommunityActivityPulse, ContributeCTA, EmergencyCard, HeroSafetySnapshot, HomeLoadingSkeleton, HotspotsNearYou, MiniMapPreview, QuickActions, RecentIncidentsNearby, SafetyTips, UserImpactTeaser } from "@/components/home";
-
+import {
+  CommunityActivityPulse,
+  ContributeCTA,
+  EmergencyCard,
+  HeroSafetySnapshot,
+  HomeLoadingSkeleton,
+  HotspotsNearYou,
+  MiniMapPreview,
+  QuickActions,
+  RecentIncidentsNearby,
+  SafetyTips,
+  UserImpactTeaser,
+} from "@/components/home";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -63,7 +74,7 @@ export default function HomeScreen() {
         {/* Header */}
         <View className="px-6 pt-4 pb-6">
           <Text className="text-3xl font-dm-sans-bold text-gray-900 dark:text-white mb-1">
-            SafeStreet
+            Safe Street
           </Text>
           <Text className="text-base font-dm-sans text-gray-600 dark:text-gray-400">
             Your safety dashboard

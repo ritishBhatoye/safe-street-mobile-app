@@ -1,6 +1,6 @@
-import { router } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState } from 'react';
+import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,41 +9,41 @@ import {
   Platform,
   ScrollView,
   StatusBar,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import Input from '@/components/atoms/Input';
-import { Button } from '@/components/atoms/Button';
-import { Divider } from '@/components/atoms/Divider';
-import { authService } from '@/services/auth.service';
-import { showToast } from '@/utils/toast';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import Input from "@/components/atoms/Input";
+import { Button } from "@/components/atoms/Button";
+import { Divider } from "@/components/atoms/Divider";
+import { authService } from "@/services/auth.service";
+import { showToast } from "@/utils/toast";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function RegisterScreen() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
-      showToast.warning('Missing Fields', 'Please fill in all fields');
+      showToast.warning("Missing Fields", "Please fill in all fields");
       return;
     }
 
     if (password !== confirmPassword) {
-      showToast.error('Password Mismatch', 'Passwords do not match');
+      showToast.error("Password Mismatch", "Passwords do not match");
       return;
     }
 
     if (password.length < 6) {
-      showToast.warning('Weak Password', 'Password must be at least 6 characters');
+      showToast.warning("Weak Password", "Password must be at least 6 characters");
       return;
     }
 
     if (!agreeToTerms) {
-      showToast.warning('Terms Required', 'Please agree to Terms & Privacy Policy');
+      showToast.warning("Terms Required", "Please agree to Terms & Privacy Policy");
       return;
     }
 
@@ -53,7 +53,7 @@ export default function RegisterScreen() {
       const { user, error } = await authService.signUp({ email, password, name });
 
       if (error) {
-        showToast.error('Registration Failed', error.message || 'Failed to create account');
+        showToast.error("Registration Failed", error.message || "Failed to create account");
         setLoading(false);
         return;
       }
@@ -61,34 +61,37 @@ export default function RegisterScreen() {
       if (user) {
         // Check if email confirmation is required
         if (user.email_confirmed_at) {
-          showToast.success('Welcome!', 'Account created successfully');
-          router.replace('/(tabs)/home');
+          showToast.success("Welcome!", "Account created successfully");
+          router.replace("/(tabs)/home");
         } else {
-          showToast.info('Verify Email', 'Please check your email to confirm your account');
-          router.replace('./sign-in');
+          showToast.info("Verify Email", "Please check your email to confirm your account");
+          router.replace("./sign-in");
         }
       }
     } catch (error) {
-      showToast.error('Error', 'An unexpected error occurred');
+      showToast.error("Error", "An unexpected error occurred");
       setLoading(false);
     }
   };
 
-  const handleSocialSignUp = async (provider: 'google' | 'apple') => {
+  const handleSocialSignUp = async (provider: "google" | "apple") => {
     try {
-      if (provider === 'google') {
+      if (provider === "google") {
         const result = await authService.signInWithGoogle();
         if (result.error) {
-          showToast.error('Sign Up Failed', result.error.message || 'Failed to sign up with Google');
+          showToast.error(
+            "Sign Up Failed",
+            result.error.message || "Failed to sign up with Google",
+          );
         }
-      } else if (provider === 'apple') {
+      } else if (provider === "apple") {
         const result = await authService.signInWithApple();
         if (result.error) {
-          showToast.error('Sign Up Failed', result.error.message || 'Failed to sign up with Apple');
+          showToast.error("Sign Up Failed", result.error.message || "Failed to sign up with Apple");
         }
       }
     } catch (error) {
-      showToast.error('Error', 'An unexpected error occurred');
+      showToast.error("Error", "An unexpected error occurred");
     }
   };
 
@@ -100,11 +103,11 @@ export default function RegisterScreen() {
 
       {/* Header with Gradient */}
       <LinearGradient
-        colors={['#8B5CF6', '#7C3AED']}
+        colors={["#8B5CF6", "#7C3AED"]}
         className="pb-8 pt-16"
         style={{ borderBottomLeftRadius: 32, borderBottomRightRadius: 32 }}
       >
-             <SafeAreaView className="px-6"> 
+        <SafeAreaView className="px-6">
           {/* Back Button */}
           <Pressable
             onPress={() => router.back()}
@@ -115,11 +118,9 @@ export default function RegisterScreen() {
 
           {/* Title */}
           <View className="mb-4">
-            <Text className="font-dm-sans-bold mb-2 text-4xl text-white">
-              Create Account
-            </Text>
+            <Text className="font-dm-sans-bold mb-2 text-4xl text-white">Create Account</Text>
             <Text className="font-dm-sans text-lg text-white/80">
-              Join SafeStreet community today
+              Join Safe Street community today
             </Text>
           </View>
 
@@ -133,7 +134,7 @@ export default function RegisterScreen() {
       </LinearGradient>
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
       >
         <ScrollView
@@ -198,27 +199,22 @@ export default function RegisterScreen() {
               <View
                 className={`h-6 w-6 items-center justify-center rounded-lg border-2 ${
                   agreeToTerms
-                    ? 'border-primary-500 bg-primary-500'
-                    : 'border-gray-300 dark:border-gray-600'
+                    ? "border-primary-500 bg-primary-500"
+                    : "border-gray-300 dark:border-gray-600"
                 }`}
               >
                 {agreeToTerms && <Ionicons name="checkmark" size={16} color="#FFFFFF" />}
               </View>
               <Text className="font-dm-sans flex-1 text-sm text-gray-600 dark:text-gray-400">
-                I agree to the{' '}
-                <Text className="font-dm-sans-semibold text-primary-500">
-                  Terms of Service
-                </Text>{' '}
-                and{' '}
-                <Text className="font-dm-sans-semibold text-primary-500">
-                  Privacy Policy
-                </Text>
+                I agree to the{" "}
+                <Text className="font-dm-sans-semibold text-primary-500">Terms of Service</Text> and{" "}
+                <Text className="font-dm-sans-semibold text-primary-500">Privacy Policy</Text>
               </Text>
             </Pressable>
 
             {/* Register Button */}
             <Button
-              title={loading ? 'Creating Account...' : 'Create Account'}
+              title={loading ? "Creating Account..." : "Create Account"}
               onPress={handleRegister}
               loading={loading}
               disabled={!isFormValid}
@@ -238,7 +234,7 @@ export default function RegisterScreen() {
             {/* Social Sign Up */}
             <View className="mb-8 flex-row gap-4">
               <Pressable
-                onPress={() => handleSocialSignUp('google')}
+                onPress={() => handleSocialSignUp("google")}
                 className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl border-2 border-gray-200 bg-white py-4 dark:border-gray-700 dark:bg-gray-800"
               >
                 <Ionicons name="logo-google" size={20} color="#EA4335" />
@@ -248,7 +244,7 @@ export default function RegisterScreen() {
               </Pressable>
 
               <Pressable
-                onPress={() => handleSocialSignUp('apple')}
+                onPress={() => handleSocialSignUp("apple")}
                 className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl border-2 border-gray-200 bg-white py-4 dark:border-gray-700 dark:bg-gray-800"
               >
                 <Ionicons name="logo-apple" size={20} color="#000000" />
@@ -263,7 +259,7 @@ export default function RegisterScreen() {
               <Text className="font-dm-sans text-gray-600 dark:text-gray-400">
                 Already have an account?
               </Text>
-              <Pressable onPress={() => router.push('./sign-in')}>
+              <Pressable onPress={() => router.push("./sign-in")}>
                 <Text className="font-dm-sans-bold text-primary-500">Sign In</Text>
               </Pressable>
             </View>

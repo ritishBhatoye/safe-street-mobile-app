@@ -39,7 +39,7 @@ export const SafetyTips: React.FC = () => {
     const interval = setInterval(() => {
       tipOpacity.value = withSequence(
         withTiming(0, { duration: 300 }),
-        withTiming(1, { duration: 300 })
+        withTiming(1, { duration: 300 }),
       );
 
       setTimeout(() => {
@@ -65,14 +65,17 @@ export const SafetyTips: React.FC = () => {
     <Animated.View style={animatedStyle}>
       <View className="mb-3">
         <Text className="text-lg font-dm-sans-bold text-gray-900 dark:text-white mb-1">
-          SafeStreet Tips
+          Safe Street Tips
         </Text>
         <Text className="text-sm font-dm-sans text-gray-500 dark:text-gray-400">
           Stay safe with these reminders
         </Text>
       </View>
 
-      <Card variant="elevated" className="bg-gradient-to-r from-accent-50 to-warning-50 dark:from-accent-900/20 dark:to-warning-900/20">
+      <Card
+        variant="elevated"
+        className="bg-gradient-to-r from-accent-50 to-warning-50 dark:from-accent-900/20 dark:to-warning-900/20"
+      >
         <Animated.View style={tipAnimatedStyle} className="flex-row items-center">
           <View className="w-12 h-12 rounded-full bg-accent-500 items-center justify-center mr-4">
             <Ionicons name={currentTip.icon as any} size={24} color="white" />
@@ -88,9 +91,7 @@ export const SafetyTips: React.FC = () => {
             <View
               key={index}
               className={`h-1 flex-1 rounded-full ${
-                index === currentTipIndex
-                  ? "bg-accent-500"
-                  : "bg-gray-300 dark:bg-gray-600"
+                index === currentTipIndex ? "bg-accent-500" : "bg-gray-300 dark:bg-gray-600"
               }`}
             />
           ))}

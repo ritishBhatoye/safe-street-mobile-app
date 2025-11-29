@@ -167,7 +167,7 @@ export const SafetyAnimatedSplash: React.FC<SafetyAnimatedSplashProps> = ({
                 textShadowRadius: 8,
               }}
             >
-              SafeStreet
+              Safe Street
             </Text>
           </Animated.View>
 

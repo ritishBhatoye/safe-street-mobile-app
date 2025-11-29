@@ -44,7 +44,7 @@ export default function ProfileScreen() {
               <Ionicons name="person-outline" size={48} color="#FFFFFF" />
             </View>
             <Text className="text-gray-900 dark:text-white font-dm-sans-bold text-2xl mb-2 text-center">
-              Welcome to SafeStreet
+              Welcome to Safe Street
             </Text>
             <Text className="text-gray-600 dark:text-gray-400 font-dm-sans text-center mb-8 px-4">
               Sign in to access your profile, report incidents, and help make your community safer
@@ -116,7 +116,7 @@ export default function ProfileScreen() {
       <>
         <Stack.Screen options={{ headerShown: false }} />
         <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={["top"]}>
-          <Animated.ScrollView className="flex-1" >
+          <Animated.ScrollView className="flex-1">
             {/* Shimmer Header */}
             <View className="bg-white">
               <View className="bg-gradient-to-r from-blue-500 to-purple-500 pt-16 pb-24 px-6">
@@ -242,7 +242,7 @@ export default function ProfileScreen() {
           className="flex-1"
           showsVerticalScrollIndicator={false}
           onScroll={scrollHandler}
-          contentContainerStyle={{paddingBottom:140}}
+          contentContainerStyle={{ paddingBottom: 140 }}
           scrollEventThrottle={16}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
         >

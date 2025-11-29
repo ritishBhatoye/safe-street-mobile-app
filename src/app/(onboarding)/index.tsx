@@ -46,16 +46,13 @@ const OnBoardingScreen = (): ReactElement => {
     ).start();
   }, [floatAnim]);
 
-  const viewableItemsChanged = useRef(
-    ({ viewableItems }: { viewableItems: ViewToken[] }) => {
-      if (viewableItems.length > 0) {
-        setCurrentIndex(viewableItems[0]?.index || 0);
-      }
-    },
-  ).current;
+  const viewableItemsChanged = useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
+    if (viewableItems.length > 0) {
+      setCurrentIndex(viewableItems[0]?.index || 0);
+    }
+  }).current;
 
-  const backgroundImage =
-    onboardingData[currentIndex]?.image || onboardingData[0]?.image;
+  const backgroundImage = onboardingData[currentIndex]?.image || onboardingData[0]?.image;
 
   const gradientColors = onboardingData[currentIndex]?.backgroundColor || [
     "rgba(51, 153, 255, 0.9)",
@@ -89,9 +86,7 @@ const OnBoardingScreen = (): ReactElement => {
               transform: [{ translateY: floatAnim }],
             }}
           >
-            <Text className="font-dm-sans-bold text-2xl tracking-wide text-white">
-              SafeStreet
-            </Text>
+            <Text className="font-dm-sans-bold text-2xl tracking-wide text-white">Safe Street</Text>
           </Animated.View>
         </View>
 
@@ -102,26 +97,17 @@ const OnBoardingScreen = (): ReactElement => {
               onPress={handleSkip}
               className="rounded-full border-2 border-white/50 bg-white/25 px-6 py-2.5 shadow-lg backdrop-blur-md active:bg-white/35"
             >
-              <Text className="font-dm-sans-semibold text-base text-white">
-                Skip
-              </Text>
+              <Text className="font-dm-sans-semibold text-base text-white">Skip</Text>
             </Pressable>
           </View>
         )}
 
         {/* Scrollable Content Area - Only this part transitions */}
-        <View
-          className={`${currentIndex === 3 ? "pt-28" : ""} flex-1 justify-center`}
-        >
+        <View className={`${currentIndex === 3 ? "pt-28" : ""} flex-1 justify-center`}>
           <FlatList
             data={onboardingData}
             renderItem={({ item, index }) => (
-              <OnboardingItem
-                item={item}
-                width={width}
-                scrollX={scrollX}
-                index={index}
-              />
+              <OnboardingItem item={item} width={width} scrollX={scrollX} index={index} />
             )}
             keyExtractor={(item) => item.id.toString()}
             horizontal
@@ -132,10 +118,9 @@ const OnBoardingScreen = (): ReactElement => {
             ref={slidesRef}
             onViewableItemsChanged={viewableItemsChanged}
             viewabilityConfig={viewConfig}
-            onScroll={Animated.event(
-              [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-              { useNativeDriver: false },
-            )}
+            onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {
+              useNativeDriver: false,
+            })}
             contentContainerStyle={{ flexGrow: 0 }}
           />
         </View>

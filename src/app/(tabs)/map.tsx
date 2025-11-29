@@ -18,7 +18,7 @@ export default function MapScreen() {
   useEffect(() => {
     (async () => {
       try {
-        const { status} = await Location.requestForegroundPermissionsAsync();
+        const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
           setErrorMsg("Permission to access location was denied");
           setIsLoading(false);
@@ -29,7 +29,7 @@ export default function MapScreen() {
           accuracy: Location.Accuracy.Balanced,
         });
         setLocation(location);
-        
+
         // Load incidents near user location
         await loadNearbyIncidents(location.coords.latitude, location.coords.longitude);
       } catch (err) {
@@ -57,7 +57,7 @@ export default function MapScreen() {
         let longitude = lng;
 
         if (item.location) {
-          if (typeof item.location === 'string') {
+          if (typeof item.location === "string") {
             const match = item.location.match(/POINT\(([^ ]+) ([^ ]+)\)/);
             if (match) {
               longitude = parseFloat(match[1]);
@@ -107,22 +107,30 @@ export default function MapScreen() {
 
   const getMarkerColor = (severity: string) => {
     switch (severity) {
-      case "critical": return "#EF4444";
-      case "danger": return "#F97316";
-      case "caution": return "#EAB308";
-      case "safe": return "#22C55E";
-      default: return "#6B7280";
+      case "critical":
+        return "#EF4444";
+      case "danger":
+        return "#F97316";
+      case "caution":
+        return "#EAB308";
+      case "safe":
+        return "#22C55E";
+      default:
+        return "#6B7280";
     }
   };
 
   const recenterMap = () => {
     if (location && mapRef.current) {
-      mapRef.current.animateToRegion({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05,
-      }, 1000);
+      mapRef.current.animateToRegion(
+        {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        },
+        1000,
+      );
     }
   };
 
@@ -134,9 +142,7 @@ export default function MapScreen() {
           <Text className="text-gray-900 font-dm-sans-bold text-xl mt-4 text-center">
             Getting Your Location
           </Text>
-          <Text className="text-gray-600 font-dm-sans text-center mt-2">
-            Please wait...
-          </Text>
+          <Text className="text-gray-600 font-dm-sans text-center mt-2">Please wait...</Text>
         </View>
       </SafeAreaView>
     );
@@ -150,9 +156,7 @@ export default function MapScreen() {
           <Text className="text-gray-900 font-dm-sans-bold text-xl mt-4 text-center">
             Location Access Required
           </Text>
-          <Text className="text-gray-600 font-dm-sans text-center mt-2">
-            {errorMsg}
-          </Text>
+          <Text className="text-gray-600 font-dm-sans text-center mt-2">{errorMsg}</Text>
         </View>
       </SafeAreaView>
     );
@@ -183,20 +187,20 @@ export default function MapScreen() {
               longitude: incident.location.longitude,
             }}
             title={incident.title}
-            description={`${incident.severity} - ${incident.city || 'Unknown location'}`}
+            description={`${incident.severity} - ${incident.city || "Unknown location"}`}
           >
-            <View style={{ alignItems: 'center' }}>
-              <View 
+            <View style={{ alignItems: "center" }}>
+              <View
                 style={{
                   backgroundColor: getMarkerColor(incident.severity),
                   width: 32,
                   height: 32,
                   borderRadius: 16,
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  alignItems: "center",
+                  justifyContent: "center",
                   borderWidth: 2,
-                  borderColor: 'white',
-                  shadowColor: '#000',
+                  borderColor: "white",
+                  shadowColor: "#000",
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.3,
                   shadowRadius: 3,
@@ -215,16 +219,12 @@ export default function MapScreen() {
         <View className="bg-white/95 backdrop-blur-sm mx-4 mt-4 rounded-2xl px-4 py-3 shadow-lg">
           <View className="flex-row items-center justify-between">
             <View className="flex-1">
-              <Text className="text-gray-900 font-dm-sans-bold text-lg">
-                SafeStreet Map
-              </Text>
+              <Text className="text-gray-900 font-dm-sans-bold text-lg">Safe Street Map</Text>
               <Text className="text-gray-600 font-dm-sans text-sm">
                 {incidents.length} active incidents
               </Text>
             </View>
-            {loadingIncidents && (
-              <ActivityIndicator size="small" color="#3B82F6" />
-            )}
+            {loadingIncidents && <ActivityIndicator size="small" color="#3B82F6" />}
           </View>
         </View>
       </SafeAreaView>
@@ -236,7 +236,7 @@ export default function MapScreen() {
             onPress={recenterMap}
             className="bg-white rounded-full p-3 shadow-lg"
             style={{
-              shadowColor: '#000',
+              shadowColor: "#000",
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.25,
               shadowRadius: 3.84,

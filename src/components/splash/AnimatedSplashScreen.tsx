@@ -271,7 +271,7 @@ export const AnimatedSplashScreen: React.FC<AnimatedSplashScreenProps> = ({
                 textShadowRadius: 8,
               }}
             >
-              SafeStreet
+              Safe Street
             </Text>
           </Animated.View>
 
