@@ -1,4 +1,4 @@
-import * as Location from 'expo-location';
+import * as Location from "expo-location";
 
 export interface LocationCoords {
   latitude: number;
@@ -16,9 +16,9 @@ export class LocationService {
   static async requestPermission(): Promise<boolean> {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
-      return status === 'granted';
+      return status === "granted";
     } catch (error) {
-      console.error('Error requesting location permission:', error);
+      console.error("Error requesting location permission:", error);
       return false;
     }
   }
@@ -26,7 +26,7 @@ export class LocationService {
   static async getCurrentPosition(): Promise<LocationCoords> {
     const hasPermission = await this.requestPermission();
     if (!hasPermission) {
-      throw new Error('Location permission denied');
+      throw new Error("Location permission denied");
     }
 
     try {
@@ -39,27 +39,27 @@ export class LocationService {
         longitude: location.coords.longitude,
       };
     } catch (error) {
-      console.error('Error getting current position:', error);
-      throw new Error('Failed to get current location');
+      console.error("Error getting current position:", error);
+      throw new Error("Failed to get current location");
     }
   }
 
   static async reverseGeocode(coords: LocationCoords): Promise<AddressInfo> {
     try {
       const [result] = await Location.reverseGeocodeAsync(coords);
-      
+
       if (!result) {
         return {};
       }
 
       return {
-        address: [result.streetNumber, result.street].filter(Boolean).join(' '),
-        city: result.city || result.subregion,
-        state: result.region,
-        country: result.country,
+        address: [result.streetNumber, result.street].filter(Boolean).join(" "),
+        city: result.city || result.subregion || undefined,
+        state: result.region || undefined,
+        country: result.country || undefined,
       };
     } catch (error) {
-      console.error('Error reverse geocoding:', error);
+      console.error("Error reverse geocoding:", error);
       return {};
     }
   }
@@ -67,7 +67,7 @@ export class LocationService {
   static async geocode(address: string): Promise<LocationCoords | null> {
     try {
       const [result] = await Location.geocodeAsync(address);
-      
+
       if (!result) {
         return null;
       }
@@ -77,26 +77,23 @@ export class LocationService {
         longitude: result.longitude,
       };
     } catch (error) {
-      console.error('Error geocoding address:', error);
+      console.error("Error geocoding address:", error);
       return null;
     }
   }
 
-  static calculateDistance(
-    coord1: LocationCoords,
-    coord2: LocationCoords
-  ): number {
+  static calculateDistance(coord1: LocationCoords, coord2: LocationCoords): number {
     const R = 6371; // Earth's radius in kilometers
     const dLat = this.toRadians(coord2.latitude - coord1.latitude);
     const dLon = this.toRadians(coord2.longitude - coord1.longitude);
-    
+
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(this.toRadians(coord1.latitude)) *
         Math.cos(this.toRadians(coord2.latitude)) *
         Math.sin(dLon / 2) *
         Math.sin(dLon / 2);
-    
+
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c; // Distance in kilometers
   }
