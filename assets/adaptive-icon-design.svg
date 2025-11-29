@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Adaptive icon - no rounded corners, designed for Android adaptive icon system -->
+  
+  <!-- Background gradient -->
+  <rect width="1024" height="1024" fill="url(#adaptiveGradient)"/>
+  
+  <defs>
+    <linearGradient id="adaptiveGradient" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="50%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1E40AF"/>
+    </linearGradient>
+    
+    <linearGradient id="adaptiveShield" x1="512" y1="150" x2="512" y2="874" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E0F2FE" stop-opacity="0.95"/>
+    </linearGradient>
+    
+    <radialGradient id="adaptiveGlow" cx="512" cy="512" r="450">
+      <stop offset="0%" stop-color="#60A5FA" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Glow -->
+  <circle cx="512" cy="512" r="450" fill="url(#adaptiveGlow)"/>
+  
+  <!-- Shield - larger for adaptive icon -->
+  <path d="M512 150 L800 270 L800 550 Q800 730 512 874 Q224 730 224 550 L224 270 Z" 
+        fill="url(#adaptiveShield)" 
+        stroke="#FFFFFF" 
+        stroke-width="10"/>
+  
+  <!-- Checkmark -->
+  <path d="M400 512 L470 600 L650 400" 
+        stroke="#3B82F6" 
+        stroke-width="56" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="none"/>
+  
+  <!-- Location pin -->
+  <circle cx="512" cy="340" r="36" fill="#3B82F6"/>
+  <circle cx="512" cy="340" r="18" fill="#FFFFFF"/>
+  
+  <!-- Community network -->
+  <circle cx="380" cy="700" r="14" fill="#3B82F6" opacity="0.9"/>
+  <circle cx="512" cy="740" r="14" fill="#3B82F6" opacity="0.9"/>
+  <circle cx="644" cy="700" r="14" fill="#3B82F6" opacity="0.9"/>
+  <line x1="380" y1="700" x2="512" y2="740" stroke="#3B82F6" stroke-width="4" opacity="0.6"/>
+  <line x1="512" y1="740" x2="644" y2="700" stroke="#3B82F6" stroke-width="4" opacity="0.6"/>
+</svg>

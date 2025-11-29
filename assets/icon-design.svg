@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with modern gradient -->
+  <rect width="1024" height="1024" rx="226" fill="url(#gradient1)"/>
+  
+  <!-- Gradient definitions -->
+  <defs>
+    <!-- Main gradient - vibrant blue to purple -->
+    <linearGradient id="gradient1" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="50%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1E40AF"/>
+    </linearGradient>
+    
+    <!-- Shield gradient -->
+    <linearGradient id="shieldGradient" x1="512" y1="200" x2="512" y2="824" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#E0F2FE" stop-opacity="0.95"/>
+    </linearGradient>
+    
+    <!-- Glow effect -->
+    <radialGradient id="glowGradient" cx="512" cy="512" r="400">
+      <stop offset="0%" stop-color="#60A5FA" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/>
+    </radialGradient>
+    
+    <!-- Inner shield gradient -->
+    <linearGradient id="innerShield" x1="512" y1="350" x2="512" y2="700" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1E40AF"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Glow effect behind shield -->
+  <circle cx="512" cy="512" r="400" fill="url(#glowGradient)"/>
+  
+  <!-- Main shield shape - modern, geometric -->
+  <path d="M512 200 L750 300 L750 550 Q750 700 512 824 Q274 700 274 550 L274 300 Z" 
+        fill="url(#shieldGradient)" 
+        stroke="#FFFFFF" 
+        stroke-width="8"
+        filter="url(#shadow)"/>
+  
+  <!-- Inner decorative shield -->
+  <path d="M512 280 L680 350 L680 540 Q680 650 512 744 Q344 650 344 540 L344 350 Z" 
+        fill="url(#innerShield)" 
+        opacity="0.15"/>
+  
+  <!-- Checkmark - bold and modern -->
+  <path d="M420 512 L480 580 L620 420" 
+        stroke="#FFFFFF" 
+        stroke-width="48" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="none"
+        filter="url(#checkShadow)"/>
+  
+  <!-- Location pin integrated into design - subtle -->
+  <circle cx="512" cy="380" r="32" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="512" cy="380" r="16" fill="#3B82F6"/>
+  
+  <!-- Community dots - representing people/network -->
+  <circle cx="400" cy="650" r="12" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="512" cy="680" r="12" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="624" cy="650" r="12" fill="#FFFFFF" opacity="0.8"/>
+  
+  <!-- Connecting lines between dots -->
+  <line x1="400" y1="650" x2="512" y2="680" stroke="#FFFFFF" stroke-width="3" opacity="0.5"/>
+  <line x1="512" y1="680" x2="624" y2="650" stroke="#FFFFFF" stroke-width="3" opacity="0.5"/>
+  
+  <!-- Shadow filters -->
+  <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="8"/>
+    <feOffset dx="0" dy="8" result="offsetblur"/>
+    <feComponentTransfer>
+      <feFuncA type="linear" slope="0.3"/>
+    </feComponentTransfer>
+    <feMerge>
+      <feMergeNode/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
+  
+  <filter id="checkShadow" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+    <feOffset dx="0" dy="4" result="offsetblur"/>
+    <feComponentTransfer>
+      <feFuncA type="linear" slope="0.4"/>
+    </feComponentTransfer>
+    <feMerge>
+      <feMergeNode/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
+</svg>
