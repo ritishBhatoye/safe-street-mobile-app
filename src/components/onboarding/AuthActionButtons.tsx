@@ -1,14 +1,25 @@
-import { router } from 'expo-router';
-import { View } from 'react-native';
-import { Button } from '@/components/atoms/Button';
+import { router } from "expo-router";
+import { View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Button } from "@/components/atoms/Button";
 
 export const AuthActionButtons = () => {
-  const handleGetStarted = () => {
-    router.push('./permissions');
+  const markOnboardingComplete = async () => {
+    try {
+      await AsyncStorage.setItem("hasSeenOnboarding", "true");
+    } catch (error) {
+      console.error("Error saving onboarding status:", error);
+    }
   };
 
-  const handleLogin = () => {
-    router.push('/(auth)/sign-in');
+  const handleGetStarted = async () => {
+    await markOnboardingComplete();
+    router.push("./permissions");
+  };
+
+  const handleLogin = async () => {
+    await markOnboardingComplete();
+    router.push("/(auth)/sign-in");
   };
 
   return (
