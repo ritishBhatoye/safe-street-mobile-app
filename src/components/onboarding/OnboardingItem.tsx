@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+
 import { View, Animated, type Animated as AnimatedType } from "react-native";
 import { Text } from "react-native";
 import type { OnBoardingType } from "@/data/onboardingData";
@@ -10,12 +11,7 @@ interface OnboardingItemProps {
   index: number;
 }
 
-export const OnboardingItem = ({
-  item,
-  width,
-  scrollX,
-  index,
-}: OnboardingItemProps) => {
+export const OnboardingItem = ({ item, width, scrollX, index }: OnboardingItemProps) => {
   const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
   const floatAnim1 = useRef(new Animated.Value(0)).current;
   const floatAnim2 = useRef(new Animated.Value(0)).current;
@@ -134,10 +130,7 @@ export const OnboardingItem = ({
               className="absolute -left-24 -top-16"
             >
               <View className="rounded-full bg-white px-4 py-2 shadow-lg">
-                <Text
-                  style={{ color: item.accentColor }}
-                  className="font-dm-sans-semibold text-sm"
-                >
+                <Text style={{ color: item.accentColor }} className="font-dm-sans-semibold text-sm">
                   {item.actionLabels[0]}
                 </Text>
               </View>
@@ -163,10 +156,7 @@ export const OnboardingItem = ({
               className="absolute -bottom-16 -right-20"
             >
               <View className="rounded-full bg-white px-4 py-2 shadow-lg">
-                <Text
-                  style={{ color: item.accentColor }}
-                  className="font-dm-sans-semibold text-sm"
-                >
+                <Text style={{ color: item.accentColor }} className="font-dm-sans-semibold text-sm">
                   {item.actionLabels[1]}
                 </Text>
               </View>
@@ -194,10 +184,7 @@ export const OnboardingItem = ({
               className="absolute -right-24 -top-16"
             >
               <View className="rounded-full bg-white px-4 py-2 shadow-lg">
-                <Text
-                  style={{ color: item.accentColor }}
-                  className="font-dm-sans-semibold text-sm"
-                >
+                <Text style={{ color: item.accentColor }} className="font-dm-sans-semibold text-sm">
                   {item.actionLabels[0]}
                 </Text>
               </View>
@@ -223,10 +210,7 @@ export const OnboardingItem = ({
               className="absolute -bottom-16 -left-20"
             >
               <View className="rounded-full bg-white px-4 py-2 shadow-lg">
-                <Text
-                  style={{ color: item.accentColor }}
-                  className="font-dm-sans-semibold text-sm"
-                >
+                <Text style={{ color: item.accentColor }} className="font-dm-sans-semibold text-sm">
                   {item.actionLabels[1]}
                 </Text>
               </View>
@@ -257,9 +241,7 @@ export const OnboardingItem = ({
       >
         {/* Title with bubble background */}
         <View className="mb-4 rounded-3xl bg-white/10 px-6 py-3 backdrop-blur-sm">
-          <Text className="font-dm-sans-bold text-center text-3xl text-white">
-            {item.title}
-          </Text>
+          <Text className="font-dm-sans-bold text-center text-3xl text-white">{item.title}</Text>
         </View>
 
         {/* Subtitle */}
