@@ -19,7 +19,6 @@ export const DMSansThin = require("../../assets/fonts/DM_Sans/static/DMSans-Thin
 export const DMSansThinItalic = require("../../assets/fonts/DM_Sans/static/DMSans-ThinItalic.ttf");
 
 // Quicksand fonts (root level)
-export const QuicksandBold = require("../../assets/fonts/Quicksand-Bold.ttf");
 export const QuicksandLight = require("../../assets/fonts/Quicksand-Light.ttf");
 export const QuicksandMedium = require("../../assets/fonts/Quicksand-Medium.ttf");
 export const QuicksandRegular = require("../../assets/fonts/Quicksand-Regular.ttf");
