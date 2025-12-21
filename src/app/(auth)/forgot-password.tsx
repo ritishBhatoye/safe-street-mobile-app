@@ -1,6 +1,6 @@
-import { router } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState } from 'react';
+import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,21 +9,21 @@ import {
   Platform,
   ScrollView,
   StatusBar,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import Input from '@/components/atoms/Input';
-import { Button } from '@/components/atoms/Button';
-import { authService } from '@/services/auth.service';
-import { showToast } from '@/utils/toast';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import Input from "@/components/atoms/Input";
+import { Button } from "@/components/atoms/Button";
+import { authService } from "@/services/auth.service";
+import { showToast } from "@/utils/toast";
 
 export default function ForgotPasswordScreen() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
 
   const handleResetPassword = async () => {
     if (!email) {
-      showToast.warning('Email Required', 'Please enter your email address');
+      showToast.warning("Email Required", "Please enter your email address");
       return;
     }
 
@@ -33,16 +33,16 @@ export default function ForgotPasswordScreen() {
       const result = await authService.resetPassword(email);
 
       if (result.error) {
-        showToast.error('Reset Failed', result.error.message || 'Failed to send reset email');
+        showToast.error("Reset Failed", result.error.message || "Failed to send reset email");
         setLoading(false);
         return;
       }
 
       setLoading(false);
       setEmailSent(true);
-      showToast.success('Email Sent!', 'Check your inbox for reset instructions');
+      showToast.success("Email Sent!", "Check your inbox for reset instructions");
     } catch (error) {
-      showToast.error('Error', 'An unexpected error occurred');
+      showToast.error("Error", "An unexpected error occurred");
       setLoading(false);
     }
   };
@@ -53,7 +53,7 @@ export default function ForgotPasswordScreen() {
         <StatusBar barStyle="light-content" />
 
         <LinearGradient
-          colors={['#22C55E', '#16A34A']}
+          colors={["#22C55E", "#16A34A"]}
           className="flex-1"
           style={{ borderBottomLeftRadius: 32, borderBottomRightRadius: 32 }}
         >
@@ -70,7 +70,7 @@ export default function ForgotPasswordScreen() {
 
             {/* Description */}
             <Text className="font-dm-sans mb-8 text-center text-lg text-white/80">
-              We&apos;ve sent password reset instructions to{'\n'}
+              We&apos;ve sent password reset instructions to{"\n"}
               <Text className="font-dm-sans-semibold">{email}</Text>
             </Text>
 
@@ -85,13 +85,8 @@ export default function ForgotPasswordScreen() {
                 className="bg-white"
               />
 
-              <Pressable
-                onPress={() => router.back()}
-                className="items-center py-3"
-              >
-                <Text className="font-dm-sans-semibold text-white">
-                  Back to Sign In
-                </Text>
+              <Pressable onPress={() => router.back()} className="items-center py-3">
+                <Text className="font-dm-sans-semibold text-white">Back to Sign In</Text>
               </Pressable>
             </View>
           </View>
@@ -106,7 +101,7 @@ export default function ForgotPasswordScreen() {
 
       {/* Header with Gradient */}
       <LinearGradient
-        colors={['#F59E0B', '#D97706']}
+        colors={["#F59E0B", "#D97706"]}
         className="pb-8 pt-16"
         style={{ borderBottomLeftRadius: 32, borderBottomRightRadius: 32 }}
       >
@@ -121,16 +116,14 @@ export default function ForgotPasswordScreen() {
 
           {/* Title */}
           <View className="mb-4">
-            <Text className="font-dm-sans-bold mb-2 text-4xl text-white">
-              Forgot Password?
-            </Text>
+            <Text className="font-dm-sans-bold mb-2 text-4xl text-white">Forgot Password?</Text>
             <Text className="font-dm-sans text-lg text-white/80">
               No worries, we&apos;ll send you reset instructions
             </Text>
           </View>
 
           {/* Icon */}
-          <View className="items-center">
+          <View className="items-center py-10 pt-5">
             <View className="h-20 w-20 items-center justify-center rounded-full bg-white/20">
               <Text style={{ fontSize: 40 }}>🔑</Text>
             </View>
@@ -139,7 +132,7 @@ export default function ForgotPasswordScreen() {
       </LinearGradient>
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
       >
         <ScrollView
@@ -151,8 +144,7 @@ export default function ForgotPasswordScreen() {
             {/* Info Box */}
             <View className="mb-6 rounded-2xl bg-warning-50 p-4 dark:bg-warning-900/20">
               <Text className="font-dm-sans text-sm leading-6 text-warning-700 dark:text-warning-300">
-                Enter your email address and we&apos;ll send you a link to reset your
-                password.
+                Enter your email address and we&apos;ll send you a link to reset your password.
               </Text>
             </View>
 
@@ -171,7 +163,7 @@ export default function ForgotPasswordScreen() {
 
             {/* Reset Button */}
             <Button
-              title={loading ? 'Sending...' : 'Send Reset Link'}
+              title={loading ? "Sending..." : "Send Reset Link"}
               onPress={handleResetPassword}
               loading={loading}
               disabled={!email}
@@ -184,9 +176,7 @@ export default function ForgotPasswordScreen() {
               className="flex-row items-center justify-center gap-2 py-3"
             >
               <Ionicons name="arrow-back" size={16} color="#3399FF" />
-              <Text className="font-dm-sans-semibold text-primary-500">
-                Back to Sign In
-              </Text>
+              <Text className="font-dm-sans-semibold text-primary-500">Back to Sign In</Text>
             </Pressable>
           </View>
         </ScrollView>
