@@ -25,6 +25,7 @@ interface InputWithLabelProps extends TextInputProps {
   className?: string;
   inputClassName?: string;
   labelClassName?: string;
+  endContent?: React.ReactNode;
 }
 
 const inputStyles = tv({
@@ -64,6 +65,7 @@ const Input: React.FC<InputWithLabelProps> = ({
   className,
   inputClassName,
   labelClassName,
+  endContent,
   ...rest
 }) => {
   const colorScheme = useColorScheme();
@@ -81,7 +83,7 @@ const Input: React.FC<InputWithLabelProps> = ({
         onValueChange(text);
       }
     },
-    [onValueChange]
+    [onValueChange],
   );
 
   return (
@@ -91,7 +93,7 @@ const Input: React.FC<InputWithLabelProps> = ({
           className={clsx(
             "font-semibold mb-1",
             isDarkMode ? "text-white" : "text-black/80",
-            labelClassName
+            labelClassName,
           )}
         >
           {label}
@@ -116,6 +118,7 @@ const Input: React.FC<InputWithLabelProps> = ({
             />
           </TouchableOpacity>
         )}
+        {endContent && <View className="ml-3">{endContent}</View>}
       </View>
     </View>
   );

@@ -1,5 +1,5 @@
-import { supabase } from '@/lib/supabase';
-import type { AuthError, User } from '@supabase/supabase-js';
+import { supabase } from "@/lib/supabase";
+import type { AuthError, User } from "@supabase/supabase-js";
 
 export interface SignUpData {
   email: string;
@@ -92,9 +92,57 @@ class AuthService {
   async resetPassword(email: string): Promise<{ error: AuthError | null }> {
     try {
       const result = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'safestreet://reset-password',
+        redirectTo: "safestreet://reset-password",
       });
       return { error: result.error };
+    } catch (error) {
+      return { error: error as AuthError };
+    }
+  }
+
+  /**
+   * Send OTP for password reset (mobile-friendly)
+   */
+  async sendPasswordResetOTP(email: string): Promise<{ error: AuthError | null }> {
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: false, // Don't create new user if doesn't exist
+        },
+      });
+      return { error };
+    } catch (error) {
+      return { error: error as AuthError };
+    }
+  }
+
+  /**
+   * Verify OTP and reset password
+   */
+  async verifyOTPAndResetPassword(
+    email: string,
+    otp: string,
+    newPassword: string,
+  ): Promise<{ error: AuthError | null }> {
+    try {
+      // Verify OTP
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        email,
+        token: otp,
+        type: "email",
+      });
+
+      if (verifyError) {
+        return { error: verifyError };
+      }
+
+      // Update password
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+
+      return { error: updateError };
     } catch (error) {
       return { error: error as AuthError };
     }
@@ -133,7 +181,7 @@ class AuthService {
    */
   private async createUserProfile(userId: string, email: string, name: string) {
     try {
-      const result = await supabase.from('profiles').insert({
+      const result = await supabase.from("profiles").insert({
         id: userId,
         email,
         name,
@@ -142,10 +190,10 @@ class AuthService {
       });
 
       if (result.error) {
-        console.error('Error creating user profile:', result.error);
+        console.error("Error creating user profile:", result.error);
       }
     } catch (error) {
-      console.error('Error creating user profile:', error);
+      console.error("Error creating user profile:", error);
     }
   }
 
@@ -155,9 +203,9 @@ class AuthService {
   async signInWithGoogle() {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
+        provider: "google",
         options: {
-          redirectTo: 'safestreet://auth/callback',
+          redirectTo: "safestreet://auth/callback",
         },
       });
       return { data, error };
@@ -172,9 +220,9 @@ class AuthService {
   async signInWithApple() {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'apple',
+        provider: "apple",
         options: {
-          redirectTo: 'safestreet://auth/callback',
+          redirectTo: "safestreet://auth/callback",
         },
       });
       return { data, error };
