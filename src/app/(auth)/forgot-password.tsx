@@ -15,6 +15,7 @@ import Input from "@/components/atoms/Input";
 import { Button } from "@/components/atoms/Button";
 import { authService } from "@/services/auth.service";
 import { showToast } from "@/utils/toast";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState("");
@@ -105,7 +106,7 @@ export default function ForgotPasswordScreen() {
         className="pb-8 pt-16"
         style={{ borderBottomLeftRadius: 32, borderBottomRightRadius: 32 }}
       >
-        <View className="px-6">
+        <SafeAreaView className="px-6">
           {/* Back Button */}
           <Pressable
             onPress={() => router.back()}
@@ -128,7 +129,7 @@ export default function ForgotPasswordScreen() {
               <Text style={{ fontSize: 40 }}>🔑</Text>
             </View>
           </View>
-        </View>
+        </SafeAreaView>
       </LinearGradient>
 
       <KeyboardAvoidingView
