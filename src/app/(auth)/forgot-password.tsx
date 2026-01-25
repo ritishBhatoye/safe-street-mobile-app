@@ -55,10 +55,9 @@ export default function ForgotPasswordScreen() {
 
         <LinearGradient
           colors={["#22C55E", "#16A34A"]}
-          className="flex-1"
-          style={{ borderBottomLeftRadius: 32, borderBottomRightRadius: 32 }}
+          style={{ borderBottomLeftRadius: 32, borderBottomRightRadius: 32, flex: 1 }}
         >
-          <View className="flex-1 items-center justify-center px-6">
+          <SafeAreaView className="flex-1 items-center justify-center px-6">
             {/* Success Icon */}
             <View className="mb-8 h-32 w-32 items-center justify-center rounded-full bg-white/20">
               <Ionicons name="mail-open" size={64} color="#FFFFFF" />
@@ -76,21 +75,24 @@ export default function ForgotPasswordScreen() {
             </Text>
 
             {/* Actions */}
-            <View className="w-full gap-3">
+            <View className="w-full gap-5">
               <Button
                 title="Open Email App"
                 onPress={() => {
                   // Open email app
                 }}
-                variant="secondary"
-                className="bg-white"
+                variant="white"
               />
-
-              <Pressable onPress={() => router.back()} className="items-center py-3">
-                <Text className="font-dm-sans-semibold text-white">Back to Sign In</Text>
-              </Pressable>
+              <Button
+                title="Back to Sign In"
+                onPress={() => {
+                  router.back();
+                }}
+                variant="outline"
+                // className="bg-white"
+              />
             </View>
-          </View>
+          </SafeAreaView>
         </LinearGradient>
       </View>
     );
