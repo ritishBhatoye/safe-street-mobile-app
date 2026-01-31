@@ -142,7 +142,15 @@ class AuthService {
         password: newPassword,
       });
 
-      return { error: updateError };
+      if (updateError) {
+        return { error: updateError };
+      }
+
+      // Sign out immediately after password reset
+      // This prevents auto-redirect to home
+      await supabase.auth.signOut();
+
+      return { error: null };
     } catch (error) {
       return { error: error as AuthError };
     }
