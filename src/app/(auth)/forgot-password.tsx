@@ -220,13 +220,9 @@ export default function ForgotPasswordScreen() {
             {step === "password" && (
               <ResetPasswordStep
                 showPassword
-                newPassword={newPassword}
-                confirmPassword={confirmPassword}
                 loading={loading}
-                setNewPassword={setNewPassword}
-                handleResetPassword={handleResetPassword}
+                onSubmit={handleResetPassword}
                 setShowPassword={setShowPassword}
-                setConfirmPassword={setConfirmPassword}
               />
             )}
 
