@@ -137,11 +137,6 @@ export default function ForgotPasswordScreen() {
   };
 
   // Handle OTP backspace
-  const handleOTPKeyPress = (index: number, key: string) => {
-    if (key === "Backspace" && !otp[index] && index > 0) {
-      otpRefs.current[index - 1]?.focus();
-    }
-  };
 
   // Resend OTP
   const handleResendOTP = async () => {
