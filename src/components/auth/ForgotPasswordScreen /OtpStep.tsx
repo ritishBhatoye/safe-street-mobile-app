@@ -1,8 +1,10 @@
 import { Button } from "@/components/atoms";
+import { formatOTPTimer } from "@/utils/handlers";
 import React from "react";
 import { View, Text, TextInput, Pressable } from "react-native";
 
 const OtpStep = ({
+  timer,
   otp,
   otpRefs,
   setStep,
@@ -11,6 +13,7 @@ const OtpStep = ({
   handleOTPChange,
   handleOTPKeyPress,
 }: {
+  timer: number;
   otp: string[];
   otpRefs: React.RefObject<(TextInput | null)[]>;
   setStep: React.Dispatch<React.SetStateAction<Step>>;
@@ -43,6 +46,30 @@ const OtpStep = ({
             />
           ))}
         </View>
+
+        {/* Timer and Resend Button */}
+        <View className="mt-6 items-center">
+          {timer > 0 ? (
+            <>
+              <Text className="font-dm-sans text-sm text-gray-500 dark:text-gray-400">
+                Resend OTP in
+              </Text>
+              <Text className="font-dm-sans-bold mt-1 text-xl text-primary-500">
+                {formatOTPTimer(timer)}
+              </Text>
+            </>
+          ) : (
+            <Pressable
+              onPress={handleResendOTP}
+              disabled={loading}
+              className="rounded-xl bg-primary-500 px-6 py-3"
+            >
+              <Text className="font-dm-sans-semibold text-white">
+                {loading ? "Sending..." : "Resend OTP"}
+              </Text>
+            </Pressable>
+          )}
+        </View>
       </View>
 
       <Button
@@ -51,12 +78,6 @@ const OtpStep = ({
         disabled={otp.join("").length !== 6}
         className="mb-4"
       />
-
-      <Pressable onPress={handleResendOTP} disabled={loading} className="items-center py-3">
-        <Text className="font-dm-sans-semibold text-primary-500">
-          Didn&#39;t receive code? Resend
-        </Text>
-      </Pressable>
     </>
   );
 };
