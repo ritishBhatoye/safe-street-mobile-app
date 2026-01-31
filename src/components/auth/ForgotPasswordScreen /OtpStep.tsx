@@ -1,27 +1,71 @@
 import { Button } from "@/components/atoms";
 import { formatOTPTimer } from "@/utils/handlers";
+import { otpSchema } from "@/utils/validations/authValidation";
+import { FormikProps, useFormik } from "formik";
 import React from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
+import { View, Text, TextInput, Pressable, Keyboard } from "react-native";
+
+interface OtpFormProps {
+  initialValues: OtpTypes;
+  timer: number;
+  otpRefs: React.RefObject<(TextInput | null)[]>;
+  loading: boolean;
+  onSubmit: (values: OtpTypes) => void;
+  handleResendOTP: () => Promise<void>;
+}
 
 const OtpStep = ({
   timer,
-  otp,
   otpRefs,
-  setStep,
   handleResendOTP,
   loading,
-  handleOTPChange,
-  handleOTPKeyPress,
-}: {
-  timer: number;
-  otp: string[];
-  otpRefs: React.RefObject<(TextInput | null)[]>;
-  setStep: React.Dispatch<React.SetStateAction<Step>>;
-  handleResendOTP: () => Promise<void>;
-  loading: boolean;
-  handleOTPChange: (index: number, value: string) => void;
-  handleOTPKeyPress: (index: number, key: string) => void;
-}) => {
+  initialValues,
+  onSubmit,
+}: OtpFormProps) => {
+  const formik: FormikProps<OtpTypes> = useFormik<OtpTypes>({
+    initialValues: initialValues,
+    validationSchema: otpSchema,
+    onSubmit: (values) => {
+      Keyboard.dismiss();
+      onSubmit(values);
+    },
+  });
+
+  // Handle OTP input
+  const handleOTPChange = (index: number, value: string) => {
+    if (value.length > 1) {
+      // Handle paste
+      const pastedCode = value.slice(0, 6).split("");
+      const newOtp = [...formik.values.otp];
+      pastedCode.forEach((char, i) => {
+        if (i < 6) newOtp[i] = char;
+      });
+      formik.setFieldValue("otp", newOtp);
+      otpRefs.current?.[5]?.focus();
+      return;
+    }
+
+    const newOtp = [...formik.values.otp];
+    newOtp[index] = value;
+    formik.setFieldValue("otp", newOtp);
+
+    // Auto-focus next input
+    if (value && index < 5) {
+      otpRefs.current?.[index + 1]?.focus();
+    }
+  };
+
+  // Handle OTP backspace
+  const handleOTPKeyPress = (index: number, key: string) => {
+    if (key === "Backspace" && !formik.values.otp[index] && index > 0) {
+      otpRefs.current?.[index - 1]?.focus();
+    }
+  };
+
+  const handleSubmit = () => {
+    formik.handleSubmit();
+  };
+
   return (
     <>
       <View className="mb-8">
@@ -30,11 +74,13 @@ const OtpStep = ({
         </Text>
 
         <View className="flex-row justify-between gap-2">
-          {otp.map((digit, index) => (
+          {formik.values.otp.map((digit, index) => (
             <TextInput
               key={index}
               ref={(ref) => {
-                otpRefs.current[index] = ref;
+                if (otpRefs.current) {
+                  otpRefs.current[index] = ref;
+                }
               }}
               value={digit}
               onChangeText={(value) => handleOTPChange(index, value)}
@@ -74,8 +120,8 @@ const OtpStep = ({
 
       <Button
         title="Verify & Continue"
-        onPress={() => setStep("password")}
-        disabled={otp.join("").length !== 6}
+        onPress={handleSubmit}
+        disabled={formik.values.otp.join("").length !== 6}
         className="mb-4"
       />
     </>

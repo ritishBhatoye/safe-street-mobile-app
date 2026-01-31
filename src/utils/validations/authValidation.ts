@@ -17,3 +17,7 @@ export const resetPasswordSchema = Yup.object().shape({
 export const emailSchema = Yup.object().shape({
   email: Yup.string().email("Invalid Email").required("Email is required"),
 });
+
+export const otpSchema = Yup.object().shape({
+  otp: Yup.array(),
+});

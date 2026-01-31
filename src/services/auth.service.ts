@@ -89,16 +89,16 @@ class AuthService {
   /**
    * Send password reset email
    */
-  async resetPassword(email: string): Promise<{ error: AuthError | null }> {
-    try {
-      const result = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: "safestreet://reset-password",
-      });
-      return { error: result.error };
-    } catch (error) {
-      return { error: error as AuthError };
-    }
-  }
+  // async resetPassword(email: string): Promise<{ error: AuthError | null }> {
+  //   try {
+  //     const result = await supabase.auth.resetPasswordForEmail(email, {
+  //       redirectTo: "safestreet://reset-password",
+  //     });
+  //     return { error: result.error };
+  //   } catch (error) {
+  //     return { error: error as AuthError };
+  //   }
+  // }
 
   /**
    * Send OTP for password reset (mobile-friendly)
@@ -120,11 +120,8 @@ class AuthService {
   /**
    * Verify OTP and reset password
    */
-  async verifyOTPAndResetPassword(
-    email: string,
-    otp: string,
-    newPassword: string,
-  ): Promise<{ error: AuthError | null }> {
+
+  async verifyOTP(email: string, otp: string): Promise<{ error: AuthError | null }> {
     try {
       // Verify OTP
       const { error: verifyError } = await supabase.auth.verifyOtp({
@@ -137,6 +134,13 @@ class AuthService {
         return { error: verifyError };
       }
 
+      return { error: null };
+    } catch (error) {
+      return { error: error as AuthError };
+    }
+  }
+  async resetPassword(newPassword: string): Promise<{ error: AuthError | null }> {
+    try {
       // Update password
       const { error: updateError } = await supabase.auth.updateUser({
         password: newPassword,

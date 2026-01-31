@@ -8,3 +8,7 @@ interface ResetPasswordTypes {
 interface EmailTypes {
   email: string;
 }
+
+interface OtpTypes {
+  otp: string[];
+}

@@ -1,25 +1,24 @@
 import { router } from "expo-router";
 
-import React, { useState, useRef, useEffect } from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StatusBar,
-  TextInput,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { Button } from "@/components/atoms/Button";
+import EmailStep from "@/components/auth/ForgotPasswordScreen /EmailStep";
+import ForgotPasswordHeader from "@/components/auth/ForgotPasswordScreen /ForgotPasswordHeader";
+import OtpStep from "@/components/auth/ForgotPasswordScreen /OtpStep";
+import ResetPasswordStep from "@/components/auth/ForgotPasswordScreen /ResetPasswordStep";
+import SuccessStep from "@/components/auth/ForgotPasswordScreen /SuccessStep";
 import { authService } from "@/services/auth.service";
 import { showToast } from "@/utils/toast";
-import ForgotPasswordHeader from "@/components/auth/ForgotPasswordScreen /ForgotPasswordHeader";
-import SuccessStep from "@/components/auth/ForgotPasswordScreen /SuccessStep";
-import EmailStep from "@/components/auth/ForgotPasswordScreen /EmailStep";
-import ResetPasswordStep from "@/components/auth/ForgotPasswordScreen /ResetPasswordStep";
-import OtpStep from "@/components/auth/ForgotPasswordScreen /OtpStep";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StatusBar,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 const TIMER_LENGTH = 600;
 
@@ -76,17 +75,29 @@ export default function ForgotPasswordScreen() {
     showToast.success("OTP Sent!", "Check your email for the verification code");
   };
 
-  // Step 2: Verify OTP and Reset Password
-  const handleResetPassword = async (values: ResetPasswordTypes) => {
-    const otpCode = otp.join("");
+  // Step 2: Verify OTP
+
+  const handleVerifyOTP = async (values: OtpTypes) => {
+    const otpCode = values.otp.join("");
 
     if (otpCode.length !== 6) {
       showToast.warning("Invalid OTP", "Please enter the 6-digit code");
       return;
     }
+    const result = await authService.verifyOTP(email, values.otp.toString());
 
+    if (result.error) {
+      showToast.error("Failed", result.error.message || "Failed to reset password");
+      setLoading(false);
+      return;
+    }
+
+    setStep("password");
+  };
+  // Step 3: Reset Password
+  const handleResetPassword = async (values: ResetPasswordTypes) => {
     setLoading(true);
-    const result = await authService.verifyOTPAndResetPassword(email, otpCode, values.password);
+    const result = await authService.resetPassword(values.password);
 
     if (result.error) {
       showToast.error("Failed", result.error.message || "Failed to reset password");
@@ -186,13 +197,11 @@ export default function ForgotPasswordScreen() {
             {step === "otp" && (
               <OtpStep
                 timer={timer}
-                otp={otp}
                 otpRefs={otpRefs}
-                setStep={setStep}
                 handleResendOTP={handleResendOTP}
                 loading={loading}
-                handleOTPChange={handleOTPChange}
-                handleOTPKeyPress={handleOTPKeyPress}
+                onSubmit={() => handleOTPChange}
+                initialValues={{ otp }}
               />
             )}
 
@@ -205,7 +214,6 @@ export default function ForgotPasswordScreen() {
                 setShowPassword={setShowPassword}
               />
             )}
-
             {/* Back to Sign In */}
             <Pressable
               onPress={() => router.back()}
