@@ -1,4 +1,5 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+// import { Colors } from "@/constants/theme";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import clsx from "clsx";
 import React, { useCallback, useState } from "react";
 import {
@@ -26,6 +27,14 @@ interface InputWithLabelProps extends TextInputProps {
   inputClassName?: string;
   labelClassName?: string;
   endContent?: React.ReactNode;
+  startContent?: React.ReactNode;
+  error?: string;
+  touched?: boolean;
+  isRequired?: boolean;
+  isDisabled?: boolean;
+  isReadOnly?: boolean;
+  showPasswordStrength?: boolean;
+  onBlur?: TextInputProps["onBlur"];
 }
 
 const inputStyles = tv({
@@ -66,12 +75,21 @@ const Input: React.FC<InputWithLabelProps> = ({
   inputClassName,
   labelClassName,
   endContent,
+  startContent,
+  error,
+  touched,
+  isRequired,
+  isDisabled,
+  isReadOnly,
+  showPasswordStrength,
+  onBlur,
   ...rest
 }) => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === "dark";
-
+  const isInvalid = !!error && !!touched;
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -89,27 +107,38 @@ const Input: React.FC<InputWithLabelProps> = ({
   return (
     <View className={`py-3 ${className}`}>
       {label && (
-        <Text
-          className={clsx(
-            "font-semibold mb-1",
-            isDarkMode ? "text-white" : "text-black/80",
-            labelClassName,
-          )}
-        >
-          {label}
-        </Text>
+        <View className="flex-row items-center mb-1.5">
+          <Text
+            className={clsx(
+              "font-semibold mb-1",
+              isDarkMode ? "text-white" : "text-black/80",
+              labelClassName,
+            )}
+          >
+            {label}
+          </Text>
+          {isRequired && <Text className="text-error-500 ml-0.5">*</Text>}
+        </View>
       )}
       <View className={clsx(inputStyles({ variant, size }), inputClassName)}>
+        {startContent && <View className="ml-3">{endContent}</View>}
+
         <TextInput
           className={clsx("flex-1 py-1 text-black dark:text-white")}
           value={value}
+          onBlur={() => {
+            setIsFocused(false);
+            onBlur;
+          }}
+          onFocus={() => setIsFocused(true)}
           onChangeText={handleTextChange}
           placeholder={placeholder}
           secureTextEntry={isPassword && !passwordVisible}
           placeholderTextColor={isDarkMode ? "#CCCCCC" : "#333333"}
+          editable={!isDisabled && !isReadOnly}
           {...rest}
         />
-        {isPassword && (
+        {isPassword && value && value.length > 0 && (
           <TouchableOpacity onPress={togglePasswordVisibility}>
             <MaterialCommunityIcons
               name={passwordVisible ? "eye-off" : "eye"}
@@ -120,6 +149,12 @@ const Input: React.FC<InputWithLabelProps> = ({
         )}
         {endContent && <View className="ml-3">{endContent}</View>}
       </View>
+      {isInvalid && !showPasswordStrength && (
+        <View className="flex-row items-center mt-1">
+          <Ionicons name="alert-circle" size={14} color={"#EF4444"} />
+          <Text className="text-xs text-#EF4444 ml-1">{error}</Text>
+        </View>
+      )}
     </View>
   );
 };
