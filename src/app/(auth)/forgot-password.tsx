@@ -162,12 +162,7 @@ export default function ForgotPasswordScreen() {
           <View className="px-6 pt-8">
             {/* Step 1: Email Input */}
             {step === "email" && (
-              <EmailStep
-                email={email}
-                setEmail={setEmail}
-                loading={loading}
-                handleSendOTP={handleSendOTP}
-              />
+              <EmailStep initialValues={{ email }} loading={loading} onSubmit={handleSendOTP} />
             )}
 
             {/* Step 2: OTP Input */}
@@ -219,7 +214,7 @@ export default function ForgotPasswordScreen() {
             {/* Step 3: New Password */}
             {step === "password" && (
               <ResetPasswordStep
-                showPassword
+                showPassword={showPassword}
                 loading={loading}
                 onSubmit={handleResetPassword}
                 setShowPassword={setShowPassword}

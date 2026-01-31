@@ -4,3 +4,7 @@ interface ResetPasswordTypes {
   password: string;
   confirmPassword: string;
 }
+
+interface EmailTypes {
+  email: string;
+}

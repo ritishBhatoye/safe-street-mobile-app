@@ -1,18 +1,24 @@
 import { Button, Input } from "@/components/atoms";
+import { emailSchema } from "@/utils/validations/authValidation";
+import { FormikProps, useFormik } from "formik";
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, Keyboard } from "react-native";
 
-const EmailStep = ({
-  email,
-  setEmail,
-  loading,
-  handleSendOTP,
-}: {
-  email: string;
-  setEmail: React.Dispatch<React.SetStateAction<string>>;
+interface EmailFormProps {
+  initialValues: EmailTypes;
   loading: boolean;
-  handleSendOTP: () => Promise<void>;
-}) => {
+  onSubmit: (values: EmailTypes) => void;
+}
+
+const EmailStep = ({ initialValues, loading, onSubmit }: EmailFormProps) => {
+  const formik: FormikProps<EmailTypes> = useFormik<EmailTypes>({
+    initialValues: initialValues,
+    validationSchema: emailSchema,
+    onSubmit: (values) => {
+      Keyboard.dismiss();
+      onSubmit(values);
+    },
+  });
   return (
     <>
       <View className="mb-6 rounded-2xl bg-warning-50 p-4 dark:bg-warning-900/20">
@@ -24,20 +30,23 @@ const EmailStep = ({
       <Input
         label="Email Address"
         placeholder="your.email@example.com"
-        value={email}
-        onValueChange={setEmail}
+        value={formik.values.email}
+        onValueChange={formik.handleChange("email")}
         keyboardType="email-address"
         autoCapitalize="none"
         variant="outline"
         className="mb-6"
         labelClassName="font-dm-sans-medium text-gray-700 dark:text-gray-300"
+        error={formik.errors.email}
+        onBlur={formik.handleBlur("email")}
+        touched={formik.touched.email}
       />
 
       <Button
         title={loading ? "Sending..." : "Send OTP"}
-        onPress={handleSendOTP}
+        onPress={() => formik.handleSubmit}
         loading={loading}
-        disabled={!email}
+        disabled={!formik.values.email}
         className="mb-4"
       />
     </>
