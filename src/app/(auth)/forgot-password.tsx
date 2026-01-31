@@ -1,145 +1,185 @@
-import { router } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState } from 'react';
+import { router } from "expo-router";
+
+import EmailStep from "@/components/auth/ForgotPasswordScreen /EmailStep";
+import ForgotPasswordHeader from "@/components/auth/ForgotPasswordScreen /ForgotPasswordHeader";
+import OtpStep from "@/components/auth/ForgotPasswordScreen /OtpStep";
+import ResetPasswordStep from "@/components/auth/ForgotPasswordScreen /ResetPasswordStep";
+import SuccessStep from "@/components/auth/ForgotPasswordScreen /SuccessStep";
+import { authService } from "@/services/auth.service";
+import { showToast } from "@/utils/toast";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  View,
-  Text,
-  Pressable,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   StatusBar,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import Input from '@/components/atoms/Input';
-import { Button } from '@/components/atoms/Button';
-import { authService } from '@/services/auth.service';
-import { showToast } from '@/utils/toast';
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+
+const TIMER_LENGTH = 600;
 
 export default function ForgotPasswordScreen() {
-  const [email, setEmail] = useState('');
+  const [step, setStep] = useState<Step>("email");
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isTimerActive, setIsTimerActive] = useState(false);
+  const [timer, setTimer] = useState(TIMER_LENGTH);
 
-  const handleResetPassword = async () => {
-    if (!email) {
-      showToast.warning('Email Required', 'Please enter your email address');
+  useEffect(() => {
+    if (!isTimerActive) return;
+
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setIsTimerActive(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isTimerActive]);
+
+  const otpRefs = useRef<(TextInput | null)[]>([]);
+
+  // Step 1: Send OTP
+  const handleSendOTP = async (values: EmailTypes) => {
+    const emailValue = values.email;
+
+    if (!emailValue) {
+      showToast.warning("Email Required", "Please enter your email address");
       return;
     }
 
+    setEmail(emailValue);
     setLoading(true);
+    const result = await authService.sendPasswordResetOTP(emailValue);
 
-    try {
-      const result = await authService.resetPassword(email);
-
-      if (result.error) {
-        showToast.error('Reset Failed', result.error.message || 'Failed to send reset email');
-        setLoading(false);
-        return;
-      }
-
+    if (result.error) {
+      showToast.error("Failed", result.error.message || "Failed to send OTP");
       setLoading(false);
-      setEmailSent(true);
-      showToast.success('Email Sent!', 'Check your inbox for reset instructions');
-    } catch (error) {
-      showToast.error('Error', 'An unexpected error occurred');
+      return;
+    }
+
+    setLoading(false);
+    setStep("otp");
+    setTimer(TIMER_LENGTH); // Reset timer
+    setIsTimerActive(true); // Start timer after successful OTP send
+    showToast.success("OTP Sent!", "Check your email for the verification code");
+  };
+
+  // Step 2: Verify OTP
+
+  const handleVerifyOTP = async (values: OtpTypes) => {
+    const otpCode = values.otp.join("");
+
+    if (otpCode.length !== 6) {
+      showToast.warning("Invalid OTP", "Please enter the 6-digit code");
+      return;
+    }
+    const result = await authService.verifyOTP(email, values.otp.toString());
+
+    if (result.error) {
+      showToast.error("Failed", result.error.message || "Failed to reset password");
+      setLoading(false);
+      return;
+    }
+
+    setStep("password");
+  };
+  // Step 3: Reset Password
+  const handleResetPassword = async (values: ResetPasswordTypes) => {
+    setLoading(true);
+    const result = await authService.resetPassword(values.password);
+
+    if (result.error) {
+      showToast.error("Failed", result.error.message || "Failed to reset password");
+      setLoading(false);
+      return;
+    }
+
+    setLoading(false);
+    setStep("success");
+    showToast.success("Success!", "Your password has been reset");
+
+    router.push("/(auth)/sign-in");
+  };
+
+  // Handle OTP input
+  const handleOTPChange = (index: number, value: string) => {
+    if (value.length > 1) {
+      // Handle paste
+      const pastedCode = value.slice(0, 6).split("");
+      const newOtp = [...otp];
+      pastedCode.forEach((char, i) => {
+        if (i < 6) newOtp[i] = char;
+      });
+      setOtp(newOtp);
+      otpRefs.current[5]?.focus();
+      return;
+    }
+
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    // Auto-focus next input
+    if (value && index < 5) {
+      otpRefs.current[index + 1]?.focus();
+    }
+  };
+
+  // Handle OTP backspace
+  const handleOTPKeyPress = (index: number, key: string) => {
+    if (key === "Backspace" && !otp[index] && index > 0) {
+      otpRefs.current[index - 1]?.focus();
+    }
+  };
+
+  // Resend OTP
+  const handleResendOTP = async () => {
+    if (timer > 0) return; // Prevent resend if timer is still active
+
+    setLoading(true);
+    const result = await authService.sendPasswordResetOTP(email);
+
+    if (result.error) {
+      showToast.error("Failed", "Could not resend OTP");
+      setLoading(false);
+    } else {
+      showToast.success("OTP Sent!", "Check your email");
+      setOtp(["", "", "", "", "", ""]);
+      setTimer(TIMER_LENGTH); // Reset timer
+      setIsTimerActive(true); // Start timer
       setLoading(false);
     }
   };
 
-  if (emailSent) {
-    return (
-      <View className="flex-1 bg-white dark:bg-gray-900">
-        <StatusBar barStyle="light-content" />
-
-        <LinearGradient
-          colors={['#22C55E', '#16A34A']}
-          className="flex-1"
-          style={{ borderBottomLeftRadius: 32, borderBottomRightRadius: 32 }}
-        >
-          <View className="flex-1 items-center justify-center px-6">
-            {/* Success Icon */}
-            <View className="mb-8 h-32 w-32 items-center justify-center rounded-full bg-white/20">
-              <Ionicons name="mail-open" size={64} color="#FFFFFF" />
-            </View>
-
-            {/* Title */}
-            <Text className="font-dm-sans-bold mb-4 text-center text-3xl text-white">
-              Check Your Email
-            </Text>
-
-            {/* Description */}
-            <Text className="font-dm-sans mb-8 text-center text-lg text-white/80">
-              We&apos;ve sent password reset instructions to{'\n'}
-              <Text className="font-dm-sans-semibold">{email}</Text>
-            </Text>
-
-            {/* Actions */}
-            <View className="w-full gap-3">
-              <Button
-                title="Open Email App"
-                onPress={() => {
-                  // Open email app
-                }}
-                variant="secondary"
-                className="bg-white"
-              />
-
-              <Pressable
-                onPress={() => router.back()}
-                className="items-center py-3"
-              >
-                <Text className="font-dm-sans-semibold text-white">
-                  Back to Sign In
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-        </LinearGradient>
-      </View>
-    );
+  // Success Screen
+  if (step === "success") {
+    return <SuccessStep />;
   }
 
   return (
     <View className="flex-1 bg-white dark:bg-gray-900">
       <StatusBar barStyle="light-content" />
 
-      {/* Header with Gradient */}
-      <LinearGradient
-        colors={['#F59E0B', '#D97706']}
-        className="pb-8 pt-16"
-        style={{ borderBottomLeftRadius: 32, borderBottomRightRadius: 32 }}
-      >
-        <View className="px-6">
-          {/* Back Button */}
-          <Pressable
-            onPress={() => router.back()}
-            className="mb-8 h-10 w-10 items-center justify-center rounded-full bg-white/20"
-          >
-            <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-          </Pressable>
-
-          {/* Title */}
-          <View className="mb-4">
-            <Text className="font-dm-sans-bold mb-2 text-4xl text-white">
-              Forgot Password?
-            </Text>
-            <Text className="font-dm-sans text-lg text-white/80">
-              No worries, we&apos;ll send you reset instructions
-            </Text>
-          </View>
-
-          {/* Icon */}
-          <View className="items-center">
-            <View className="h-20 w-20 items-center justify-center rounded-full bg-white/20">
-              <Text style={{ fontSize: 40 }}>🔑</Text>
-            </View>
-          </View>
-        </View>
-      </LinearGradient>
+      {/* Header */}
+      <ForgotPasswordHeader
+        step={step}
+        email={email}
+        onBackPress={() => (step === "email" ? router.back() : setStep("email"))}
+      />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
       >
         <ScrollView
@@ -148,45 +188,39 @@ export default function ForgotPasswordScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View className="px-6 pt-8">
-            {/* Info Box */}
-            <View className="mb-6 rounded-2xl bg-warning-50 p-4 dark:bg-warning-900/20">
-              <Text className="font-dm-sans text-sm leading-6 text-warning-700 dark:text-warning-300">
-                Enter your email address and we&apos;ll send you a link to reset your
-                password.
-              </Text>
-            </View>
+            {/* Step 1: Email Input */}
+            {step === "email" && (
+              <EmailStep initialValues={{ email }} loading={loading} onSubmit={handleSendOTP} />
+            )}
 
-            {/* Email Input */}
-            <Input
-              label="Email Address"
-              placeholder="your.email@example.com"
-              value={email}
-              onValueChange={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              variant="outline"
-              className="mb-6"
-              labelClassName="font-dm-sans-medium text-gray-700 dark:text-gray-300"
-            />
+            {/* Step 2: OTP Input */}
+            {step === "otp" && (
+              <OtpStep
+                timer={timer}
+                otpRefs={otpRefs}
+                handleResendOTP={handleResendOTP}
+                loading={loading}
+                onSubmit={() => handleOTPChange}
+                initialValues={{ otp }}
+              />
+            )}
 
-            {/* Reset Button */}
-            <Button
-              title={loading ? 'Sending...' : 'Send Reset Link'}
-              onPress={handleResetPassword}
-              loading={loading}
-              disabled={!email}
-              className="mb-4"
-            />
-
+            {/* Step 3: New Password */}
+            {step === "password" && (
+              <ResetPasswordStep
+                showPassword={showPassword}
+                loading={loading}
+                onSubmit={handleResetPassword}
+                setShowPassword={setShowPassword}
+              />
+            )}
             {/* Back to Sign In */}
             <Pressable
               onPress={() => router.back()}
               className="flex-row items-center justify-center gap-2 py-3"
             >
               <Ionicons name="arrow-back" size={16} color="#3399FF" />
-              <Text className="font-dm-sans-semibold text-primary-500">
-                Back to Sign In
-              </Text>
+              <Text className="font-dm-sans-semibold text-primary-500">Back to Sign In</Text>
             </Pressable>
           </View>
         </ScrollView>

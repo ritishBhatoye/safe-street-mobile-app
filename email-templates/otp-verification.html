@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Safe Street Verification Code</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f8fafc;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1E40AF 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .logo-container {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .app-name {
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.5px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .tagline {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            margin: 8px 0 0 0;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .content {
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .greeting {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+        
+        .message {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 40px;
+            line-height: 1.7;
+        }
+        
+        .otp-container {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px solid #3B82F6;
+            border-radius: 16px;
+            padding: 40px 20px;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .otp-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        .otp-label {
+            font-size: 14px;
+            color: #3B82F6;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .otp-code {
+            font-size: 48px;
+            font-weight: 800;
+            color: #1E40AF;
+            letter-spacing: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            margin: 16px 0;
+            text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .otp-instruction {
+            font-size: 14px;
+            color: #1E40AF;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .security-tips {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 32px 0;
+            text-align: left;
+        }
+        
+        .security-tips-title {
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .security-tip {
+            color: #a16207;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .security-tip:last-child {
+            margin-bottom: 0;
+        }
+        
+        .expiry-notice {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 32px;
+            text-align: center;
+        }
+        
+        .expiry-text {
+            font-size: 16px;
+            color: #dc2626;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .expiry-subtext {
+            font-size: 14px;
+            color: #dc2626;
+        }
+        
+        .footer {
+            background: #f8fafc;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .footer-text {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 16px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .footer-link {
+            color: #3B82F6;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 600px) {
+            .email-container {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .footer {
+                padding: 20px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .app-name {
+                font-size: 28px;
+            }
+            
+            .greeting {
+                font-size: 22px;
+            }
+            
+            .otp-code {
+                font-size: 36px;
+                letter-spacing: 4px;
+            }
+            
+            .otp-container {
+                padding: 30px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo">🛡️</div>
+                <h1 class="app-name">Safe Street</h1>
+                <p class="tagline">Keeping Communities Safe Together</p>
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <h2 class="greeting">📧 Your Verification Code</h2>
+            
+            <p class="message">
+                Here's your 6-digit verification code to reset your Safe Street password. Enter this code in the app to continue.
+            </p>
+            
+            <div class="otp-container">
+                <div class="otp-label">Verification Code</div>
+                <div class="otp-code">{{ .Token }}</div>
+                <div class="otp-instruction">Enter this code in the Safe Street app</div>
+            </div>
+            
+            <div class="security-tips">
+                <div class="security-tips-title">
+                    🔒 Security Tips
+                </div>
+                <div class="security-tip">
+                    <span>•</span>
+                    <span>Never share this code with anyone</span>
+                </div>
+                <div class="security-tip">
+                    <span>•</span>
+                    <span>Safe Street will never ask for this code via phone or email</span>
+                </div>
+                <div class="security-tip">
+                    <span>•</span>
+                    <span>If you didn't request this code, please ignore this email</span>
+                </div>
+            </div>
+            
+            <div class="expiry-notice">
+                <div class="expiry-text">
+                    ⏰ Code expires in 10 minutes
+                </div>
+                <div class="expiry-subtext">
+                    Request a new code if this one expires
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p class="footer-text">
+                This verification code was sent to you for your Safe Street password reset request.
+            </p>
+            
+            <div class="footer-links">
+                <a href="#" class="footer-link">Help Center</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Contact Support</a>
+            </div>
+            
+            <p class="footer-text">
+                © 2024 Safe Street. All rights reserved.<br>
+                Building safer communities, one street at a time.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
