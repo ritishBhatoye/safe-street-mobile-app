@@ -19,6 +19,11 @@ const EmailStep = ({ initialValues, loading, onSubmit }: EmailFormProps) => {
       onSubmit(values);
     },
   });
+
+  const handleSubmit = () => {
+    formik.handleSubmit();
+  };
+
   return (
     <>
       <View className="mb-6 rounded-2xl bg-warning-50 p-4 dark:bg-warning-900/20">
@@ -44,9 +49,9 @@ const EmailStep = ({ initialValues, loading, onSubmit }: EmailFormProps) => {
 
       <Button
         title={loading ? "Sending..." : "Send OTP"}
-        onPress={() => formik.handleSubmit}
+        onPress={handleSubmit}
         loading={loading}
-        disabled={!formik.values.email}
+        disabled={!formik.values.email || !formik.isValid}
         className="mb-4"
       />
     </>

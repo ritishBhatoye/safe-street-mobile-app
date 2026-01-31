@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,7 +12,6 @@ import {
   TextInput,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import Input from "@/components/atoms/Input";
 import { Button } from "@/components/atoms/Button";
 import { authService } from "@/services/auth.service";
 import { showToast } from "@/utils/toast";
@@ -21,27 +20,48 @@ import SuccessStep from "@/components/auth/ForgotPasswordScreen /SuccessStep";
 import EmailStep from "@/components/auth/ForgotPasswordScreen /EmailStep";
 import ResetPasswordStep from "@/components/auth/ForgotPasswordScreen /ResetPasswordStep";
 
+const TIMER_LENGTH = 600;
+
 export default function ForgotPasswordScreen() {
   const [step, setStep] = useState<Step>("email");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isTimerActive, setIsTimerActive] = useState(false);
+  const [timer, setTimer] = useState(TIMER_LENGTH);
 
+  useEffect(() => {
+    if (!isTimerActive) return;
+
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setIsTimerActive(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isTimerActive]);
   // OTP input refs
+
   const otpRefs = useRef<(TextInput | null)[]>([]);
 
   // Step 1: Send OTP
-  const handleSendOTP = async () => {
-    if (!email) {
+  const handleSendOTP = async (values: EmailTypes) => {
+    const emailValue = values.email;
+
+    if (!emailValue) {
       showToast.warning("Email Required", "Please enter your email address");
       return;
     }
 
+    setEmail(emailValue);
     setLoading(true);
-    const result = await authService.sendPasswordResetOTP(email);
+    const result = await authService.sendPasswordResetOTP(emailValue);
 
     if (result.error) {
       showToast.error("Failed", result.error.message || "Failed to send OTP");
@@ -51,11 +71,13 @@ export default function ForgotPasswordScreen() {
 
     setLoading(false);
     setStep("otp");
+    setTimer(TIMER_LENGTH); // Reset timer
+    setIsTimerActive(true); // Start timer after successful OTP send
     showToast.success("OTP Sent!", "Check your email for the verification code");
   };
 
   // Step 2: Verify OTP and Reset Password
-  const handleResetPassword = async () => {
+  const handleResetPassword = async (values: ResetPasswordTypes) => {
     const otpCode = otp.join("");
 
     if (otpCode.length !== 6) {
@@ -63,18 +85,8 @@ export default function ForgotPasswordScreen() {
       return;
     }
 
-    if (!newPassword || newPassword.length < 8) {
-      showToast.warning("Weak Password", "Password must be at least 8 characters");
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      showToast.warning("Mismatch", "Passwords do not match");
-      return;
-    }
-
     setLoading(true);
-    const result = await authService.verifyOTPAndResetPassword(email, otpCode, newPassword);
+    const result = await authService.verifyOTPAndResetPassword(email, otpCode, values.password);
 
     if (result.error) {
       showToast.error("Failed", result.error.message || "Failed to reset password");
@@ -122,22 +134,32 @@ export default function ForgotPasswordScreen() {
 
   // Resend OTP
   const handleResendOTP = async () => {
+    if (timer > 0) return; // Prevent resend if timer is still active
+
     setLoading(true);
     const result = await authService.sendPasswordResetOTP(email);
 
     if (result.error) {
       showToast.error("Failed", "Could not resend OTP");
+      setLoading(false);
     } else {
       showToast.success("OTP Sent!", "Check your email");
       setOtp(["", "", "", "", "", ""]);
+      setTimer(TIMER_LENGTH); // Reset timer
+      setIsTimerActive(true); // Start timer
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   // Success Screen
   if (step === "success") {
     return <SuccessStep />;
   }
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  };
 
   return (
     <View className="flex-1 bg-white dark:bg-gray-900">
@@ -190,6 +212,30 @@ export default function ForgotPasswordScreen() {
                       />
                     ))}
                   </View>
+
+                  {/* Timer and Resend Button */}
+                  <View className="mt-6 items-center">
+                    {timer > 0 ? (
+                      <>
+                        <Text className="font-dm-sans text-sm text-gray-500 dark:text-gray-400">
+                          Resend OTP in
+                        </Text>
+                        <Text className="font-dm-sans-bold mt-1 text-xl text-primary-500">
+                          {formatTime(timer)}
+                        </Text>
+                      </>
+                    ) : (
+                      <Pressable
+                        onPress={handleResendOTP}
+                        disabled={loading}
+                        className="rounded-xl bg-primary-500 px-6 py-3"
+                      >
+                        <Text className="font-dm-sans-semibold text-white">
+                          {loading ? "Sending..." : "Resend OTP"}
+                        </Text>
+                      </Pressable>
+                    )}
+                  </View>
                 </View>
 
                 <Button
@@ -198,16 +244,6 @@ export default function ForgotPasswordScreen() {
                   disabled={otp.join("").length !== 6}
                   className="mb-4"
                 />
-
-                <Pressable
-                  onPress={handleResendOTP}
-                  disabled={loading}
-                  className="items-center py-3"
-                >
-                  <Text className="font-dm-sans-semibold text-primary-500">
-                    Didn&#39;t receive code? Resend
-                  </Text>
-                </Pressable>
               </>
             )}
 
