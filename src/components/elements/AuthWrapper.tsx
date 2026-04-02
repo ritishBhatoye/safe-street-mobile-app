@@ -24,7 +24,7 @@ const AuthWrapper = ({
   subTitle: string;
   gradColors?: [string, string, ...string[]];
   children: React.ReactNode;
-  icon: React.ReactNode | string | IoniconName;
+  icon?: React.ReactNode | string | IoniconName;
 }) => {
   const scrollY = useRef(new Animated.Value(0)).current;
 
