@@ -10,6 +10,7 @@ interface EmailTypes {
 }
 
 interface OtpTypes {
+  email: string;
   otp: string[];
 }
 
@@ -28,3 +29,4 @@ interface SignInFormType {
 // Form Props Types
 type MultiFactorFormProps = FormSubmissionProps<MultiFactorFormTypes>;
 type SignInFormProps = FormSubmissionProps<SignInFormType>;
+type OtpFormProps = FormSubmissionProps<OtpTypes>;
