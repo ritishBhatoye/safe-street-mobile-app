@@ -30,3 +30,4 @@ interface SignInFormType {
 type MultiFactorFormProps = FormSubmissionProps<MultiFactorFormTypes>;
 type SignInFormProps = FormSubmissionProps<SignInFormType>;
 type OtpFormProps = FormSubmissionProps<OtpTypes>;
+type EmailFormProps = FormSubmissionProps<EmailTypes>;
