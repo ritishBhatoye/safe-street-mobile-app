@@ -21,3 +21,15 @@ export const emailSchema = Yup.object().shape({
 export const otpSchema = Yup.object().shape({
   otp: Yup.array(),
 });
+
+export const signInSchema = Yup.object().shape({
+  // name: Yup.string().required("Name is required"),
+  email: Yup.string().email("Invalid Email").required("Email is required"),
+  password: Yup.string()
+    .min(8, "Password must be at least 8 characters")
+    .matches(/[a-z]/, "Must contain at least one lowercase letter")
+    .matches(/[A-Z]/, "Must contain at least one uppercase letter")
+    .matches(/[0-9]/, "Must contain at least one number")
+    .matches(/[@$!%*?&#]/, "Must contain at least one special character")
+    .required("Password is required"),
+});

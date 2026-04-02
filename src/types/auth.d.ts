@@ -12,3 +12,19 @@ interface EmailTypes {
 interface OtpTypes {
   otp: string[];
 }
+
+interface FormSubmissionProps<T> {
+  loading: boolean;
+  onSubmit: (values: T, actions?: ResetFormType) => void;
+  initialValues?: T;
+  isFetchingData?: boolean;
+}
+
+interface SignInFormType {
+  email: string;
+  password: string;
+}
+
+// Form Props Types
+type MultiFactorFormProps = FormSubmissionProps<MultiFactorFormTypes>;
+type SignInFormProps = FormSubmissionProps<SignInFormType>;

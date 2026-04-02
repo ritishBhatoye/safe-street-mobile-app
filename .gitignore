@@ -61,3 +61,7 @@ tasks.md
 # Database & SQL files (keep private)
 *.sql
 !example.sql
+
+# Auto-push script files
+.last_push_time
+scripts/auto-push.sh
