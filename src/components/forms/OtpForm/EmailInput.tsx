@@ -45,9 +45,9 @@ const EmailInput = ({ loading, onSubmit, initialValues }: EmailFormProps) => {
 
         <Button
           title={loading ? "Sending..." : "Send OTP"}
-          onPress={handleSendOTP}
+          onPress={() => formik.handleSubmit()}
           loading={loading}
-          disabled={!email}
+          disabled={!formik.errors.email || !formik.values.email}
           className="mb-4"
         />
       </ScrollView>
