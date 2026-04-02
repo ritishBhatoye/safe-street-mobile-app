@@ -3,7 +3,7 @@ import AuthWrapper from "@/components/elements/AuthWrapper";
 import { resetPasswordSchema } from "@/utils/validations/authValidation";
 import { FormikProps, useFormik } from "formik";
 import React from "react";
-import { Keyboard, View, Text } from "react-native";
+import { Keyboard, View, Text, ScrollView } from "react-native";
 
 const PasswordInput = ({ loading, initialValues, onSubmit }: ResetPasswordFormProps) => {
   const formik: FormikProps<ResetPasswordTypes> = useFormik({
@@ -21,7 +21,11 @@ const PasswordInput = ({ loading, initialValues, onSubmit }: ResetPasswordFormPr
       subTitle={"Create a strong password"}
       icon="🔒"
     >
-      <View>
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 32 }}
+        showsVerticalScrollIndicator={false}
+      >
         <Input
           isPassword
           label="New Password"
@@ -65,7 +69,7 @@ const PasswordInput = ({ loading, initialValues, onSubmit }: ResetPasswordFormPr
           disabled={!formik.values.password || !formik.values.confirmPassword}
           className="mb-4"
         />
-      </View>
+      </ScrollView>
     </AuthWrapper>
   );
 };
