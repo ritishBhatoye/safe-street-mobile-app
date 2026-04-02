@@ -16,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const AuthWrapper = ({
   title = "Welcome Back",
   subTitle = "Sign in to stay safe and connected",
+  icon,
   children,
   gradColors = ["#3399FF", "#0080FF"],
 }: {
@@ -23,6 +24,7 @@ const AuthWrapper = ({
   subTitle: string;
   gradColors?: [string, string, ...string[]];
   children: React.ReactNode;
+  icon: React.ReactNode | string;
 }) => {
   const scrollY = useRef(new Animated.Value(0)).current;
 
