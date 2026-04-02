@@ -60,12 +60,11 @@ const SignInForm = ({
             onPress={() => router.push("/(auth)/forgot-password")}
           />
           <Button
-            // title={loading ? "Signing In..." : "Sign In"}
+            title={loading ? "Signing In..." : "Sign In"}
             onPress={() => formik.handleSubmit()}
             loading={loading}
             disabled={!formik.values.email || !formik.values.password || !formik.errors}
             className="mb-6"
-            title={""}
           />
         </View>
         {/* Divider */}
