@@ -12,11 +12,11 @@ import {
   Animated,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+type IoniconName = keyof typeof Ionicons.glyphMap;
 const AuthWrapper = ({
   title = "Welcome Back",
   subTitle = "Sign in to stay safe and connected",
-  icon,
+  icon = "🛡️",
   children,
   gradColors = ["#3399FF", "#0080FF"],
 }: {
@@ -24,7 +24,7 @@ const AuthWrapper = ({
   subTitle: string;
   gradColors?: [string, string, ...string[]];
   children: React.ReactNode;
-  icon: React.ReactNode | string;
+  icon: React.ReactNode | string | IoniconName;
 }) => {
   const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -91,7 +91,7 @@ const AuthWrapper = ({
               }}
             >
               <View className="mt-4 h-20 w-20 items-center justify-center rounded-full bg-white/20">
-                <Text style={{ fontSize: 40 }}>🛡️</Text>
+                <Text style={{ fontSize: 40 }}>{icon}</Text>
               </View>
             </Animated.View>
           </SafeAreaView>
