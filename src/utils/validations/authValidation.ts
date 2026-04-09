@@ -19,6 +19,7 @@ export const emailSchema = Yup.object().shape({
 });
 
 export const otpSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid Email").required("Email is required"),
   otp: Yup.array(),
 });
 
