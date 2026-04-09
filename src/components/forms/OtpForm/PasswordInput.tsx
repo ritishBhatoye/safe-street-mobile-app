@@ -63,8 +63,7 @@ const PasswordInput = ({ loading, initialValues, onSubmit }: ResetPasswordFormPr
 
         <Button
           title={loading ? "Resetting..." : "Reset Password"}
-          //   onPress={handleResetPassword}
-          onPress={formik.handleChange}
+          onPress={() => formik.handleSubmit()}
           loading={loading}
           disabled={!formik.values.password || !formik.values.confirmPassword}
           className="mb-4"
