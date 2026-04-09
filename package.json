@@ -35,6 +35,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "expo": "~54.0.33",
+    "expo-auth-session": "~7.0.10",
     "expo-blur": "~15.0.8",
     "expo-constants": "~18.0.10",
     "expo-device": "~8.0.10",
