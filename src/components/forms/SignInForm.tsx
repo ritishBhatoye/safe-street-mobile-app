@@ -7,15 +7,11 @@ import OAuthAction from "../auth/SignInForm/OAuthAction";
 import { router } from "expo-router";
 import AuthWrapper from "../elements/AuthWrapper";
 import TouchCTA from "../elements/TouchCTA";
+import { useOAuth } from "@/hooks/useOAuth";
 
-const SignInForm = ({
-  initialValues,
-  onSubmit,
-  loading,
-  handleOAuth,
-}: SignInFormProps & {
-  handleOAuth: (social: "google" | "apple") => void;
-}) => {
+const SignInForm = ({ initialValues, onSubmit, loading }: SignInFormProps) => {
+  const { signInWithGoogle, signInWithApple } = useOAuth();
+
   const formik: FormikProps<SignInFormType> = useFormik<SignInFormType>({
     initialValues: initialValues || { email: "", password: "" },
     validationSchema: signInSchema,
@@ -24,6 +20,14 @@ const SignInForm = ({
       onSubmit(values);
     },
   });
+
+  const handleOAuth = async (provider: "google" | "apple") => {
+    if (provider === "google") {
+      await signInWithGoogle();
+    } else {
+      await signInWithApple();
+    }
+  };
 
   return (
     <AuthWrapper
