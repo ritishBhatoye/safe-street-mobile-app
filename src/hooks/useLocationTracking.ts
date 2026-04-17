@@ -1,12 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
-import * as Location from 'expo-location';
-import { WALK_CONFIG } from '@/constants/walk';
-import { walkService } from '@/services/walk.service';
+import { useState, useEffect, useRef } from "react";
+import * as Location from "expo-location";
+import { WALK_CONFIG } from "@/constants/walk";
+import { walkService } from "@/services/walk.service";
 
 export const useLocationTracking = (walkId: string | null, isActive: boolean) => {
   const [currentLocation, setCurrentLocation] = useState<LiveLocation | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (!walkId || !isActive) {
@@ -20,8 +20,8 @@ export const useLocationTracking = (walkId: string | null, isActive: boolean) =>
     const startTracking = async () => {
       try {
         const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setError('Location permission denied');
+        if (status !== "granted") {
+          setError("Location permission denied");
           return;
         }
 
@@ -49,7 +49,7 @@ export const useLocationTracking = (walkId: string | null, isActive: boolean) =>
             // Broadcast to watchers (Zomato style - no DB storage)
             walkService.broadcastLocation(walkId, liveLocation);
           } catch (err) {
-            console.error('Location update error:', err);
+            console.error("Location update error:", err);
           }
         }, WALK_CONFIG.LOCATION_UPDATE_INTERVAL);
       } catch (err: any) {

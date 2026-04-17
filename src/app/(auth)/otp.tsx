@@ -73,10 +73,21 @@ export default function ForgotPasswordOTPScreen() {
     }
 
     setLoading(true);
-    const result = await authService.verifyOTPAndResetPassword(email, otpCode, newPassword);
 
-    if (result.error) {
-      showToast.error("Failed", result.error.message || "Failed to reset password");
+    // First verify OTP
+    const verifyResult = await authService.verifyOTP(email, otpCode);
+
+    if (verifyResult.error) {
+      showToast.error("Failed", verifyResult.error.message || "Invalid OTP");
+      setLoading(false);
+      return;
+    }
+
+    // Then reset password
+    const resetResult = await authService.resetPassword(newPassword);
+
+    if (resetResult.error) {
+      showToast.error("Failed", resetResult.error.message || "Failed to reset password");
       setLoading(false);
       return;
     }

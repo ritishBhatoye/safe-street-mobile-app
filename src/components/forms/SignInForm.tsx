@@ -10,7 +10,7 @@ import TouchCTA from "../elements/TouchCTA";
 import { useOAuth } from "@/hooks/useOAuth";
 
 const SignInForm = ({ initialValues, onSubmit, loading }: SignInFormProps) => {
-  const { signInWithGoogle, signInWithApple } = useOAuth();
+  const { signInWithGoogle } = useOAuth();
 
   const formik: FormikProps<SignInFormType> = useFormik<SignInFormType>({
     initialValues: initialValues || { email: "", password: "" },
@@ -21,12 +21,8 @@ const SignInForm = ({ initialValues, onSubmit, loading }: SignInFormProps) => {
     },
   });
 
-  const handleOAuth = async (provider: "google" | "apple") => {
-    if (provider === "google") {
-      await signInWithGoogle();
-    } else {
-      await signInWithApple();
-    }
+  const handleOAuth = async (provider: "google") => {
+    await signInWithGoogle();
   };
 
   return (

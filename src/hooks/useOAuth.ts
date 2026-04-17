@@ -62,42 +62,7 @@ export const useOAuth = () => {
     }
   };
 
-  const signInWithApple = async () => {
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "apple",
-        options: {
-          redirectTo: redirectUrl,
-          skipBrowserRedirect: false,
-        },
-      });
-
-      if (error) throw error;
-
-      if (data?.url) {
-        const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUrl);
-
-        if (result.type === "success") {
-          const url = result.url;
-          const params = new URL(url).searchParams;
-          const accessToken = params.get("access_token");
-          const refreshToken = params.get("refresh_token");
-
-          if (accessToken && refreshToken) {
-            await supabase.auth.setSession({
-              access_token: accessToken,
-              refresh_token: refreshToken,
-            });
-          }
-        }
-      }
-    } catch (error: any) {
-      showToast.error("Error", error.message || "Failed to sign in with Apple");
-    }
-  };
-
   return {
     signInWithGoogle,
-    signInWithApple,
   };
 };

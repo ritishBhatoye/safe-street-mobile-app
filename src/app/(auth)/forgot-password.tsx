@@ -196,7 +196,7 @@ export default function ForgotPasswordScreen() {
                 handleResendOTP={handleResendOTP}
                 loading={loading}
                 onSubmit={() => handleOTPChange}
-                initialValues={{ otp }}
+                initialValues={{ otp, email }}
               />
             )}
 

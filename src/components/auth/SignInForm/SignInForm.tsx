@@ -48,7 +48,15 @@ const SignInScreen = () => {
       showToast.error("Error", "An unexpected error occurred");
     }
   };
-  return <SignInForm loading={loading} onSubmit={handleSignIn} handleOAuth={handleSocialSignIn} />;
+  return (
+    <SignInForm
+      loading={loading}
+      onSubmit={handleSignIn}
+      handleOAuth={() => {
+        void handleSocialSignIn;
+      }}
+    />
+  );
 };
 
 export default SignInScreen;
