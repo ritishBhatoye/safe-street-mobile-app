@@ -15,6 +15,8 @@ const SignInForm = ({ initialValues, onSubmit, loading }: SignInFormProps) => {
   const formik: FormikProps<SignInFormType> = useFormik<SignInFormType>({
     initialValues: initialValues || { email: "", password: "" },
     validationSchema: signInSchema,
+    validateOnChange: false,
+    validateOnBlur: true,
     onSubmit: (values) => {
       Keyboard.dismiss();
       onSubmit(values);
@@ -34,10 +36,14 @@ const SignInForm = ({ initialValues, onSubmit, loading }: SignInFormProps) => {
       <ScrollView>
         <View>
           <Input
+            isRequired
             label="Email"
             placeholder="your.email@example.com"
             value={formik.values.email}
             onValueChange={formik.handleChange("email")}
+            onBlur={formik.handleBlur("email")}
+            error={formik.touched.email ? formik.errors.email : undefined}
+            touched={formik.touched.email}
             keyboardType="email-address"
             variant="outline"
             className="mb-4"
@@ -45,10 +51,14 @@ const SignInForm = ({ initialValues, onSubmit, loading }: SignInFormProps) => {
           />
 
           <Input
+            isRequired
             label="Password"
             placeholder="Enter your password"
             value={formik.values.password}
             onValueChange={formik.handleChange("password")}
+            onBlur={formik.handleBlur("password")}
+            error={formik.touched.password ? formik.errors.password : undefined}
+            touched={formik.touched.password}
             isPassword
             variant="outline"
             className="mb-2"

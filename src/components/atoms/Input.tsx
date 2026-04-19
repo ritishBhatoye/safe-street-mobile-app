@@ -117,7 +117,7 @@ const Input: React.FC<InputWithLabelProps> = ({
           >
             {label}
           </Text>
-          {isRequired && <Text className="text-error-500 ml-0.5">*</Text>}
+          {isRequired && <Text className="text-error-500 ml-0.5 mb-1.5">*</Text>}
         </View>
       )}
       <View className={clsx(inputStyles({ variant, size }), inputClassName)}>
@@ -126,9 +126,9 @@ const Input: React.FC<InputWithLabelProps> = ({
         <TextInput
           className={clsx("flex-1 py-1 text-black dark:text-white")}
           value={value}
-          onBlur={() => {
+          onBlur={(e) => {
             setIsFocused(false);
-            onBlur;
+            onBlur?.(e);
           }}
           onFocus={() => setIsFocused(true)}
           onChangeText={handleTextChange}
@@ -152,7 +152,7 @@ const Input: React.FC<InputWithLabelProps> = ({
       {isInvalid && !showPasswordStrength && (
         <View className="flex-row items-center mt-1">
           <Ionicons name="alert-circle" size={14} color={"#EF4444"} />
-          <Text className="text-xs text-#EF4444 ml-1">{error}</Text>
+          <Text className="text-xs text-danger-500 ml-1">{error}</Text>
         </View>
       )}
     </View>
