@@ -111,7 +111,7 @@ const Input: React.FC<InputWithLabelProps> = ({
           <Text
             className={clsx(
               "font-semibold mb-1",
-              isDarkMode ? "text-white" : "text-black/80",
+              isDarkMode ? "text-white" : "text-black",
               labelClassName,
             )}
           >
@@ -134,7 +134,7 @@ const Input: React.FC<InputWithLabelProps> = ({
           onChangeText={handleTextChange}
           placeholder={placeholder}
           secureTextEntry={isPassword && !passwordVisible}
-          placeholderTextColor={isDarkMode ? "#CCCCCC" : "#333333"}
+          placeholderTextColor={isDarkMode ? "#CCCCCC" : "#888888"}
           editable={!isDisabled && !isReadOnly}
           {...rest}
         />
