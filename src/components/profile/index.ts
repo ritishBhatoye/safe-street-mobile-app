@@ -1,6 +1,10 @@
 export { ProfileHeader } from "./ProfileHeader";
+export { AnimatedProfileHeader } from "./AnimatedProfileHeader";
 export { ProfileStats } from "./ProfileStats";
 export { EditProfileModal } from "./EditProfile/EditProfileModal";
 export { EditProfileCard } from "./EditProfile/EditProfileCard";
 export { EmergencyContactsCard } from "./EmergencyContact/EmergencyContactsCard";
 export { EmergencyContactModal } from "./EmergencyContact/EmergencyContactModal";
+export { AccountInformationCard } from "./AccountInformationCard";
+export { ProfileLoading } from "./ProfileLoading";
+export { UnableToLoadProfile } from "./UnableToLoadProfile";

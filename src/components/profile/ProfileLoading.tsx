@@ -3,7 +3,7 @@ import React from "react";
 import { Animated, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const ProfileLoading = () => {
+export const ProfileLoading: React.FC = () => {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
@@ -73,5 +73,3 @@ const ProfileLoading = () => {
     </>
   );
 };
-
-export default ProfileLoading;

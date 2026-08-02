@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, RefreshControl, Text, Pressable, Alert } from "react-native";
+import { View, RefreshControl, Text, Alert } from "react-native";
 import { Stack, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
@@ -7,18 +7,21 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 import { useProfileStats } from "@/hooks/useProfileStats";
 import { useAvatarUpload } from "@/hooks/useAvatarUpload";
-import { ProfileHeader } from "@/components/profile/ProfileHeader";
-import { AnimatedProfileHeader } from "@/components/profile/AnimatedProfileHeader";
-import { ProfileStats } from "@/components/profile/ProfileStats";
-import { EditProfileModal } from "@/components/profile/EditProfile/EditProfileModal";
-import { EmergencyContactsCard } from "@/components/profile/EmergencyContact/EmergencyContactsCard";
 import { Card } from "@/components/atoms/Card";
 import { Button } from "@/components/atoms/Button";
 import { showToast } from "@/utils/toast";
 import UserNotFound from "@/components/profile/UserNotFound";
-import ProfileLoading from "@/components/profile/ProfileLoading";
-import UnableToLoadProfile from "@/components/profile/UnableToLoadProfile";
-import { EditProfileCard } from "@/components/profile";
+import {
+  AccountInformationCard,
+  EditProfileCard,
+  ProfileLoading,
+  UnableToLoadProfile,
+  AnimatedProfileHeader,
+  EditProfileModal,
+  ProfileHeader,
+  EmergencyContactsCard,
+  ProfileStats,
+} from "@/components/profile";
 
 export default function ProfileScreen() {
   const { user, signOut } = useAuth();
@@ -154,6 +157,7 @@ export default function ProfileScreen() {
             <EditProfileCard onPress={() => setEditModalVisible(true)} />
 
             {/* Account Info Card */}
+            <AccountInformationCard profile={profile} userId={user?.id.substring(0, 8)} />
             <Card variant="elevated" className="mb-3">
               <View className="py-2">
                 <View className="flex-row items-center mb-3">

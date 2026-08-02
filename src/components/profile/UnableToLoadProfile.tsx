@@ -10,7 +10,7 @@ interface Props {
   onSignOut: () => Promise<void>;
 }
 
-const UnableToLoadProfile = ({ onRetry, onSignOut }: Props) => {
+export const UnableToLoadProfile = ({ onRetry, onSignOut }: Props) => {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
@@ -42,5 +42,3 @@ const UnableToLoadProfile = ({ onRetry, onSignOut }: Props) => {
     </>
   );
 };
-
-export default UnableToLoadProfile;
