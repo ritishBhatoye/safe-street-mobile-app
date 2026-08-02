@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,10 +9,9 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Button } from '@/components/atoms/Button';
-
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Button } from "@/components/atoms/Button";
 
 interface EditProfileModalProps {
   visible: boolean;
@@ -30,7 +29,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
   onAvatarPress,
 }) => {
   const [name, setName] = useState(currentProfile.name);
-  const [phone, setPhone] = useState(currentProfile.phone || '');
+  const [phone, setPhone] = useState(currentProfile.phone || "");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
 
@@ -38,11 +37,11 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     const newErrors: { name?: string; phone?: string } = {};
 
     if (!name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = "Name is required";
     }
 
     if (phone && !/^\+?[\d\s-()]+$/.test(phone)) {
-      newErrors.phone = 'Invalid phone number format';
+      newErrors.phone = "Invalid phone number format";
     }
 
     setErrors(newErrors);
@@ -60,7 +59,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
       });
       onClose();
     } catch (error) {
-      console.error('Error saving profile:', error);
+      console.error("Error saving profile:", error);
     } finally {
       setLoading(false);
     }
@@ -74,7 +73,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
       onRequestClose={onClose}
     >
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1 bg-white dark:bg-gray-900"
       >
         {/* Header */}
@@ -91,10 +90,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
         <ScrollView className="flex-1 px-4 pt-6">
           {/* Avatar Section */}
           <View className="items-center mb-6">
-            <Pressable
-              onPress={onAvatarPress}
-              className="relative active:opacity-80"
-            >
+            <Pressable onPress={onAvatarPress} className="relative active:opacity-80">
               <View className="w-32 h-32 rounded-full bg-gray-200 dark:bg-gray-700 items-center justify-center overflow-hidden">
                 {currentProfile.avatar_url ? (
                   <Image
@@ -106,7 +102,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                   <Ionicons name="person" size={64} color="#9CA3AF" />
                 )}
               </View>
-              
+
               <View className="absolute bottom-0 right-0 w-10 h-10 rounded-full bg-primary-500 items-center justify-center shadow-lg">
                 <Ionicons name="camera" size={20} color="white" />
               </View>
@@ -129,9 +125,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 font-dm-sans text-base text-gray-900 dark:text-white"
             />
             {errors.name && (
-              <Text className="text-red-500 font-dm-sans text-sm mt-1">
-                {errors.name}
-              </Text>
+              <Text className="text-red-500 font-dm-sans text-sm mt-1">{errors.name}</Text>
             )}
           </View>
 
@@ -164,15 +158,13 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 font-dm-sans text-base text-gray-900 dark:text-white"
             />
             {errors.phone && (
-              <Text className="text-red-500 font-dm-sans text-sm mt-1">
-                {errors.phone}
-              </Text>
+              <Text className="text-red-500 font-dm-sans text-sm mt-1">{errors.phone}</Text>
             )}
           </View>
         </ScrollView>
 
         {/* Footer Buttons */}
-        <View className="px-4 py-4 border-t border-gray-200 dark:border-gray-700">
+        <View className="px-4 py-4 mb-2 border-t border-gray-200 dark:border-gray-700">
           <Button
             title="Save Changes"
             onPress={handleSave}
@@ -184,9 +176,9 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
           <Button
             title="Cancel"
             onPress={onClose}
-            variant="ghost"
+            variant="danger"
             size="large"
-            className="border border-gray-300 dark:border-gray-600"
+            className="border-0"
           />
         </View>
       </KeyboardAvoidingView>

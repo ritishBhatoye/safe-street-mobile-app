@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Card } from '@/components/atoms/Card';
-import { EmergencyContactModal } from '@/components/profile/EmergencyContactModal';
-import { EmergencyContactFormValues } from '@/utils/emergencyContactValidation';
-import { supabase } from '@/lib/supabase';
-import { showToast } from '@/utils/toast';
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import { Card } from "@/components/atoms/Card";
+import { EmergencyContactModal } from "@/components/profile/EmergencyContact/EmergencyContactModal";
+import { EmergencyContactFormValues } from "@/utils/emergencyContactValidation";
+import { supabase } from "@/lib/supabase";
+import { showToast } from "@/utils/toast";
 
 interface EmergencyContact {
   id: string;
@@ -30,19 +30,21 @@ export const EmergencyContactsCard: React.FC = () => {
 
   const loadContacts = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return;
 
       const { data, error } = await supabase
-        .from('emergency_contacts')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('priority', { ascending: true });
+        .from("emergency_contacts")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("priority", { ascending: true });
 
       if (error) throw error;
       setContacts(data || []);
     } catch (error) {
-      console.error('Error loading contacts:', error);
+      console.error("Error loading contacts:", error);
     } finally {
       setLoading(false);
     }
@@ -60,75 +62,71 @@ export const EmergencyContactsCard: React.FC = () => {
 
   const handleSaveContact = async (values: EmergencyContactFormValues) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
 
       if (editingContact) {
         // Update existing contact
         const { error } = await supabase
-          .from('emergency_contacts')
+          .from("emergency_contacts")
           .update({
             name: values.name.trim(),
             phone: values.phone.trim(),
             relationship: values.relationship.trim() || null,
             is_default: values.is_default,
           })
-          .eq('id', editingContact.id);
+          .eq("id", editingContact.id);
 
         if (error) throw error;
-        showToast.success('Success', 'Contact updated');
+        showToast.success("Success", "Contact updated");
       } else {
         // Add new contact
-        const { error } = await supabase
-          .from('emergency_contacts')
-          .insert({
-            user_id: user.id,
-            name: values.name.trim(),
-            phone: values.phone.trim(),
-            relationship: values.relationship.trim() || null,
-            priority: contacts.length,
-            is_default: values.is_default,
-          });
+        const { error } = await supabase.from("emergency_contacts").insert({
+          user_id: user.id,
+          name: values.name.trim(),
+          phone: values.phone.trim(),
+          relationship: values.relationship.trim() || null,
+          priority: contacts.length,
+          is_default: values.is_default,
+        });
 
         if (error) throw error;
-        showToast.success('Success', 'Contact added');
+        showToast.success("Success", "Contact added");
       }
 
       loadContacts();
     } catch (error: any) {
-      console.error('Error saving contact:', error);
-      showToast.error('Error', error.message || 'Failed to save contact');
+      console.error("Error saving contact:", error);
+      showToast.error("Error", error.message || "Failed to save contact");
       throw error;
     }
   };
 
   const handleDeleteContact = (contact: EmergencyContact) => {
-    Alert.alert(
-      'Delete Contact',
-      `Are you sure you want to delete ${contact.name}?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              const { error } = await supabase
-                .from('emergency_contacts')
-                .delete()
-                .eq('id', contact.id);
+    Alert.alert("Delete Contact", `Are you sure you want to delete ${contact.name}?`, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            const { error } = await supabase
+              .from("emergency_contacts")
+              .delete()
+              .eq("id", contact.id);
 
-              if (error) throw error;
-              showToast.success('Deleted', 'Contact removed');
-              loadContacts();
-            } catch (error) {
-              console.error('Error deleting contact:', error);
-              showToast.error('Error', 'Failed to delete contact');
-            }
-          },
+            if (error) throw error;
+            showToast.success("Deleted", "Contact removed");
+            loadContacts();
+          } catch (error) {
+            console.error("Error deleting contact:", error);
+            showToast.error("Error", "Failed to delete contact");
+          }
         },
-      ]
-    );
+      },
+    ]);
   };
 
   return (
@@ -146,7 +144,7 @@ export const EmergencyContactsCard: React.FC = () => {
                   Emergency Contacts
                 </Text>
                 <Text className="text-gray-600 dark:text-gray-400 font-dm-sans text-xs">
-                  {contacts.length} contact{contacts.length !== 1 ? 's' : ''} added
+                  {contacts.length} contact{contacts.length !== 1 ? "s" : ""} added
                 </Text>
               </View>
             </View>
@@ -186,7 +184,7 @@ export const EmergencyContactsCard: React.FC = () => {
                   className="flex-row items-center py-2 border-b border-gray-100 dark:border-gray-800 last:border-b-0"
                 >
                   <LinearGradient
-                    colors={['#EF4444', '#DC2626']}
+                    colors={["#EF4444", "#DC2626"]}
                     className="w-10 h-10 rounded-full items-center justify-center mr-3"
                   >
                     <Ionicons name="person" size={20} color="white" />

@@ -3,7 +3,7 @@ import { Pressable, Text, ActivityIndicator, type PressableProps } from "react-n
 
 interface ButtonProps extends PressableProps {
   title: string;
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "white";
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "white" | "danger";
   size?: "small" | "medium" | "large";
   loading?: boolean;
   disabled?: boolean;
@@ -26,6 +26,7 @@ export const Button = ({
     outline: "border-2 border-white bg-transparent active:bg-white/10",
     ghost: "bg-transparent active:bg-white/10",
     white: "bg-white active:bg-white/50",
+    danger: "bg-red-500 active:bg-red-500/50",
   };
 
   const sizeStyles = {
@@ -43,9 +44,10 @@ export const Button = ({
   const textColorStyles = {
     primary: "text-white",
     secondary: "text-white",
-    outline: "text-white",
-    ghost: "text-white",
+    outline: "text-gray-100",
+    ghost: "text-black",
     white: "text-success-600",
+    danger: "text-white",
   };
 
   const isDisabled = disabled || loading;

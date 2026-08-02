@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -9,15 +9,15 @@ import {
   Platform,
   ScrollView,
   ActivityIndicator,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { BlurView } from 'expo-blur';
-import { Formik } from 'formik';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
+import { Formik } from "formik";
 import {
   initialEmergencyContactValues,
   emergencyContactValidationSchema,
   EmergencyContactFormValues,
-} from '@/utils/emergencyContactValidation';
+} from "@/utils/emergencyContactValidation";
 
 interface EmergencyContact {
   id: string;
@@ -45,37 +45,29 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
       return {
         name: editingContact.name,
         phone: editingContact.phone,
-        relationship: editingContact.relationship || '',
+        relationship: editingContact.relationship || "",
         is_default: editingContact.is_default,
       };
     }
     return initialEmergencyContactValues;
   };
 
-  const handleSubmit = async (
-    values: EmergencyContactFormValues,
-    { setSubmitting }: any
-  ) => {
+  const handleSubmit = async (values: EmergencyContactFormValues, { setSubmitting }: any) => {
     try {
       await onSave(values);
       onClose();
     } catch (error) {
-      console.error('Error saving contact:', error);
+      console.error("Error saving contact:", error);
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={onClose}
-    >
+    <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={onClose}>
       <BlurView intensity={20} tint="dark" className="flex-1">
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
           className="flex-1 justify-end"
         >
           <View className="bg-white dark:bg-gray-900 rounded-t-3xl max-h-[90%]">
@@ -96,12 +88,12 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                   <View className="flex-row items-center justify-between px-6 pb-4">
                     <View>
                       <Text className="text-2xl font-dm-sans-bold text-black dark:text-white">
-                        {editingContact ? 'Edit Contact' : 'Add Contact'}
+                        {editingContact ? "Edit Contact" : "Add Contact"}
                       </Text>
                       <Text className="text-gray-600 dark:text-gray-400 font-dm-sans text-sm mt-1">
                         {editingContact
-                          ? 'Update emergency contact details'
-                          : 'Add a new emergency contact'}
+                          ? "Update emergency contact details"
+                          : "Add a new emergency contact"}
                       </Text>
                     </View>
                     <TouchableOpacity
@@ -125,22 +117,18 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                       <View
                         className={`flex-row items-center bg-gray-50 dark:bg-gray-800 rounded-xl px-4 py-3 border ${
                           formikProps.touched.name && formikProps.errors.name
-                            ? 'border-red-500'
-                            : 'border-gray-200 dark:border-gray-700'
+                            ? "border-red-500"
+                            : "border-gray-200 dark:border-gray-700"
                         }`}
                       >
-                        <Ionicons
-                          name="person-outline"
-                          size={20}
-                          color="#9CA3AF"
-                        />
+                        <Ionicons name="person-outline" size={20} color="#9CA3AF" />
                         <TextInput
                           className="flex-1 ml-3 text-gray-900 dark:text-white font-dm-sans text-base"
                           placeholder="Enter name"
                           placeholderTextColor="#9CA3AF"
                           value={formikProps.values.name}
-                          onChangeText={formikProps.handleChange('name')}
-                          onBlur={formikProps.handleBlur('name')}
+                          onChangeText={formikProps.handleChange("name")}
+                          onBlur={formikProps.handleBlur("name")}
                           autoCapitalize="words"
                         />
                       </View>
@@ -159,8 +147,8 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                       <View
                         className={`flex-row items-center bg-gray-50 dark:bg-gray-800 rounded-xl px-4 py-3 border ${
                           formikProps.touched.phone && formikProps.errors.phone
-                            ? 'border-red-500'
-                            : 'border-gray-200 dark:border-gray-700'
+                            ? "border-red-500"
+                            : "border-gray-200 dark:border-gray-700"
                         }`}
                       >
                         <Ionicons name="call-outline" size={20} color="#9CA3AF" />
@@ -169,8 +157,8 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                           placeholder="Enter phone number"
                           placeholderTextColor="#9CA3AF"
                           value={formikProps.values.phone}
-                          onChangeText={formikProps.handleChange('phone')}
-                          onBlur={formikProps.handleBlur('phone')}
+                          onChangeText={formikProps.handleChange("phone")}
+                          onBlur={formikProps.handleBlur("phone")}
                           keyboardType="phone-pad"
                         />
                       </View>
@@ -188,10 +176,9 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                       </Text>
                       <View
                         className={`flex-row items-center bg-gray-50 dark:bg-gray-800 rounded-xl px-4 py-3 border ${
-                          formikProps.touched.relationship &&
-                          formikProps.errors.relationship
-                            ? 'border-red-500'
-                            : 'border-gray-200 dark:border-gray-700'
+                          formikProps.touched.relationship && formikProps.errors.relationship
+                            ? "border-red-500"
+                            : "border-gray-200 dark:border-gray-700"
                         }`}
                       >
                         <Ionicons name="heart-outline" size={20} color="#9CA3AF" />
@@ -200,34 +187,30 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                           placeholder="e.g., Mother, Friend, Spouse"
                           placeholderTextColor="#9CA3AF"
                           value={formikProps.values.relationship}
-                          onChangeText={formikProps.handleChange('relationship')}
-                          onBlur={formikProps.handleBlur('relationship')}
+                          onChangeText={formikProps.handleChange("relationship")}
+                          onBlur={formikProps.handleBlur("relationship")}
                           autoCapitalize="words"
                         />
                       </View>
-                      {formikProps.touched.relationship &&
-                        formikProps.errors.relationship && (
-                          <Text className="text-red-500 text-sm font-dm-sans mt-1">
-                            {formikProps.errors.relationship}
-                          </Text>
-                        )}
+                      {formikProps.touched.relationship && formikProps.errors.relationship && (
+                        <Text className="text-red-500 text-sm font-dm-sans mt-1">
+                          {formikProps.errors.relationship}
+                        </Text>
+                      )}
                     </View>
 
                     {/* Primary Contact Toggle */}
                     <TouchableOpacity
                       onPress={() =>
-                        formikProps.setFieldValue(
-                          'is_default',
-                          !formikProps.values.is_default
-                        )
+                        formikProps.setFieldValue("is_default", !formikProps.values.is_default)
                       }
                       className="flex-row items-center mb-6"
                     >
                       <View
                         className={`w-6 h-6 rounded border-2 items-center justify-center mr-3 ${
                           formikProps.values.is_default
-                            ? 'bg-blue-500 border-blue-500'
-                            : 'bg-transparent border-gray-300 dark:border-gray-600'
+                            ? "bg-blue-500 border-blue-500"
+                            : "bg-transparent border-gray-300 dark:border-gray-600"
                         }`}
                       >
                         {formikProps.values.is_default && (
@@ -247,14 +230,9 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                     {/* Info Banner */}
                     <View className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 mb-6">
                       <View className="flex-row items-start">
-                        <Ionicons
-                          name="information-circle"
-                          size={20}
-                          color="#3B82F6"
-                        />
+                        <Ionicons name="information-circle" size={20} color="#3B82F6" />
                         <Text className="flex-1 ml-2 text-blue-900 dark:text-blue-100 font-dm-sans text-sm">
-                          This contact can be added as a watcher when using Walk
-                          with Me feature
+                          This contact can be added as a watcher when using Walk with Me feature
                         </Text>
                       </View>
                     </View>
@@ -273,20 +251,18 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                       </TouchableOpacity>
                       <TouchableOpacity
                         onPress={() => formikProps.handleSubmit()}
-                        disabled={
-                          formikProps.isSubmitting || !formikProps.isValid
-                        }
+                        disabled={formikProps.isSubmitting || !formikProps.isValid}
                         className={`flex-1 rounded-xl py-4 active:opacity-80 ${
                           formikProps.isSubmitting || !formikProps.isValid
-                            ? 'bg-gray-400'
-                            : 'bg-blue-500'
+                            ? "bg-gray-400"
+                            : "bg-blue-500"
                         }`}
                       >
                         {formikProps.isSubmitting ? (
                           <ActivityIndicator size="small" color="white" />
                         ) : (
                           <Text className="text-white font-dm-sans-semibold text-center text-base">
-                            {editingContact ? 'Update Contact' : 'Add Contact'}
+                            {editingContact ? "Update Contact" : "Add Contact"}
                           </Text>
                         )}
                       </TouchableOpacity>
