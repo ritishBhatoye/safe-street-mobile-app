@@ -65,3 +65,6 @@ tasks.md
 # Auto-push script files
 .last_push_time
 scripts/auto-push.sh
+
+# Temporary husky disable file
+.huskyrc
