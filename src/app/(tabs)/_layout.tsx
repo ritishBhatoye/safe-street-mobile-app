@@ -66,9 +66,8 @@ const TabBarIcon = ({ focused, iconName, title }: TabBarIconProps) => {
         <Animated.Text
           style={{
             opacity: opacityAnim,
-            fontWeight: 800,
           }}
-          className={`text-[10px] w-full mt-1 font-dm-sans-medium ${
+          className={`text-xs w-full mt-1 font-dm-sans-semibold ${
             focused
               ? isDarkMode
                 ? "text-primary-300"

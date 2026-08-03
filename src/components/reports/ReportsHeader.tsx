@@ -28,7 +28,7 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
 
   const toggleSearch = () => {
     const toValue = isSearchExpanded ? 48 : 300;
-    
+
     Animated.spring(searchWidth, {
       toValue,
       useNativeDriver: false,
@@ -37,7 +37,7 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
     }).start();
 
     setIsSearchExpanded(!isSearchExpanded);
-    
+
     if (isSearchExpanded && searchQuery && onSearchChange) {
       onSearchChange("");
     }
@@ -46,36 +46,37 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
   return (
     <View className=" pt-4 pb-6">
       <View className="flex-row items-center justify-between mb-6">
-       {!isSearchExpanded &&( <View className="flex-1">
-          <Text className="text-4xl font-dm-sans-bold text-gray-900 mb-1">Reports</Text>
-          <View className="flex-row items-center">
-            <View className="bg-blue-500 rounded-full w-2 h-2 mr-2" />
-            <Text className="text-sm font-dm-sans-medium text-gray-600">
-              {totalReports} total reports
+        {!isSearchExpanded && (
+          <View className="flex-1">
+            <Text className="text-4xl font-dm-sans-bold text-gray-900  dark:text-gray-100 mb-1">
+              Reports
             </Text>
+            <View className="flex-row items-center">
+              <View className="bg-blue-500 rounded-full w-2 h-2 mr-2" />
+              <Text className="text-sm font-dm-sans-medium text-gray-600 dark:text-gray-300">
+                {totalReports} total reports
+              </Text>
+            </View>
           </View>
-        </View>)}
-        
+        )}
+
         <View className="flex-row gap-2">
           {/* Animated Search Bar */}
-          <Animated.View 
-            style={{ width: searchWidth }}
-            className="rounded-2xl overflow-hidden"
-          >
+          <Animated.View style={{ width: searchWidth }} className="rounded-2xl overflow-hidden">
             <BlurView intensity={40} tint="prominent">
               <LinearGradient
                 colors={["rgba(255, 255, 255, 0.9)", "rgba(249, 250, 251, 0.9)"]}
                 className="flex-row items-center"
-                style={{ padding: 12,flexDirection:'row-reverse',alignItems:'center' }}
+                style={{ padding: 12, flexDirection: "row-reverse", alignItems: "center" }}
               >
                 <TouchableOpacity onPress={toggleSearch}>
-                  <Ionicons 
-                    name={isSearchExpanded ? "close" : "search"} 
-                    size={24} 
-                    color="#6B7280" 
+                  <Ionicons
+                    name={isSearchExpanded ? "close" : "search"}
+                    size={24}
+                    color="#6B7280"
                   />
                 </TouchableOpacity>
-                
+
                 {isSearchExpanded && (
                   <TextInput
                     placeholder="Search reports..."
@@ -89,9 +90,9 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
               </LinearGradient>
             </BlurView>
           </Animated.View>
-                 <TouchableOpacity
+          <TouchableOpacity
             className="rounded-2xl overflow-hidden"
-            onPress={()=>router.push('/(tabs)/reports/create-report')}
+            onPress={() => router.push("/(tabs)/reports/create-report")}
             style={{
               shadowColor: "#3b82f6",
               shadowOffset: { width: 0, height: 4 },
@@ -102,8 +103,12 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
           >
             <BlurView intensity={40} tint="light">
               <LinearGradient
-                colors={["rgba(59, 130, 246, 0.9)", "rgba(37, 99, 235, 0.9)","rgba(37, 99, 255, 0.4)"]}
-                style={{padding:12}}
+                colors={[
+                  "rgba(59, 130, 246, 0.9)",
+                  "rgba(37, 99, 235, 0.9)",
+                  "rgba(37, 99, 255, 0.4)",
+                ]}
+                style={{ padding: 12 }}
               >
                 <Ionicons name="add-outline" size={24} color="#ffffff" />
               </LinearGradient>
@@ -123,8 +128,12 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
           >
             <BlurView intensity={40} tint="light">
               <LinearGradient
-                colors={["rgba(59, 130, 246, 0.9)", "rgba(37, 99, 235, 0.9)","rgba(37, 99, 255, 0.4)"]}
-                style={{padding:12}}
+                colors={[
+                  "rgba(59, 130, 246, 0.9)",
+                  "rgba(37, 99, 235, 0.9)",
+                  "rgba(37, 99, 255, 0.4)",
+                ]}
+                style={{ padding: 12 }}
               >
                 <Ionicons name="filter" size={24} color="#ffffff" />
               </LinearGradient>
@@ -139,13 +148,15 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
           <BlurView intensity={100} tint="prominent">
             <LinearGradient
               colors={["rgba(239, 68, 68, 0.15)", "rgba(220, 38, 38, 0.1)"]}
-              style={{padding:20}}
+              style={{ padding: 20 }}
             >
               <Ionicons name="alert-circle" size={20} color="#ef4444" />
-              <Text className="text-2xl font-dm-sans-bold text-gray-900 mt-2">
+              <Text className="text-2xl font-dm-sans-bold text-gray-900 dark:text-gray-100 mt-2">
                 {criticalCount}
               </Text>
-              <Text className="text-xs font-dm-sans text-gray-600">Critical</Text>
+              <Text className="text-xs font-dm-sans text-gray-600 dark:text-gray-200">
+                Critical
+              </Text>
             </LinearGradient>
           </BlurView>
         </View>
@@ -153,13 +164,15 @@ export const ReportsHeader: React.FC<ReportsHeaderProps> = ({
           <BlurView intensity={30} tint="light">
             <LinearGradient
               colors={["rgba(34, 197, 94, 0.15)", "rgba(22, 163, 74, 0.1)"]}
-           style={{padding:20}}
+              style={{ padding: 20 }}
             >
               <Ionicons name="checkmark-circle" size={20} color="#22c55e" />
-              <Text className="text-2xl font-dm-sans-bold text-gray-900 mt-2">
+              <Text className="text-2xl font-dm-sans-bold text-gray-900 dark:text-gray-100 mt-2">
                 {resolvedCount}
               </Text>
-              <Text className="text-xs font-dm-sans text-gray-600">Resolved</Text>
+              <Text className="text-xs font-dm-sans text-gray-600 dark:text-gray-200">
+                Resolved
+              </Text>
             </LinearGradient>
           </BlurView>
         </View>
