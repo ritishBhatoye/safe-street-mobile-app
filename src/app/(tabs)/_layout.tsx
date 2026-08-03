@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import React from "react";
-import { Animated, View, Platform } from "react-native";
+import { Animated, View, Platform, useColorScheme } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import GlassTabBarBackground from "@/components/atoms/GlassTabBarBackground";
 
@@ -14,6 +14,9 @@ const TabBarIcon = ({ focused, iconName, title }: TabBarIconProps) => {
   const scaleAnim = React.useRef(new Animated.Value(focused ? 1 : 0.9)).current;
   const opacityAnim = React.useRef(new Animated.Value(focused ? 1 : 0.6)).current;
   const bgScaleAnim = React.useRef(new Animated.Value(focused ? 1 : 0)).current;
+
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === "dark";
 
   React.useEffect(() => {
     Animated.parallel([
@@ -52,16 +55,27 @@ const TabBarIcon = ({ focused, iconName, title }: TabBarIconProps) => {
               transform: [{ scale: bgScaleAnim }],
               opacity: bgScaleAnim,
             }}
-            className="absolute items-center justify-center bg-blue-500 rounded-full w-10 h-10 shadow-lg"
+            className={`absolute items-center justify-center ${isDarkMode ? "bg-primary-500" : "bg-primary-600"} rounded-full w-10 h-10 shadow-lg`}
           />
-          <Ionicons name={iconName as any} size={22} color={focused ? "#ffffff" : "#9ca3af"} />
+          <Ionicons
+            name={iconName as any}
+            size={22}
+            color={focused ? "#ffffff" : isDarkMode ? "#ffffff" : "#000000"}
+          />
         </View>
         <Animated.Text
           style={{
             opacity: opacityAnim,
+            fontWeight: 800,
           }}
           className={`text-[10px] w-full mt-1 font-dm-sans-medium ${
-            focused ? "text-blue-600" : "text-gray-400"
+            focused
+              ? isDarkMode
+                ? "text-primary-300"
+                : "text-primary-600"
+              : isDarkMode
+                ? "text-white"
+                : "text-black"
           }`}
         >
           {title}
