@@ -1,9 +1,10 @@
-import React, { forwardRef, ReactNode } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import ActionsSheet, { SheetProps, ActionSheetRef } from 'react-native-actions-sheet';
-import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { BlurView } from 'expo-blur';
+import React, { forwardRef, ReactNode } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, useColorScheme } from "react-native";
+import ActionsSheet, { SheetProps, ActionSheetRef } from "react-native-actions-sheet";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { BlurView } from "expo-blur";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface ActionSheetProps extends Partial<SheetProps> {
   title?: string;
@@ -20,24 +21,29 @@ export const ActionSheet = forwardRef<ActionSheetRef, ActionSheetProps>(
       subtitle,
       children,
       showCloseButton = true,
-      headerGradient = ['rgba(59, 130, 246, 0.1)', 'rgba(147, 51, 234, 0.1)'],
+      headerGradient = ["rgba(59, 130, 246, 0.1)", "rgba(147, 51, 234, 0.1)"],
       ...props
     },
-    ref
+    ref,
   ) => {
+    const colorScheme = useColorScheme();
+    const isDarkMode = colorScheme === "dark";
+    const insets = useSafeAreaInsets();
+
     return (
       <ActionsSheet
         ref={ref}
         containerStyle={styles.container}
         gestureEnabled={true}
-        defaultOverlayOpacity={0.3}
-        snapPoints={[50, 75, 100]}
+        defaultOverlayOpacity={0.5}
+        snapPoints={[50, 75, 95]}
         initialSnapIndex={1}
         enableGesturesInScrollView={false}
         indicatorStyle={styles.hiddenIndicator}
+        drawUnderStatusBar={false}
         {...props}
       >
-        <View style={styles.content}>
+        <View style={[styles.content, { backgroundColor: isDarkMode ? "#111827" : "#ffffff" }]}>
           {/* Header */}
           {(title || showCloseButton) && (
             <View style={styles.header}>
@@ -54,10 +60,10 @@ export const ActionSheet = forwardRef<ActionSheetRef, ActionSheetProps>(
                   {/* Title Section */}
                   {title && (
                     <View style={styles.titleSection}>
-                      <Text style={styles.title}>{title}</Text>
-                      {subtitle && (
-                        <Text style={styles.subtitle}>{subtitle}</Text>
-                      )}
+                      <Text style={[styles.title, { color: isDarkMode ? "#ffffff" : "#111827" }]}>
+                        {title}
+                      </Text>
+                      {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
                     </View>
                   )}
 
@@ -66,7 +72,7 @@ export const ActionSheet = forwardRef<ActionSheetRef, ActionSheetProps>(
                     <TouchableOpacity
                       style={styles.closeButton}
                       onPress={() => {
-                        if (ref && typeof ref !== 'function' && ref.current) {
+                        if (ref && typeof ref !== "function" && ref.current) {
                           ref.current.hide();
                         }
                       }}
@@ -82,20 +88,18 @@ export const ActionSheet = forwardRef<ActionSheetRef, ActionSheetProps>(
           )}
 
           {/* Content */}
-          <View style={styles.body}>{children}</View>
+          <View style={[styles.body, { paddingBottom: insets.bottom || 20 }]}>{children}</View>
         </View>
       </ActionsSheet>
     );
-  }
+  },
 );
 
-ActionSheet.displayName = 'ActionSheet';
+ActionSheet.displayName = "ActionSheet";
 
 const styles = StyleSheet.create({
   container: {
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    backgroundColor: '#ffffff',
+    backgroundColor: "transparent",
   },
   hiddenIndicator: {
     width: 0,
@@ -103,10 +107,13 @@ const styles = StyleSheet.create({
     opacity: 0,
   },
   content: {
-    paddingBottom: 20,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingBottom: 24,
+    backgroundColor: "#ffffff",
   },
   header: {
-    overflow: 'hidden',
+    overflow: "hidden",
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
   },
@@ -116,14 +123,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   headerContent: {
-    position: 'relative',
+    position: "relative",
   },
   handleBar: {
     width: 40,
     height: 4,
-    backgroundColor: '#D1D5DB',
+    backgroundColor: "#D1D5DB",
     borderRadius: 2,
-    alignSelf: 'center',
+    alignSelf: "center",
     marginBottom: 16,
   },
   titleSection: {
@@ -131,27 +138,26 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontFamily: 'DMSans-Bold',
-    color: '#111827',
+    fontFamily: "DMSans-Bold",
     marginBottom: 4,
   },
   subtitle: {
     fontSize: 14,
-    fontFamily: 'DMSans-Regular',
-    color: '#6B7280',
+    fontFamily: "DMSans-Regular",
+    color: "#6B7280",
   },
   closeButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 12,
     right: 0,
     borderRadius: 20,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   closeButtonBlur: {
     width: 40,
     height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   body: {
     paddingHorizontal: 20,

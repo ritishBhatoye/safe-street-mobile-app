@@ -144,77 +144,79 @@ export default function ReportsScreen() {
   }
 
   return (
-    <View className="flex-1 bg-gray-50 dark:bg-gray-900">
-      {/* <LinearGradient
+    <>
+      <View className="flex-1 bg-gray-50 dark:bg-gray-900">
+        {/* <LinearGradient
         colors={["#eff6ff", "#faf5ff", "#f5f3ff"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{ flex: 1 }}
         className="flex-1"
       > */}
-      <SafeAreaView className="flex-1" edges={["top"]}>
-        <StatusBar barStyle="dark-content" />
+        <SafeAreaView className="flex-1" edges={["top"]}>
+          <StatusBar barStyle="dark-content" />
 
-        <FlatList
-          data={filteredReports}
-          renderItem={({ item, index }) => (
-            <ReportCard item={item} index={index} onPress={handleReportPress} />
-          )}
-          keyExtractor={(item) => item.id}
-          ListHeaderComponent={
-            <ReportsHeader
-              totalReports={totalReports}
-              reports={reports}
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              onFilterPress={handleFilterPress}
-            />
-          }
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 100 }}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              tintColor="#3b82f6"
-              colors={["#3b82f6"]}
-            />
-          }
-          ListFooterComponent={
-            <>
-              {renderFooter()}
-              {renderEndMessage()}
-            </>
-          }
-          ListEmptyComponent={
-            !loading ? (
-              searchQuery.trim() ? (
-                <View className="py-12 items-center">
-                  <Text className="text-gray-500 font-dm-sans-bold text-lg mb-2">
-                    No results found
-                  </Text>
-                  <Text className="text-gray-400 font-dm-sans text-sm">
-                    Try a different search term
-                  </Text>
-                </View>
-              ) : (
-                <ReportsEmptyState error={error} onRetry={onRefresh} />
-              )
-            ) : null
-          }
-          onEndReached={loadMore}
-          onEndReachedThreshold={0.5}
-          showsVerticalScrollIndicator={false}
-        />
+          <FlatList
+            data={filteredReports}
+            renderItem={({ item, index }) => (
+              <ReportCard item={item} index={index} onPress={handleReportPress} />
+            )}
+            keyExtractor={(item) => item.id}
+            ListHeaderComponent={
+              <ReportsHeader
+                totalReports={totalReports}
+                reports={reports}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                onFilterPress={handleFilterPress}
+              />
+            }
+            contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 100 }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor="#3b82f6"
+                colors={["#3b82f6"]}
+              />
+            }
+            ListFooterComponent={
+              <>
+                {renderFooter()}
+                {renderEndMessage()}
+              </>
+            }
+            ListEmptyComponent={
+              !loading ? (
+                searchQuery.trim() ? (
+                  <View className="py-12 items-center">
+                    <Text className="text-gray-500 font-dm-sans-bold text-lg mb-2">
+                      No results found
+                    </Text>
+                    <Text className="text-gray-400 font-dm-sans text-sm">
+                      Try a different search term
+                    </Text>
+                  </View>
+                ) : (
+                  <ReportsEmptyState error={error} onRetry={onRefresh} />
+                )
+              ) : null
+            }
+            onEndReached={loadMore}
+            onEndReachedThreshold={0.5}
+            showsVerticalScrollIndicator={false}
+          />
 
-        {/* Filter Sheet */}
-        <ReportsFilterSheet
-          sheetRef={filterSheetRef}
-          filters={filters}
-          onFiltersChange={setFilters}
-          onReset={handleResetFilters}
-        />
-      </SafeAreaView>
-      {/* </LinearGradient> */}
-    </View>
+          {/* Filter Sheet */}
+        </SafeAreaView>
+        {/* </LinearGradient> */}
+      </View>
+      <ReportsFilterSheet
+        sheetRef={filterSheetRef}
+        filters={filters}
+        onFiltersChange={setFilters}
+        onReset={handleResetFilters}
+      />
+    </>
   );
 }

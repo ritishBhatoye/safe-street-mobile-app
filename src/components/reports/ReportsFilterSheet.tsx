@@ -1,14 +1,14 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { ActionSheet } from '@/components/elements';
-import { ActionSheetRef } from 'react-native-actions-sheet';
-import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import React from "react";
+import { View, Text, TouchableOpacity, ScrollView, useColorScheme } from "react-native";
+import { ActionSheet } from "@/components/elements";
+import { ActionSheetRef } from "react-native-actions-sheet";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
 export interface ReportFilters {
   status: string[];
   severity: string[];
-  sortBy: 'newest' | 'oldest' | 'severity';
+  sortBy: "newest" | "oldest" | "severity";
 }
 
 interface ReportsFilterSheetProps {
@@ -19,22 +19,22 @@ interface ReportsFilterSheetProps {
 }
 
 const STATUS_OPTIONS = [
-  { value: 'active', label: 'Active', color: '#3b82f6', icon: 'alert-circle' },
-  { value: 'resolved', label: 'Resolved', color: '#22c55e', icon: 'checkmark-circle' },
-  { value: 'flagged', label: 'Flagged', color: '#ef4444', icon: 'flag' },
+  { value: "active", label: "Active", color: "#3b82f6", icon: "alert-circle" },
+  { value: "resolved", label: "Resolved", color: "#22c55e", icon: "checkmark-circle" },
+  { value: "flagged", label: "Flagged", color: "#ef4444", icon: "flag" },
 ];
 
 const SEVERITY_OPTIONS = [
-  { value: 'safe', label: 'Safe', color: '#10b981' },
-  { value: 'caution', label: 'Caution', color: '#f59e0b' },
-  { value: 'danger', label: 'Danger', color: '#f97316' },
-  { value: 'critical', label: 'Critical', color: '#ef4444' },
+  { value: "safe", label: "Safe", color: "#10b981" },
+  { value: "caution", label: "Caution", color: "#f59e0b" },
+  { value: "danger", label: "Danger", color: "#f97316" },
+  { value: "critical", label: "Critical", color: "#ef4444" },
 ];
 
 const SORT_OPTIONS = [
-  { value: 'newest', label: 'Newest First', icon: 'arrow-down' },
-  { value: 'oldest', label: 'Oldest First', icon: 'arrow-up' },
-  { value: 'severity', label: 'Severity', icon: 'alert-circle' },
+  { value: "newest", label: "Newest First", icon: "arrow-down" },
+  { value: "oldest", label: "Oldest First", icon: "arrow-up" },
+  { value: "severity", label: "Severity", icon: "alert-circle" },
 ] as const;
 
 export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
@@ -57,34 +57,29 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
     onFiltersChange({ ...filters, severity: newSeverities });
   };
 
-  const setSortBy = (sortBy: 'newest' | 'oldest' | 'severity') => {
+  const setSortBy = (sortBy: "newest" | "oldest" | "severity") => {
     onFiltersChange({ ...filters, sortBy });
   };
 
   const activeFiltersCount =
-    filters.status.length + filters.severity.length + (filters.sortBy !== 'newest' ? 1 : 0);
+    filters.status.length + filters.severity.length + (filters.sortBy !== "newest" ? 1 : 0);
 
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === "dark";
   return (
     <ActionSheet
       ref={sheetRef}
       title="Filter Reports"
-      subtitle={`${activeFiltersCount} filter${activeFiltersCount !== 1 ? 's' : ''} active`}
-      headerGradient={['rgba(59, 130, 246, 0.1)', 'rgba(147, 51, 234, 0.1)']}
+      subtitle={`${activeFiltersCount} filter${activeFiltersCount !== 1 ? "s" : ""} active`}
+      headerGradient={["rgba(59, 130, 246, 0.1)", "rgba(147, 51, 234, 0.1)"]}
     >
       <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 500 }}>
         {/* Status Filter */}
         <View style={{ marginBottom: 24 }}>
-          <Text
-            style={{
-              fontSize: 16,
-              fontFamily: 'DMSans-Bold',
-              color: '#111827',
-              marginBottom: 12,
-            }}
-          >
+          <Text className="text-base mb-3 text-gray-900 dark:text-white font-dm-sans-bold">
             Status
           </Text>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
             {STATUS_OPTIONS.map((option) => {
               const isSelected = filters.status.includes(option.value);
               return (
@@ -93,20 +88,20 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
                   onPress={() => toggleStatus(option.value)}
                   style={{
                     borderRadius: 12,
-                    overflow: 'hidden',
+                    overflow: "hidden",
                     borderWidth: 2,
-                    borderColor: isSelected ? option.color : '#e5e7eb',
+                    borderColor: isSelected ? option.color : "#e5e7eb",
                   }}
                 >
                   <LinearGradient
                     colors={
                       isSelected
                         ? [`${option.color}20`, `${option.color}10`]
-                        : ['#ffffff', '#f9fafb']
+                        : ["#ffffff", "#f9fafb"]
                     }
                     style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
+                      flexDirection: "row",
+                      alignItems: "center",
                       paddingHorizontal: 16,
                       paddingVertical: 10,
                       gap: 6,
@@ -115,13 +110,13 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
                     <Ionicons
                       name={option.icon as any}
                       size={18}
-                      color={isSelected ? option.color : '#6b7280'}
+                      color={isSelected ? option.color : "#6b7280"}
                     />
                     <Text
                       style={{
-                        fontFamily: isSelected ? 'DMSans-Bold' : 'DMSans-Medium',
+                        fontFamily: isSelected ? "DMSans-Bold" : "DMSans-Medium",
                         fontSize: 14,
-                        color: isSelected ? option.color : '#6b7280',
+                        color: isSelected ? option.color : "#6b7280",
                       }}
                     >
                       {option.label}
@@ -138,14 +133,14 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
           <Text
             style={{
               fontSize: 16,
-              fontFamily: 'DMSans-Bold',
-              color: '#111827',
+              fontFamily: "DMSans-Bold",
+              color: "#111827",
               marginBottom: 12,
             }}
           >
             Severity
           </Text>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
             {SEVERITY_OPTIONS.map((option) => {
               const isSelected = filters.severity.includes(option.value);
               return (
@@ -154,16 +149,16 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
                   onPress={() => toggleSeverity(option.value)}
                   style={{
                     borderRadius: 12,
-                    overflow: 'hidden',
+                    overflow: "hidden",
                     borderWidth: 2,
-                    borderColor: isSelected ? option.color : '#e5e7eb',
+                    borderColor: isSelected ? option.color : "#e5e7eb",
                   }}
                 >
                   <LinearGradient
                     colors={
                       isSelected
                         ? [`${option.color}20`, `${option.color}10`]
-                        : ['#ffffff', '#f9fafb']
+                        : ["#ffffff", "#f9fafb"]
                     }
                     style={{
                       paddingHorizontal: 16,
@@ -172,9 +167,9 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
                   >
                     <Text
                       style={{
-                        fontFamily: isSelected ? 'DMSans-Bold' : 'DMSans-Medium',
+                        fontFamily: isSelected ? "DMSans-Bold" : "DMSans-Medium",
                         fontSize: 14,
-                        color: isSelected ? option.color : '#6b7280',
+                        color: isSelected ? option.color : "#6b7280",
                       }}
                     >
                       {option.label}
@@ -191,8 +186,8 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
           <Text
             style={{
               fontSize: 16,
-              fontFamily: 'DMSans-Bold',
-              color: '#111827',
+              fontFamily: "DMSans-Bold",
+              color: "#111827",
               marginBottom: 12,
             }}
           >
@@ -207,20 +202,20 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
                   onPress={() => setSortBy(option.value)}
                   style={{
                     borderRadius: 12,
-                    overflow: 'hidden',
+                    overflow: "hidden",
                     borderWidth: 2,
-                    borderColor: isSelected ? '#3b82f6' : '#e5e7eb',
+                    borderColor: isSelected ? "#3b82f6" : "#e5e7eb",
                   }}
                 >
                   <LinearGradient
                     colors={
                       isSelected
-                        ? ['rgba(59, 130, 246, 0.2)', 'rgba(59, 130, 246, 0.1)']
-                        : ['#ffffff', '#f9fafb']
+                        ? ["rgba(59, 130, 246, 0.2)", "rgba(59, 130, 246, 0.1)"]
+                        : ["#ffffff", "#f9fafb"]
                     }
                     style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
+                      flexDirection: "row",
+                      alignItems: "center",
                       paddingHorizontal: 16,
                       paddingVertical: 14,
                       gap: 10,
@@ -229,21 +224,19 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
                     <Ionicons
                       name={option.icon as any}
                       size={20}
-                      color={isSelected ? '#3b82f6' : '#6b7280'}
+                      color={isSelected ? "#3b82f6" : "#6b7280"}
                     />
                     <Text
                       style={{
-                        fontFamily: isSelected ? 'DMSans-Bold' : 'DMSans-Medium',
+                        fontFamily: isSelected ? "DMSans-Bold" : "DMSans-Medium",
                         fontSize: 15,
-                        color: isSelected ? '#3b82f6' : '#6b7280',
+                        color: isSelected ? "#3b82f6" : "#6b7280",
                         flex: 1,
                       }}
                     >
                       {option.label}
                     </Text>
-                    {isSelected && (
-                      <Ionicons name="checkmark-circle" size={20} color="#3b82f6" />
-                    )}
+                    {isSelected && <Ionicons name="checkmark-circle" size={20} color="#3b82f6" />}
                   </LinearGradient>
                 </TouchableOpacity>
               );
@@ -252,29 +245,29 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
         </View>
 
         {/* Action Buttons */}
-        <View style={{ flexDirection: 'row', gap: 12, marginTop: 8, marginBottom: 16 }}>
+        <View style={{ flexDirection: "row", gap: 12, marginTop: 8, marginBottom: 16 }}>
           <TouchableOpacity
             onPress={onReset}
             style={{
               flex: 1,
               borderRadius: 12,
-              overflow: 'hidden',
+              overflow: "hidden",
               borderWidth: 2,
-              borderColor: '#e5e7eb',
+              borderColor: "#e5e7eb",
             }}
           >
             <View
               style={{
-                backgroundColor: '#ffffff',
+                backgroundColor: "#ffffff",
                 paddingVertical: 14,
-                alignItems: 'center',
+                alignItems: "center",
               }}
             >
               <Text
                 style={{
-                  fontFamily: 'DMSans-Bold',
+                  fontFamily: "DMSans-Bold",
                   fontSize: 15,
-                  color: '#6b7280',
+                  color: "#6b7280",
                 }}
               >
                 Reset
@@ -287,21 +280,21 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
             style={{
               flex: 1,
               borderRadius: 12,
-              overflow: 'hidden',
+              overflow: "hidden",
             }}
           >
             <LinearGradient
-              colors={['#3b82f6', '#2563eb']}
+              colors={["#3b82f6", "#2563eb"]}
               style={{
                 paddingVertical: 14,
-                alignItems: 'center',
+                alignItems: "center",
               }}
             >
               <Text
                 style={{
-                  fontFamily: 'DMSans-Bold',
+                  fontFamily: "DMSans-Bold",
                   fontSize: 15,
-                  color: '#ffffff',
+                  color: "#ffffff",
                 }}
               >
                 Apply Filters
