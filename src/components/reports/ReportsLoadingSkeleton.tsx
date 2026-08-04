@@ -1,28 +1,28 @@
-import React from 'react';
-import { View } from 'react-native';
-import { ShimmerEffect } from '@/components/atoms/ShimmerEffect';
+import React from "react";
+import { ScrollView, View } from "react-native";
+import { ShimmerEffect } from "@/components/atoms/ShimmerEffect";
 
 export const ReportsLoadingSkeleton = () => {
   return (
-    <View className="px-4">
+    <ScrollView className="px-4 dark:bg-gray-700">
       {/* Header Skeleton */}
       <View className="pt-4 pb-6">
         <View className="flex-row items-center justify-between mb-6">
           <View className="flex-1">
             <ShimmerEffect>
-              <View className="bg-gray-400 h-10 w-32 rounded-lg mb-2" />
+              <View className="bg-gray-400 dark:bg-gray-500 h-10 w-32 rounded-lg mb-2" />
             </ShimmerEffect>
             <ShimmerEffect>
-              <View className="bg-gray-300 h-4 w-40 rounded-md" />
+              <View className="bg-gray-300 dark:bg-gray-400 h-4 w-40 rounded-md" />
             </ShimmerEffect>
           </View>
-          
+
           <View className="flex-row gap-2">
             <ShimmerEffect>
-              <View className="bg-gray-400 h-12 w-12 rounded-2xl" />
+              <View className="bg-gray-400 dark:bg-gray-500  h-12 w-12 rounded-2xl" />
             </ShimmerEffect>
             <ShimmerEffect>
-              <View className="bg-gray-400 h-12 w-12 rounded-2xl" />
+              <View className="bg-gray-400 dark:bg-gray-500 h-12 w-12 rounded-2xl" />
             </ShimmerEffect>
           </View>
         </View>
@@ -32,18 +32,18 @@ export const ReportsLoadingSkeleton = () => {
           <View className="flex-1">
             <ShimmerEffect>
               <View className="bg-white rounded-2xl p-5">
-                <View className="bg-gray-400 h-5 w-5 rounded-full mb-2" />
-                <View className="bg-gray-400 h-8 w-12 rounded-md mb-1" />
-                <View className="bg-gray-300 h-3 w-16 rounded-md" />
+                <View className="bg-gray-400 dark:bg-gray-500 h-5 w-5 rounded-full mb-2" />
+                <View className="bg-gray-400 dark:bg-gray-400 h-8 w-12 rounded-md mb-1" />
+                <View className="bg-gray-300 dark:bg-gray-400 h-3 w-16 rounded-md" />
               </View>
             </ShimmerEffect>
           </View>
           <View className="flex-1">
             <ShimmerEffect>
               <View className="bg-white rounded-2xl p-5">
-                <View className="bg-gray-400 h-5 w-5 rounded-full mb-2" />
-                <View className="bg-gray-400 h-8 w-12 rounded-md mb-1" />
-                <View className="bg-gray-300 h-3 w-16 rounded-md" />
+                <View className="bg-gray-400 dark:bg-gray-500 h-5 w-5 rounded-full mb-2" />
+                <View className="bg-gray-400 dark:bg-gray-500 h-8 w-12 rounded-md mb-1" />
+                <View className="bg-gray-300 dark:bg-gray-400 h-3 w-16 rounded-md" />
               </View>
             </ShimmerEffect>
           </View>
@@ -54,7 +54,7 @@ export const ReportsLoadingSkeleton = () => {
       {[1, 2, 3, 4].map((i) => (
         <View key={i} className="mb-4">
           <ShimmerEffect>
-            <View className="bg-white rounded-3xl p-5">
+            <View className="bg-white dark:bg-gray-100 rounded-3xl p-5">
               {/* Header */}
               <View className="flex-row items-start justify-between mb-3">
                 <View className="flex-1">
@@ -85,6 +85,6 @@ export const ReportsLoadingSkeleton = () => {
           </ShimmerEffect>
         </View>
       ))}
-    </View>
+    </ScrollView>
   );
 };

@@ -1,15 +1,12 @@
-import React, { useEffect, useRef } from 'react';
-import { Animated } from 'react-native';
+import React, { useEffect, useRef } from "react";
+import { Animated } from "react-native";
 
 interface ShimmerEffectProps {
   children: React.ReactNode;
   duration?: number;
 }
 
-export const ShimmerEffect: React.FC<ShimmerEffectProps> = ({ 
-  children, 
-  duration = 1500 
-}) => {
+export const ShimmerEffect: React.FC<ShimmerEffectProps> = ({ children, duration = 1500 }) => {
   const animatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -25,7 +22,7 @@ export const ShimmerEffect: React.FC<ShimmerEffectProps> = ({
           duration,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     ).start();
   }, [animatedValue, duration]);
 

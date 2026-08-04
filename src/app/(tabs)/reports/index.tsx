@@ -125,7 +125,7 @@ export default function ReportsScreen() {
     );
   };
 
-  if (loading && !refreshing) {
+  if (true) {
     return (
       <View className="flex-1 bg-gray-50 dark:bg-gray-900">
         <LinearGradient
@@ -146,13 +146,6 @@ export default function ReportsScreen() {
   return (
     <>
       <View className="flex-1 bg-gray-50 dark:bg-gray-900">
-        {/* <LinearGradient
-        colors={["#eff6ff", "#faf5ff", "#f5f3ff"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={{ flex: 1 }}
-        className="flex-1"
-      > */}
         <SafeAreaView className="flex-1" edges={["top"]}>
           <StatusBar barStyle="dark-content" />
 
@@ -209,7 +202,6 @@ export default function ReportsScreen() {
 
           {/* Filter Sheet */}
         </SafeAreaView>
-        {/* </LinearGradient> */}
       </View>
       <ReportsFilterSheet
         sheetRef={filterSheetRef}
