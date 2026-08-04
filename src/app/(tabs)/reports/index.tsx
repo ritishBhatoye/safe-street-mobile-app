@@ -125,7 +125,7 @@ export default function ReportsScreen() {
     );
   };
 
-  if (true) {
+  if (loading && !refreshing) {
     return (
       <View className="flex-1 bg-gray-50 dark:bg-gray-900">
         <LinearGradient

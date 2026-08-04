@@ -4,6 +4,7 @@ import { ActionSheet } from "@/components/elements";
 import { ActionSheetRef } from "react-native-actions-sheet";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { Button } from "../atoms";
 
 export interface ReportFilters {
   status: string[];
@@ -90,14 +91,16 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
                     borderRadius: 12,
                     overflow: "hidden",
                     borderWidth: 2,
-                    borderColor: isSelected ? option.color : "#e5e7eb",
+                    borderColor: isSelected ? option.color : isDarkMode ? "#374151" : "#e5e7eb",
                   }}
                 >
                   <LinearGradient
                     colors={
                       isSelected
                         ? [`${option.color}20`, `${option.color}10`]
-                        : ["#ffffff", "#f9fafb"]
+                        : isDarkMode
+                          ? ["#1f2937", "#111827"]
+                          : ["#ffffff", "#f9fafb"]
                     }
                     style={{
                       flexDirection: "row",
@@ -110,13 +113,13 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
                     <Ionicons
                       name={option.icon as any}
                       size={18}
-                      color={isSelected ? option.color : "#6b7280"}
+                      color={isSelected ? option.color : isDarkMode ? "#9ca3af" : "#6b7280"}
                     />
                     <Text
                       style={{
                         fontFamily: isSelected ? "DMSans-Bold" : "DMSans-Medium",
                         fontSize: 14,
-                        color: isSelected ? option.color : "#6b7280",
+                        color: isSelected ? option.color : isDarkMode ? "#9ca3af" : "#6b7280",
                       }}
                     >
                       {option.label}
@@ -134,7 +137,7 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
             style={{
               fontSize: 16,
               fontFamily: "DMSans-Bold",
-              color: "#111827",
+              color: isDarkMode ? "#ffffff" : "#111827",
               marginBottom: 12,
             }}
           >
@@ -151,14 +154,16 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
                     borderRadius: 12,
                     overflow: "hidden",
                     borderWidth: 2,
-                    borderColor: isSelected ? option.color : "#e5e7eb",
+                    borderColor: isSelected ? option.color : isDarkMode ? "#374151" : "#e5e7eb",
                   }}
                 >
                   <LinearGradient
                     colors={
                       isSelected
                         ? [`${option.color}20`, `${option.color}10`]
-                        : ["#ffffff", "#f9fafb"]
+                        : isDarkMode
+                          ? ["#1f2937", "#111827"]
+                          : ["#ffffff", "#f9fafb"]
                     }
                     style={{
                       paddingHorizontal: 16,
@@ -169,7 +174,7 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
                       style={{
                         fontFamily: isSelected ? "DMSans-Bold" : "DMSans-Medium",
                         fontSize: 14,
-                        color: isSelected ? option.color : "#6b7280",
+                        color: isSelected ? option.color : isDarkMode ? "#9ca3af" : "#6b7280",
                       }}
                     >
                       {option.label}
@@ -187,7 +192,7 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
             style={{
               fontSize: 16,
               fontFamily: "DMSans-Bold",
-              color: "#111827",
+              color: isDarkMode ? "#ffffff" : "#111827",
               marginBottom: 12,
             }}
           >
@@ -204,14 +209,16 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
                     borderRadius: 12,
                     overflow: "hidden",
                     borderWidth: 2,
-                    borderColor: isSelected ? "#3b82f6" : "#e5e7eb",
+                    borderColor: isSelected ? "#3b82f6" : isDarkMode ? "#374151" : "#e5e7eb",
                   }}
                 >
                   <LinearGradient
                     colors={
                       isSelected
                         ? ["rgba(59, 130, 246, 0.2)", "rgba(59, 130, 246, 0.1)"]
-                        : ["#ffffff", "#f9fafb"]
+                        : isDarkMode
+                          ? ["#1f2937", "#111827"]
+                          : ["#ffffff", "#f9fafb"]
                     }
                     style={{
                       flexDirection: "row",
@@ -224,13 +231,13 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
                     <Ionicons
                       name={option.icon as any}
                       size={20}
-                      color={isSelected ? "#3b82f6" : "#6b7280"}
+                      color={isSelected ? "#3b82f6" : isDarkMode ? "#9ca3af" : "#6b7280"}
                     />
                     <Text
                       style={{
                         fontFamily: isSelected ? "DMSans-Bold" : "DMSans-Medium",
                         fontSize: 15,
-                        color: isSelected ? "#3b82f6" : "#6b7280",
+                        color: isSelected ? "#3b82f6" : isDarkMode ? "#9ca3af" : "#6b7280",
                         flex: 1,
                       }}
                     >
@@ -245,20 +252,30 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
         </View>
 
         {/* Action Buttons */}
-        <View style={{ flexDirection: "row", gap: 12, marginTop: 8, marginBottom: 16 }}>
-          <TouchableOpacity
+        <View
+          className="flex-row w-full gap-12 mt-2 mb-4"
+          // style={{ flexDirection: "row", gap: 12, marginTop: 8, marginBottom: 16 }}
+        >
+          <Button
+            className="w-fit"
+            title={"Reset"}
+            variant={"outline"}
+            loading={false}
+            disabled={false}
+          />
+          {/* <TouchableOpacity
             onPress={onReset}
             style={{
               flex: 1,
               borderRadius: 12,
               overflow: "hidden",
               borderWidth: 2,
-              borderColor: "#e5e7eb",
+              borderColor: isDarkMode ? "#374151" : "#e5e7eb",
             }}
           >
             <View
               style={{
-                backgroundColor: "#ffffff",
+                backgroundColor: isDarkMode ? "#1f2937" : "#ffffff",
                 paddingVertical: 14,
                 alignItems: "center",
               }}
@@ -267,40 +284,40 @@ export const ReportsFilterSheet: React.FC<ReportsFilterSheetProps> = ({
                 style={{
                   fontFamily: "DMSans-Bold",
                   fontSize: 15,
-                  color: "#6b7280",
+                  color: isDarkMode ? "#9ca3af" : "#6b7280",
                 }}
               >
                 Reset
               </Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
-          <TouchableOpacity
-            onPress={() => sheetRef.current?.hide()}
+          {/* <TouchableOpacity
+
             style={{
               flex: 1,
               borderRadius: 12,
               overflow: "hidden",
             }}
-          >
-            <LinearGradient
+          > */}
+          {/* <LinearGradient
               colors={["#3b82f6", "#2563eb"]}
               style={{
                 paddingVertical: 14,
                 alignItems: "center",
               }}
-            >
-              <Text
-                style={{
-                  fontFamily: "DMSans-Bold",
-                  fontSize: 15,
-                  color: "#ffffff",
-                }}
-              >
-                Apply Filters
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
+            > */}
+          <Button
+            className="w-fit"
+            onPress={() => sheetRef.current?.hide()}
+            title={"Apply Filters"}
+            variant={"primary"}
+            loading={false}
+            disabled={false}
+          />
+
+          {/* </LinearGradient> */}
+          {/* </TouchableOpacity> */}
         </View>
       </ScrollView>
     </ActionSheet>

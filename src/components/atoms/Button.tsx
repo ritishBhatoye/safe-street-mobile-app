@@ -3,7 +3,7 @@ import { Pressable, Text, ActivityIndicator, type PressableProps } from "react-n
 
 interface ButtonProps extends PressableProps {
   title: string;
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "white" | "danger";
+  variant: "primary" | "secondary" | "outline" | "ghost" | "white" | "danger";
   size?: "small" | "medium" | "large";
   loading?: boolean;
   disabled?: boolean;
@@ -18,7 +18,7 @@ export const Button = ({
   className = "",
   ...props
 }: ButtonProps) => {
-  const baseStyles = "items-center justify-center rounded-2xl";
+  const baseStyles = "items-center justify-center rounded-3xl";
 
   const variantStyles = {
     primary: "bg-primary-500 active:bg-primary-600",

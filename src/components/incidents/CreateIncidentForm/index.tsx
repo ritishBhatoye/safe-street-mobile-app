@@ -1,34 +1,34 @@
-import React from 'react';
-import { View, TouchableOpacity, Text, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
-import { BlurView } from 'expo-blur';
-import { FormikProps } from 'formik';
-import { IncidentFormValues } from '@/utils/incidentValidation';
-import { IncidentType, IncidentSeverity } from '@/constants/incidents';
-import { IncidentTypeStep } from './Steps/IncidentTypeStep';
-import { SeverityDetailsStep } from './Steps/SeverityDetailsStep';
-import { LocationDescriptionStep } from './Steps/LocationDescriptionStep';
-import { ReanimatedBackground } from './ReanimatedBackground';
-import { ReanimatedStepTransition } from './ReanimatedStepTransition';
-import { ReanimatedButton } from './ReanimatedButton';
-import { LoadingOverlay } from './LoadingOverlay';
+import React from "react";
+import { View, TouchableOpacity, Text, ScrollView } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+import { BlurView } from "expo-blur";
+import { FormikProps } from "formik";
+import { IncidentFormValues } from "@/utils/incidentValidation";
+import { IncidentType, IncidentSeverity } from "@/constants/incidents";
+import { IncidentTypeStep } from "./Steps/IncidentTypeStep";
+import { SeverityDetailsStep } from "./Steps/SeverityDetailsStep";
+import { LocationDescriptionStep } from "./Steps/LocationDescriptionStep";
+import { ReanimatedBackground } from "./ReanimatedBackground";
+import { ReanimatedStepTransition } from "./ReanimatedStepTransition";
+import { LoadingOverlay } from "./LoadingOverlay";
+import { Button } from "@/components/atoms";
 
 interface CreateIncidentFormProps {
   // Formik Props
   formikProps: FormikProps<IncidentFormValues>;
-  
+
   // Step Management
   currentStep: number;
   onStepChange: (step: number) => void;
-  
+
   // Actions
   onCancel?: () => void;
-  
+
   // State
   isLoading: boolean;
   isGettingLocation: boolean;
-  
+
   // Handlers
   onGetLocation: () => void;
   onPickOnMap: () => void;
@@ -47,11 +47,7 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
   validateCurrentStep,
 }) => {
   const { values, errors, touched, setFieldValue, handleSubmit } = formikProps;
-  const stepTitles = [
-    'Select Incident Type',
-    'Set Severity & Title', 
-    'Add Location & Details'
-  ];
+  const stepTitles = ["Select Incident Type", "Set Severity & Title", "Add Location & Details"];
 
   const nextStep = async () => {
     if (currentStep < 3) {
@@ -84,7 +80,7 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
   // Get current step errors
   const getCurrentStepErrors = () => {
     const stepErrors: string[] = [];
-    
+
     switch (currentStep) {
       case 1:
         if (touched.type && errors.type) stepErrors.push(errors.type);
@@ -99,7 +95,7 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
         if (touched.description && errors.description) stepErrors.push(errors.description);
         break;
     }
-    
+
     return stepErrors;
   };
 
@@ -109,7 +105,7 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
         return (
           <IncidentTypeStep
             selectedType={values.type as IncidentType}
-            onTypeSelect={(type: IncidentType) => setFieldValue('type', type)}
+            onTypeSelect={(type: IncidentType) => setFieldValue("type", type)}
             error={touched.type ? errors.type : undefined}
           />
         );
@@ -118,8 +114,8 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
           <SeverityDetailsStep
             selectedSeverity={values.severity as IncidentSeverity}
             title={values.title}
-            onSeveritySelect={(severity: IncidentSeverity) => setFieldValue('severity', severity)}
-            onTitleChange={(title: string) => setFieldValue('title', title)}
+            onSeveritySelect={(severity: IncidentSeverity) => setFieldValue("severity", severity)}
+            onTitleChange={(title: string) => setFieldValue("title", title)}
             severityError={touched.severity ? errors.severity : undefined}
             titleError={touched.title ? errors.title : undefined}
           />
@@ -134,11 +130,11 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
             isGettingLocation={isGettingLocation}
             onGetLocation={onGetLocation}
             onPickOnMap={onPickOnMap}
-            onDescriptionChange={(description: string) => setFieldValue('description', description)}
+            onDescriptionChange={(description: string) => setFieldValue("description", description)}
             locationError={
-              (touched.latitude && errors.latitude) || 
-              (touched.longitude && errors.longitude) ? 
-              'Location is required' : undefined
+              (touched.latitude && errors.latitude) || (touched.longitude && errors.longitude)
+                ? "Location is required"
+                : undefined
             }
             descriptionError={touched.description ? errors.description : undefined}
           />
@@ -149,11 +145,11 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
   };
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 dark:bg-gray-700">
       {/* Reanimated Background */}
       <ReanimatedBackground currentStep={currentStep} />
 
-      <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
+      <ScrollView className="flex-1 px-4 dark:bg-gray-700" showsVerticalScrollIndicator={false}>
         {/* Error Messages */}
         {getCurrentStepErrors().length > 0 && (
           <Animated.View entering={FadeInDown.delay(100)}>
@@ -174,9 +170,9 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
 
         {/* Reanimated Step Transition */}
         <Animated.View entering={FadeInDown.delay(100)}>
-          <ReanimatedStepTransition 
-            currentStep={currentStep} 
-            totalSteps={3} 
+          <ReanimatedStepTransition
+            currentStep={currentStep}
+            totalSteps={3}
             stepTitles={stepTitles}
           />
         </Animated.View>
@@ -187,63 +183,63 @@ export const CreateIncidentForm: React.FC<CreateIncidentFormProps> = ({
         </Animated.View>
       </ScrollView>
 
-      {/* Navigation Footer with Skia Buttons */}
-      <Animated.View entering={FadeInUp.delay(400)}>
-        <BlurView intensity={20} tint="light" className="border-t border-gray-200/50">
-          <View className="p-4">
+      {/* Navigation Footer */}
+      <Animated.View className={"rounded-ss-3xl rounded-se-3xl"} entering={FadeInUp.delay(400)}>
+        <BlurView intensity={20} tint="light" className="border-t-0 rounded-ss-3xl rounded-se-3xl">
+          <View className="p-4 bg-gray-200/50 dark:bg-gray-900">
             <View className="flex-row gap-3 items-center justify-center">
               {currentStep > 1 && (
-                <ReanimatedButton
+                <Button
                   title="Back"
                   onPress={prevStep}
                   variant="secondary"
-                  icon="chevron-back"
-                  width={100}
-                  height={50}
+                  size="medium"
+                  className="flex-1 max-w-[120px]"
                 />
               )}
-              
+
               {currentStep < 3 ? (
-                <ReanimatedButton
+                <Button
                   title="Continue"
                   onPress={nextStep}
                   disabled={!canProceedToNextStep()}
                   variant="primary"
-                  icon="chevron-forward"
-                  width={currentStep > 1 ? 150 : 200}
-                  height={50}
+                  size="medium"
+                  className={currentStep > 1 ? "flex-1 w-full" : "flex-1 w-full"}
                 />
               ) : (
-                <ReanimatedButton
-                  title={isLoading ? 'Submitting...' : 'Submit Report'}
+                <Button
+                  title={isLoading ? "Submitting..." : "Submit Report"}
                   onPress={() => handleSubmit()}
                   disabled={!canProceedToNextStep()}
                   loading={isLoading}
-                  variant="success"
-                  icon={!isLoading ? "checkmark-circle" : undefined}
-                  width={currentStep > 1 ? 180 : 220}
-                  height={50}
+                  variant="primary"
+                  // size="medium"
+                  className={
+                    currentStep > 1
+                      ? "flex-1 w-full bg-green-600 active:bg-green-700"
+                      : "flex-1 w-full bg-green-600 active:bg-green-700"
+                  }
                 />
               )}
             </View>
-            
+
             {currentStep === 1 && onCancel && (
-              <TouchableOpacity
+              <Button
+                className="w-full mt-3"
                 onPress={onCancel}
-                className="mt-4 p-3"
-              >
-                <Text className="text-center text-gray-500 font-dm-sans">
-                  Cancel
-                </Text>
-              </TouchableOpacity>
+                title="Cancel"
+                variant="danger"
+                size="medium"
+              />
             )}
           </View>
         </BlurView>
       </Animated.View>
 
       {/* Loading Overlay */}
-      <LoadingOverlay 
-        visible={isLoading} 
+      <LoadingOverlay
+        visible={isLoading}
         message="Creating your safety report and notifying the community..."
       />
     </View>
